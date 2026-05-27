@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Intranet Escolar - Profesores</title>
+    <link rel="icon" type="image/svg+xml" href="../static/img/kairos-logo.svg">
+    <link rel="stylesheet" href="../static/css/styles.css">
+  </head>
+  <body data-page="profesores">
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <img class="brand-logo" src="../static/img/kairos-logo.svg" alt="Colegio Kairos">
+          <div><strong>Colegio Kairos</strong><small>Administracion academica</small></div>
+        </div>
+        <nav class="nav-menu">
+          <a href="index.html"><span class="nav-icon nav-home"></span> Inicio</a>
+          <a class="active" href="profesores.html"><span class="nav-icon nav-users"></span> Profesores</a>
+          <a href="asignaturas.html"><span class="nav-icon nav-book"></span> Asignaturas</a>
+          <a href="asignaciones.html"><span class="nav-icon nav-link"></span> Asignaciones</a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <nav class="topbar">
+          <button class="icon-button menu-toggle" type="button" aria-label="Abrir menu"><span class="hamburger"><span></span><span></span><span></span></span></button>
+          <h1>Profesores</h1>
+          <button class="admin-chip" type="button" data-logout title="Cerrar sesion"><span class="avatar">A</span><span>Administrador</span><span>v</span></button>
+        </nav>
+
+        <section class="panel">
+          <div class="module-header">
+            <div>
+              <p class="section-kicker">CRUD academico</p>
+              <h2>Lista de Profesores</h2>
+            </div>
+            <button class="button button-blue" type="button" id="nuevo-profesor">Nuevo Profesor</button>
+          </div>
+
+          <div class="search-row">
+            <input id="profesor-search" class="search-input" placeholder="Buscar profesor...">
+            <span class="search-icon" aria-hidden="true"></span>
+          </div>
+
+          <p id="profesor-message" class="message hidden"></p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Correo Electronico</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="profesores-table"></tbody>
+            </table>
+          </div>
+          <p id="profesores-empty" class="empty-state hidden">No hay profesores para mostrar.</p>
+          <div class="pagination">
+            <button class="button button-light" disabled>Anterior</button>
+            <span>Pagina 1</span>
+            <button class="button button-light" disabled>Siguiente</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal hidden" id="profesor-modal" aria-hidden="true">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 id="profesor-form-title">Nuevo Profesor</h2>
+          <button class="icon-button" type="button" data-close-modal>x</button>
+        </div>
+        <form id="profesor-form" class="form-grid">
+          <input type="hidden" id="profesor-id">
+          <label>Nombre<input id="profesor-nombre" required maxlength="100"></label>
+          <label>Apellido<input id="profesor-apellido" required maxlength="100"></label>
+          <label>Correo Electronico<input id="profesor-correo" type="email" required maxlength="150"></label>
+          <label>Telefono<input id="profesor-telefono" maxlength="20"></label>
+          <div class="form-actions span-2">
+            <button class="button button-blue" type="submit">Guardar</button>
+            <button class="button button-light" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="../static/js/main.js"></script>
+  </body>
+</html>

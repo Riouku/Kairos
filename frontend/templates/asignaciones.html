@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Intranet Escolar - Asignaciones</title>
+    <link rel="icon" type="image/svg+xml" href="../static/img/kairos-logo.svg">
+    <link rel="stylesheet" href="../static/css/styles.css">
+  </head>
+  <body data-page="asignaciones">
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <img class="brand-logo" src="../static/img/kairos-logo.svg" alt="Colegio Kairos">
+          <div><strong>Colegio Kairos</strong><small>Administracion academica</small></div>
+        </div>
+        <nav class="nav-menu">
+          <a href="index.html"><span class="nav-icon nav-home"></span> Inicio</a>
+          <a href="profesores.html"><span class="nav-icon nav-users"></span> Profesores</a>
+          <a href="asignaturas.html"><span class="nav-icon nav-book"></span> Asignaturas</a>
+          <a class="active" href="asignaciones.html"><span class="nav-icon nav-link"></span> Asignaciones</a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <nav class="topbar">
+          <button class="icon-button menu-toggle" type="button" aria-label="Abrir menu"><span class="hamburger"><span></span><span></span><span></span></span></button>
+          <h1>Asignaciones</h1>
+          <button class="admin-chip" type="button" data-logout title="Cerrar sesion"><span class="avatar">A</span><span>Administrador</span><span>v</span></button>
+        </nav>
+
+        <section class="assignment-layout">
+          <article class="panel">
+            <div class="module-header compact">
+              <div>
+                <p class="section-kicker">Nueva relacion</p>
+                <h2>Guardar Asignacion</h2>
+              </div>
+            </div>
+            <form id="asignacion-form" class="form-grid single">
+              <label>Profesor<select id="asignacion-profesor" required></select></label>
+              <label>Asignatura<select id="asignacion-asignatura" required></select></label>
+              <label>Fecha<input id="asignacion-fecha" type="date"></label>
+              <button class="button button-green" type="submit">Guardar Asignacion</button>
+            </form>
+            <p id="asignacion-message" class="message hidden"></p>
+          </article>
+
+          <article class="panel">
+            <div class="module-header">
+              <div>
+                <p class="section-kicker">Listado</p>
+                <h2>Asignaciones</h2>
+              </div>
+              <button class="button button-blue" type="button" id="ver-todas-asignaciones">Ver todas las asignaciones</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Profesor</th>
+                    <th>Asignatura</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="asignaciones-table"></tbody>
+              </table>
+            </div>
+            <p id="asignaciones-empty" class="empty-state hidden">No hay asignaciones para mostrar.</p>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="../static/js/main.js"></script>
+  </body>
+</html>
