@@ -34,9 +34,19 @@ def create_asignacion(db: Session, payload: AsignacionCreate) -> AsignacionRead:
     profesor = db.get(Profesor, payload.profesor_id)
     if not profesor:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Profesor no encontrado.")
+    if not profesor.activo:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="No se puede asignar una asignatura a un profesor inactivo.",
+        )
     asignatura = db.get(Asignatura, payload.asignatura_id)
     if not asignatura:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Asignatura no encontrada.")
+    if not asignatura.activo:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="No se puede asignar una asignatura inactiva.",
+        )
 
     asignacion = Asignacion(
         profesor_id=payload.profesor_id,

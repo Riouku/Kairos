@@ -4,14 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Intranet Escolar - Inicio</title>
-    <link rel="icon" type="image/svg+xml" href="../static/img/kairos-logo.svg">
-    <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="/static/img/kairos-logo.svg">
+    <link rel="stylesheet" href="/static/css/styles.css">
   </head>
   <body data-page="dashboard">
     <div class="app-shell">
       <aside class="sidebar" id="sidebar">
         <div class="brand">
-          <img class="brand-logo" src="../static/img/kairos-logo.svg" alt="Colegio Kairos">
+          <img class="brand-logo" src="/static/img/kairos-logo.svg" alt="Colegio Kairos">
           <div>
             <strong>Colegio Kairos</strong>
             <small>Administracion academica</small>
@@ -22,6 +22,7 @@
           <a href="profesores.html"><span class="nav-icon nav-users"></span> Profesores</a>
           <a href="asignaturas.html"><span class="nav-icon nav-book"></span> Asignaturas</a>
           <a href="asignaciones.html"><span class="nav-icon nav-link"></span> Asignaciones</a>
+          <a href="calendario.html"><span class="nav-icon nav-calendar"></span> Calendario</a>
         </nav>
       </aside>
 
@@ -31,14 +32,13 @@
           <h1>Inicio</h1>
           <button class="admin-chip" type="button" data-logout title="Cerrar sesion">
             <span class="avatar">A</span>
-            <span>Administrador</span>
-            <span>v</span>
+            <span>Administracion</span>
           </button>
         </nav>
 
         <section class="welcome-panel">
           <div>
-            <p>Bienvenido, Administrador</p>
+            <p>Bienvenido, Administracion</p>
             <h2>Panel de Control Kairos</h2>
           </div>
           <div id="api-status" class="api-status">Conectando API</div>
@@ -76,14 +76,14 @@
         </section>
 
         <section class="dashboard-grid">
-          <article class="panel chart-panel">
+          <article class="panel">
             <div class="panel-header">
               <div>
-                <p class="section-kicker">Estadisticas mensuales</p>
+                <p class="section-kicker">Resumen mensual</p>
                 <h3>Asignaciones por mes</h3>
               </div>
             </div>
-            <div id="monthly-chart" class="monthly-chart" aria-label="Grafico de asignaciones mensuales"></div>
+            <div id="monthly-chart" class="monthly-chart" aria-label="Asignaciones por mes"></div>
           </article>
 
           <article class="panel">
@@ -111,6 +111,6 @@
         </section>
       </main>
     </div>
-    <script src="../static/js/main.js"></script>
+    <script src="/static/js/main.js"></script>
   </body>
 </html>

@@ -1,7 +1,18 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 
-from app.routes import asignaciones_router, asignaturas_router, dashboard_router, profesores_router
+from app.database import SessionLocal
+from app.routes import (
+    asignaciones_router,
+    asignaturas_router,
+    calendario_router,
+    cursos_router,
+    dashboard_router,
+    profesores_router,
+)
 from config import get_settings
 
 settings = get_settings()
@@ -19,9 +30,31 @@ app.add_middleware(
 app.include_router(profesores_router, prefix="/api")
 app.include_router(asignaturas_router, prefix="/api")
 app.include_router(asignaciones_router, prefix="/api")
+app.include_router(cursos_router, prefix="/api")
+app.include_router(calendario_router, prefix="/api")
 app.include_router(dashboard_router, prefix="/api")
+
+
+@app.exception_handler(SQLAlchemyError)
+def sqlalchemy_exception_handler(_request: Request, _exc: SQLAlchemyError):
+    return JSONResponse(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        content={
+            "detail": (
+                "No se pudo consultar PostgreSQL. Verifica que el servicio este iniciado "
+                "y que DATABASE_URL apunte a una base de datos disponible."
+            )
+        },
+    )
 
 
 @app.get("/health", tags=["Sistema"])
 def health_check():
     return {"status": "ok", "app": settings.app_name}
+
+
+@app.get("/health/db", tags=["Sistema"])
+def database_health_check():
+    with SessionLocal() as db:
+        db.execute(text("SELECT 1"))
+    return {"status": "ok", "database": "connected"}

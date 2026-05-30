@@ -88,6 +88,45 @@ El frontend consume por defecto la API en:
 http://localhost:8000/api
 ```
 
+## Docker
+
+Levantar PostgreSQL, FastAPI y el frontend:
+
+```powershell
+docker compose up --build
+```
+
+Crear las tablas con Alembic cuando los contenedores esten arriba:
+
+```powershell
+docker compose exec api python -m alembic upgrade head
+```
+
+Abrir el frontend:
+
+```text
+http://localhost:8001/templates/index.html
+```
+
+Abrir la documentacion de la API:
+
+```text
+http://localhost:8000/docs
+```
+
+Verificar estado:
+
+```text
+http://localhost:8000/health
+http://localhost:8000/health/db
+```
+
+Dentro de Docker, la API se conecta a PostgreSQL con:
+
+```env
+DATABASE_URL=postgresql://postgres:postgres@db:5432/intranet_escolar
+```
+
 ## Flujo de demo
 
 1. Verificar que el estado de API aparezca como conectado.

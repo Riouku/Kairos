@@ -9,8 +9,13 @@ router = APIRouter(prefix="/asignaturas", tags=["Asignaturas"])
 
 
 @router.get("", response_model=list[AsignaturaRead])
-def list_asignaturas(search: str | None = None, db: Session = Depends(get_db)):
-    return asignaturas_controller.list_asignaturas(db, search)
+def list_asignaturas(
+    search: str | None = None,
+    activo: bool | None = None,
+    nivel: str | None = None,
+    db: Session = Depends(get_db),
+):
+    return asignaturas_controller.list_asignaturas(db, search, activo, nivel)
 
 
 @router.get("/{asignatura_id}", response_model=AsignaturaRead)
@@ -26,6 +31,11 @@ def create_asignatura(payload: AsignaturaCreate, db: Session = Depends(get_db)):
 @router.put("/{asignatura_id}", response_model=AsignaturaRead)
 def update_asignatura(asignatura_id: int, payload: AsignaturaUpdate, db: Session = Depends(get_db)):
     return asignaturas_controller.update_asignatura(db, asignatura_id, payload)
+
+
+@router.patch("/{asignatura_id}/estado", response_model=AsignaturaRead)
+def update_asignatura_estado(asignatura_id: int, activo: bool, db: Session = Depends(get_db)):
+    return asignaturas_controller.update_asignatura_estado(db, asignatura_id, activo)
 
 
 @router.delete("/{asignatura_id}", status_code=status.HTTP_204_NO_CONTENT)

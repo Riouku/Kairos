@@ -11,7 +11,11 @@ class Base(DeclarativeBase):
 
 
 settings = get_settings()
-engine = create_engine(settings.database_url, pool_pre_ping=True)
+engine_options = {"pool_pre_ping": True}
+if settings.database_url.startswith("postgresql"):
+    engine_options["connect_args"] = {"connect_timeout": 1}
+
+engine = create_engine(settings.database_url, **engine_options)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 

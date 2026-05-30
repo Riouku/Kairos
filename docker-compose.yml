@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: kairos-db
+    environment:
+      POSTGRES_DB: intranet_escolar
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d intranet_escolar"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./backend
+    container_name: kairos-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_NAME: Intranet Escolar
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/intranet_escolar
+      FRONTEND_ORIGINS: http://localhost:8001,http://127.0.0.1:8001,http://localhost:5500,http://127.0.0.1:5500
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: kairos-frontend
+    depends_on:
+      - api
+    ports:
+      - "8001:8001"
+
+volumes:
+  postgres_data:
