@@ -20,3 +20,6 @@ class Curso(Base):
 
     eventos = relationship("EventoAcademico", back_populates="curso")
     horarios = relationship("HorarioClase", back_populates="curso", cascade="all, delete-orphan")
+    estudiantes = relationship("Estudiante", back_populates="curso")
+    evaluaciones = relationship("Evaluacion", back_populates="curso")
+    asistencias = relationship("Asistencia", back_populates="curso")

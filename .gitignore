@@ -1,5 +1,6 @@
 __pycache__/
 *.py[cod]
+*.log
 .env
 .venv/
 backend/.venv/
@@ -9,3 +10,4 @@ backend/.venv/
 dist/
 build/
 outputs/
+public/

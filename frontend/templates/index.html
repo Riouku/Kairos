@@ -19,10 +19,14 @@
         </div>
         <nav class="nav-menu">
           <a class="active" href="index.html"><span class="nav-icon nav-home"></span> Inicio</a>
+          <a href="cursos.html"><span class="nav-icon nav-course"></span> Cursos</a>
+          <a href="estudiantes.html"><span class="nav-icon nav-students"></span> Estudiantes</a>
           <a href="profesores.html"><span class="nav-icon nav-users"></span> Profesores</a>
           <a href="asignaturas.html"><span class="nav-icon nav-book"></span> Asignaturas</a>
           <a href="asignaciones.html"><span class="nav-icon nav-link"></span> Asignaciones</a>
           <a href="calendario.html"><span class="nav-icon nav-calendar"></span> Calendario</a>
+          <a href="notas.html"><span class="nav-icon nav-notes"></span> Notas</a>
+          <a href="asistencia.html"><span class="nav-icon nav-attendance"></span> Asistencia</a>
         </nav>
       </aside>
 
@@ -59,6 +63,13 @@
               <small>Total asignaturas</small>
             </div>
           </article>
+          <article class="stat-card stat-blue">
+            <span class="stat-icon stat-users"></span>
+            <div>
+              <strong id="total-estudiantes">0</strong>
+              <small>Total estudiantes</small>
+            </div>
+          </article>
           <article class="stat-card stat-orange">
             <span class="stat-icon stat-link"></span>
             <div>
@@ -73,10 +84,65 @@
               <small>Mes mas activo: <span id="mes-activo">Sin datos</span></small>
             </div>
           </article>
+          <article class="stat-card stat-green">
+            <span class="stat-icon stat-notes"></span>
+            <div>
+              <strong id="promedio-general">-</strong>
+              <small>Promedio general</small>
+            </div>
+          </article>
+          <article class="stat-card stat-blue">
+            <span class="stat-icon stat-users"></span>
+            <div>
+              <strong id="porcentaje-asistencia">-</strong>
+              <small>Asistencia mensual</small>
+            </div>
+          </article>
         </section>
 
-        <section class="dashboard-grid">
-          <article class="panel">
+        <section class="panel quick-actions-panel">
+          <div class="panel-header">
+            <div>
+              <p class="section-kicker">Resumen académico</p>
+              <h3>Accesos rápidos</h3>
+            </div>
+          </div>
+          <div class="quick-actions-grid">
+            <a class="quick-action" href="cursos.html">
+              <span class="stat-icon stat-book"></span>
+              <strong>Cursos</strong>
+              <small>Gestiona cursos y revisa estudiantes.</small>
+            </a>
+            <a class="quick-action" href="estudiantes.html">
+              <span class="stat-icon stat-users"></span>
+              <strong>Estudiantes</strong>
+              <small>Matricula, cursos y estado academico.</small>
+            </a>
+            <a class="quick-action" href="notas.html">
+              <span class="stat-icon stat-notes"></span>
+              <strong>Gestionar notas</strong>
+              <small>Estudiantes, evaluaciones y promedios.</small>
+            </a>
+            <a class="quick-action" href="calendario.html">
+              <span class="stat-icon stat-calendar"></span>
+              <strong>Calendario académico</strong>
+              <small>Eventos, horarios y actividades.</small>
+            </a>
+            <a class="quick-action" href="asignaciones.html">
+              <span class="stat-icon stat-link"></span>
+              <strong>Asignaciones</strong>
+              <small>Profesores vinculados a asignaturas.</small>
+            </a>
+            <a class="quick-action" href="asistencia.html">
+              <span class="stat-icon stat-users"></span>
+              <strong>Asistencia</strong>
+              <small>Control diario y resumen mensual.</small>
+            </a>
+          </div>
+        </section>
+
+        <section class="dashboard-grid dashboard-overview">
+          <article class="panel dashboard-chart-panel">
             <div class="panel-header">
               <div>
                 <p class="section-kicker">Resumen mensual</p>
@@ -86,6 +152,7 @@
             <div id="monthly-chart" class="monthly-chart" aria-label="Asignaciones por mes"></div>
           </article>
 
+          <div class="dashboard-side-stack">
           <article class="panel">
             <div class="panel-header">
               <div>
@@ -106,8 +173,32 @@
                 <tbody id="dashboard-asignaciones"></tbody>
               </table>
             </div>
-            <p id="dashboard-empty" class="empty-state hidden">Aun no existen asignaciones registradas.</p>
+            <p id="dashboard-empty" class="empty-state hidden">Aún no existen asignaciones registradas. Crea una asignación para ver actividad reciente.</p>
           </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="section-kicker">Rendimiento</p>
+                <h3>Últimas notas</h3>
+              </div>
+              <a class="button button-blue" href="notas.html">Gestionar</a>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Estudiante</th>
+                    <th>Evaluación</th>
+                    <th>Nota</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-notas"></tbody>
+              </table>
+            </div>
+            <p id="dashboard-notas-empty" class="empty-state hidden">Aún no existen notas registradas. Ingresa notas para activar este resumen.</p>
+          </article>
+          </div>
         </section>
       </main>
     </div>

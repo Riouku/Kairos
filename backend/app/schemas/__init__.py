@@ -1,5 +1,12 @@
 from app.schemas.asignacion import AsignacionCreate, AsignacionRead
 from app.schemas.asignatura import AsignaturaCreate, AsignaturaRead, AsignaturaUpdate
+from app.schemas.asistencia import (
+    AsistenciaBulkCreate,
+    AsistenciaCreate,
+    AsistenciaRead,
+    AsistenciaResumenRead,
+    AsistenciaUpdate,
+)
 from app.schemas.calendario import (
     CalendarioItem,
     CalendarioMesRead,
@@ -14,11 +21,32 @@ from app.schemas.calendario import (
     HorarioClaseUpdate,
 )
 from app.schemas.dashboard import DashboardResumen, EstadisticaMensual
+from app.schemas.notas import (
+    EstudianteCreate,
+    EstudianteRead,
+    EstudianteUpdate,
+    EvaluacionCreate,
+    EvaluacionRead,
+    EvaluacionUpdate,
+    NotaCreate,
+    NotaRead,
+    NotaResumenItem,
+    NotaResumenRead,
+    NotaUpdate,
+    PeriodoAcademicoCreate,
+    PeriodoAcademicoRead,
+    PeriodoAcademicoUpdate,
+)
 from app.schemas.profesor import ProfesorCreate, ProfesorRead, ProfesorUpdate
 
 __all__ = [
     "AsignacionCreate",
     "AsignacionRead",
+    "AsistenciaBulkCreate",
+    "AsistenciaCreate",
+    "AsistenciaRead",
+    "AsistenciaResumenRead",
+    "AsistenciaUpdate",
     "AsignaturaCreate",
     "AsignaturaRead",
     "AsignaturaUpdate",
@@ -28,13 +56,27 @@ __all__ = [
     "CursoRead",
     "CursoUpdate",
     "DashboardResumen",
+    "EstudianteCreate",
+    "EstudianteRead",
+    "EstudianteUpdate",
     "EstadisticaMensual",
+    "EvaluacionCreate",
+    "EvaluacionRead",
+    "EvaluacionUpdate",
     "EventoAcademicoCreate",
     "EventoAcademicoRead",
     "EventoAcademicoUpdate",
     "HorarioClaseCreate",
     "HorarioClaseRead",
     "HorarioClaseUpdate",
+    "NotaCreate",
+    "NotaRead",
+    "NotaResumenItem",
+    "NotaResumenRead",
+    "NotaUpdate",
+    "PeriodoAcademicoCreate",
+    "PeriodoAcademicoRead",
+    "PeriodoAcademicoUpdate",
     "ProfesorCreate",
     "ProfesorRead",
     "ProfesorUpdate",

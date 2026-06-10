@@ -3,7 +3,7 @@ from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.models import Asignacion, HorarioClase, Profesor
+from app.models import Asignacion, Evaluacion, HorarioClase, Profesor
 from app.schemas import ProfesorCreate, ProfesorUpdate
 
 
@@ -89,10 +89,11 @@ def delete_profesor(db: Session, profesor_id: int) -> None:
     profesor = get_profesor(db, profesor_id)
     has_asignaciones = db.query(Asignacion).filter(Asignacion.profesor_id == profesor_id).first()
     has_horarios = db.query(HorarioClase).filter(HorarioClase.profesor_id == profesor_id).first()
-    if has_asignaciones or has_horarios:
+    has_evaluaciones = db.query(Evaluacion).filter(Evaluacion.profesor_id == profesor_id).first()
+    if has_asignaciones or has_horarios or has_evaluaciones:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="No se puede eliminar el profesor porque tiene asignaciones u horarios asociados.",
+            detail="No se puede eliminar el profesor porque tiene asignaciones, horarios o evaluaciones asociadas.",
         )
     db.delete(profesor)
     db.commit()

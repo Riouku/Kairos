@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Intranet Escolar - Asistencia</title>
+    <link rel="icon" type="image/svg+xml" href="/static/img/kairos-logo.svg">
+    <link rel="stylesheet" href="/static/css/styles.css">
+  </head>
+  <body data-page="asistencia">
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <img class="brand-logo" src="/static/img/kairos-logo.svg" alt="Colegio Kairos">
+          <div>
+            <strong>Colegio Kairos</strong>
+            <small>Administracion academica</small>
+          </div>
+        </div>
+        <nav class="nav-menu">
+          <a href="index.html"><span class="nav-icon nav-home"></span> Inicio</a>
+          <a href="cursos.html"><span class="nav-icon nav-course"></span> Cursos</a>
+          <a href="estudiantes.html"><span class="nav-icon nav-students"></span> Estudiantes</a>
+          <a href="profesores.html"><span class="nav-icon nav-users"></span> Profesores</a>
+          <a href="asignaturas.html"><span class="nav-icon nav-book"></span> Asignaturas</a>
+          <a href="asignaciones.html"><span class="nav-icon nav-link"></span> Asignaciones</a>
+          <a href="calendario.html"><span class="nav-icon nav-calendar"></span> Calendario</a>
+          <a href="notas.html"><span class="nav-icon nav-notes"></span> Notas</a>
+          <a class="active" href="asistencia.html"><span class="nav-icon nav-attendance"></span> Asistencia</a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <nav class="topbar">
+          <button class="icon-button menu-toggle" type="button" aria-label="Abrir menu"><span class="hamburger"><span></span><span></span><span></span></span></button>
+          <h1>Asistencia</h1>
+          <button class="admin-chip" type="button" data-logout title="Cerrar sesion">
+            <span class="avatar">A</span>
+            <span>Administracion</span>
+          </button>
+        </nav>
+
+        <section class="welcome-panel">
+          <div>
+            <p>Control diario</p>
+            <h2>Registro de asistencia por curso</h2>
+          </div>
+          <div id="api-status" class="api-status">Conectando API</div>
+        </section>
+
+        <p id="asistencia-message" class="message hidden"></p>
+
+        <section class="panel attendance-filters">
+          <label>Año<input id="asistencia-anio" type="number" min="2000" max="2100" value="2026"></label>
+          <label>Fecha<input id="asistencia-fecha" type="date"></label>
+          <label>Curso<select id="asistencia-curso"><option value="">Seleccione curso</option></select></label>
+          <button class="button button-blue" type="button" id="asistencia-cargar">Cargar curso</button>
+        </section>
+
+        <section class="stats-grid attendance-stats">
+          <article class="stat-card stat-green">
+            <span class="stat-icon stat-users"></span>
+            <div>
+              <strong id="asistencia-presentes">0</strong>
+              <small>Presentes</small>
+            </div>
+          </article>
+          <article class="stat-card stat-orange">
+            <span class="stat-icon stat-calendar"></span>
+            <div>
+              <strong id="asistencia-tardes">0</strong>
+              <small>Tardes</small>
+            </div>
+          </article>
+          <article class="stat-card stat-purple">
+            <span class="stat-icon stat-notes"></span>
+            <div>
+              <strong id="asistencia-justificados">0</strong>
+              <small>Justificados</small>
+            </div>
+          </article>
+          <article class="stat-card stat-blue">
+            <span class="stat-icon stat-link"></span>
+            <div>
+              <strong id="asistencia-porcentaje">-</strong>
+              <small>Asistencia mensual</small>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="section-kicker">Libro diario</p>
+              <h3>Estudiantes del curso</h3>
+            </div>
+            <button class="button button-green" type="button" id="asistencia-guardar">Guardar asistencia</button>
+          </div>
+          <div class="table-wrap">
+            <table class="attendance-table">
+              <thead>
+                <tr>
+                  <th>Estudiante</th>
+                  <th>Estado</th>
+                  <th>Observacion</th>
+                </tr>
+              </thead>
+              <tbody id="asistencia-table"></tbody>
+            </table>
+          </div>
+          <p id="asistencia-empty" class="empty-state">Selecciona un curso y una fecha para registrar asistencia.</p>
+        </section>
+      </main>
+    </div>
+    <script src="/static/js/main.js"></script>
+  </body>
+</html>

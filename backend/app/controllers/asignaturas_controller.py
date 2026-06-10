@@ -3,7 +3,7 @@ from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.models import Asignacion, Asignatura, HorarioClase
+from app.models import Asignacion, Asignatura, Evaluacion, HorarioClase
 from app.schemas import AsignaturaCreate, AsignaturaUpdate
 
 
@@ -93,10 +93,11 @@ def delete_asignatura(db: Session, asignatura_id: int) -> None:
     asignatura = get_asignatura(db, asignatura_id)
     has_asignaciones = db.query(Asignacion).filter(Asignacion.asignatura_id == asignatura_id).first()
     has_horarios = db.query(HorarioClase).filter(HorarioClase.asignatura_id == asignatura_id).first()
-    if has_asignaciones or has_horarios:
+    has_evaluaciones = db.query(Evaluacion).filter(Evaluacion.asignatura_id == asignatura_id).first()
+    if has_asignaciones or has_horarios or has_evaluaciones:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="No se puede eliminar la asignatura porque tiene asignaciones u horarios asociados.",
+            detail="No se puede eliminar la asignatura porque tiene asignaciones, horarios o evaluaciones asociadas.",
         )
     db.delete(asignatura)
     db.commit()

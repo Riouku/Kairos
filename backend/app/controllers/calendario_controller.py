@@ -6,7 +6,7 @@ from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, joinedload
 
-from app.models import Asignatura, Curso, EventoAcademico, HorarioClase, Profesor
+from app.models import Asignatura, Curso, Estudiante, Evaluacion, EventoAcademico, HorarioClase, Profesor
 from app.schemas import (
     CalendarioItem,
     CalendarioMesRead,
@@ -145,10 +145,12 @@ def delete_curso(db: Session, curso_id: int) -> None:
     curso = get_curso(db, curso_id)
     has_eventos = db.query(EventoAcademico).filter(EventoAcademico.curso_id == curso_id).first()
     has_horarios = db.query(HorarioClase).filter(HorarioClase.curso_id == curso_id).first()
-    if has_eventos or has_horarios:
+    has_estudiantes = db.query(Estudiante).filter(Estudiante.curso_id == curso_id).first()
+    has_evaluaciones = db.query(Evaluacion).filter(Evaluacion.curso_id == curso_id).first()
+    if has_eventos or has_horarios or has_estudiantes or has_evaluaciones:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="No se puede eliminar el curso porque tiene eventos u horarios asociados.",
+            detail="No se puede eliminar el curso porque tiene eventos, horarios, estudiantes o evaluaciones asociados.",
         )
     db.delete(curso)
     db.commit()

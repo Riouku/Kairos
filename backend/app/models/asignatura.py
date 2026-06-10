@@ -18,3 +18,4 @@ class Asignatura(Base):
     asignaciones = relationship("Asignacion", back_populates="asignatura", cascade="all, delete-orphan")
     eventos_academicos = relationship("EventoAcademico", back_populates="asignatura")
     horarios_clases = relationship("HorarioClase", back_populates="asignatura")
+    evaluaciones = relationship("Evaluacion", back_populates="asignatura")

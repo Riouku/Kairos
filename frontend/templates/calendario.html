@@ -16,10 +16,14 @@
         </div>
         <nav class="nav-menu">
           <a href="index.html"><span class="nav-icon nav-home"></span> Inicio</a>
+          <a href="cursos.html"><span class="nav-icon nav-course"></span> Cursos</a>
+          <a href="estudiantes.html"><span class="nav-icon nav-students"></span> Estudiantes</a>
           <a href="profesores.html"><span class="nav-icon nav-users"></span> Profesores</a>
           <a href="asignaturas.html"><span class="nav-icon nav-book"></span> Asignaturas</a>
           <a href="asignaciones.html"><span class="nav-icon nav-link"></span> Asignaciones</a>
           <a class="active" href="calendario.html"><span class="nav-icon nav-calendar"></span> Calendario</a>
+          <a href="notas.html"><span class="nav-icon nav-notes"></span> Notas</a>
+          <a href="asistencia.html"><span class="nav-icon nav-attendance"></span> Asistencia</a>
         </nav>
       </aside>
 
@@ -34,7 +38,7 @@
           <div>
             <p class="section-kicker">Calendario academico</p>
             <h2 id="calendar-title">Junio 2026</h2>
-            <span id="calendar-subtitle">Anio academico 2026</span>
+            <span id="calendar-subtitle">Año académico 2026</span>
           </div>
           <div class="ordered-calendar-actions">
             <button class="button button-blue" type="button" id="calendar-new-event">Nuevo evento</button>
@@ -66,7 +70,7 @@
 
         <section class="panel ordered-calendar-filter-panel" id="calendar-filter-panel">
           <div class="ordered-calendar-filters">
-            <label>Anio
+            <label>Año
               <select id="calendar-filter-anio">
                 <option value="2026">2026</option>
                 <option value="2025">2025</option>
@@ -93,7 +97,7 @@
               <select id="calendar-filter-tipo">
                 <option value="">Todos</option>
                 <option value="clase">Clase</option>
-                <option value="evaluacion">Evaluacion</option>
+                <option value="evaluacion">Evaluación</option>
                 <option value="reunion">Reunion</option>
                 <option value="feriado">Feriado</option>
                 <option value="actividad">Actividad</option>
@@ -169,7 +173,7 @@
                   <option value="Completa">Completa</option>
                 </select>
               </label>
-              <label>Anio<input id="curso-anio" type="number" min="2000" max="2100" value="2026" required></label>
+              <label>Año<input id="curso-anio" type="number" min="2000" max="2100" value="2026" required></label>
               <button class="button button-blue" type="submit">Guardar Curso</button>
               <p id="curso-message" class="message hidden"></p>
             </form>
@@ -186,7 +190,7 @@
               <label>Titulo<input id="evento-titulo" placeholder="Evaluacion parcial" required></label>
               <label>Tipo
                 <select id="evento-tipo" required>
-                  <option value="evaluacion">Evaluacion</option>
+                  <option value="evaluacion">Evaluación</option>
                   <option value="reunion">Reunion</option>
                   <option value="feriado">Feriado</option>
                   <option value="actividad">Actividad</option>
@@ -229,7 +233,7 @@
               </label>
               <label>Hora inicio<input id="horario-inicio" type="time" required></label>
               <label>Hora fin<input id="horario-fin" type="time" required></label>
-              <label>Anio<input id="horario-anio" type="number" min="2000" max="2100" value="2026" required></label>
+              <label>Año<input id="horario-anio" type="number" min="2000" max="2100" value="2026" required></label>
               <button class="button button-green" type="submit">Guardar Horario</button>
               <p id="horario-message" class="message hidden"></p>
             </form>

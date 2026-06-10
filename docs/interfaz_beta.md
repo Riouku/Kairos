@@ -1,473 +1,173 @@
-# Documentación de Interfaz — Intranet Escolar
+# Documentacion de Interfaz - Intranet Escolar
 
-## Descripción General
+## Descripcion General
 
-La interfaz corresponde a una intranet escolar moderna y minimalista enfocada en:
+La interfaz corresponde a una intranet escolar administrativa, simple y modular.
+Esta construida con HTML, CSS y JavaScript sin framework frontend.
 
-- Profesores
-- Asignaturas
-- Asignaciones
-
-El diseño utiliza una estructura tipo dashboard administrativo.
-
----
-
-# 1. Estructura General del Layout
-
-La aplicación está dividida en 2 secciones principales:
-
-## Sidebar lateral izquierdo
-
-Barra vertical fija con:
-
-- Logo del sistema
-- Nombre “INTRANET ESCOLAR”
-- Menú de navegación
-
-### Opciones del menú
+Modulos visibles:
 
 - Inicio
 - Profesores
 - Asignaturas
 - Asignaciones
+- Calendario
+- Notas
 
-### Características visuales
+## Layout
 
-- Fondo azul oscuro degradado
-- Texto blanco
-- Íconos blancos
-- Botón activo azul brillante
-- Bordes redondeados
-- Sidebar fija de ancho aproximado:
-  - 240px desktop
+La aplicacion usa una estructura tipo dashboard:
 
----
+- Sidebar lateral con logo y menu principal.
+- Contenido principal con encabezado de seccion.
+- Cards de resumen en inicio.
+- Tablas para listados.
+- Formularios para crear y editar registros.
 
-## Contenido principal
+## Navegacion
 
-Zona derecha donde cambia el contenido según el módulo.
+Todas las pantallas principales viven en `frontend/templates/`:
 
-Características:
+- `index.html`
+- `profesores.html`
+- `asignaturas.html`
+- `asignaciones.html`
+- `calendario.html`
+- `notas.html`
+- `login.html`
 
-- Fondo gris muy claro
-- Padding interno amplio
-- Cards blancas
-- Bordes redondeados
-- Sombra suave
-- Diseño responsive
+El archivo `frontend/index.html` redirige al dashboard para que `http://localhost:8001/` abra la aplicacion en modo local.
 
----
+## Pantalla Inicio
 
-# 2. Navbar Superior
+La pantalla de inicio muestra:
 
-En la parte superior del contenido principal existe una barra horizontal.
-
-## Componentes
-
-### Botón menú hamburguesa
-
-- Icono ☰
-- Visible en responsive
-
-### Nombre de la sección actual
-
-Ejemplos:
-
-- Inicio
-- Profesores
-- Asignaturas
-- Asignaciones
-
-### Usuario administrador
-
-Lado derecho:
-
-- Avatar circular
-- Texto: “admin”
-- Flecha desplegable
-
----
-
-# 3. Pantalla Dashboard (Inicio)
-
-## Header
-
-Texto:
-
-- “Bienvenido, admin”
-- Subtexto: “Panel de Control”
-
----
-
-## Tarjetas resumen (stats cards)
-
-Se muestran 3 tarjetas horizontales:
-
-### Card Profesores
-
-Contenido:
-
-- Ícono usuarios
-- Número total profesores
-- Texto descriptivo
-
-Color:
-- Azul
-
----
-
-### Card Asignaturas
-
-Contenido:
-
-- Ícono libro
-- Número total asignaturas
-
-Color:
-- Verde
-
----
-
-### Card Asignaciones
-
-Contenido:
-
-- Ícono enlace/asignación
-- Total asignaciones
-
-Color:
-- Naranja
-
----
-
-## Gráfico de resumen
-
-Card blanca con:
-
-- Título:
-  - “Resumen del Sistema”
-- Gráfico de líneas simple
-- Estadísticas mensuales
-
----
-
-## Tabla de asignaciones recientes
-
-Card blanca con:
-
-Columnas:
-
-- Asignatura
-- Profesor
-- Fecha
-
----
-
-# 4. Módulo Profesores
-
-Pantalla CRUD.
-
-## Componentes
-
-### Header
-
-- Título:
-  - “Lista de Profesores”
-- Botón:
-  - “Nuevo Profesor”
-
----
-
-## Barra de búsqueda
-
-Input con:
-
-- Placeholder:
-  - “Buscar profesor…”
-
-Ícono lupa al lado derecho.
-
----
-
-## Tabla de profesores
-
-### Columnas
-
-- ID
-- Nombre
-- Apellido
-- Correo Electrónico
-- Acciones
-
----
-
-## Botones de acciones
-
-### Editar
-
-- Botón azul
-- Icono lápiz
-
-### Eliminar
-
-- Botón rojo
-- Icono basurero
-
----
-
-## Paginación
-
-Parte inferior:
-
-- Anterior
-- Número de páginas
-- Siguiente
-
----
-
-# 5. Módulo Asignaturas
-
-Similar al CRUD de profesores.
-
-## Header
-
-- “Lista de Asignaturas”
-- Botón:
-  - “Nueva Asignatura”
-
----
-
-## Tabla
-
-### Columnas
-
-- ID
-- Asignatura
-- Descripción
-- Acciones
-
----
-
-## Funcionalidades
-
-- Crear asignatura
-- Editar asignatura
-- Eliminar asignatura
-- Buscar asignatura
-
----
-
-# 6. Módulo Asignaciones
-
-Pantalla dividida en 2 columnas.
-
----
-
-## Columna izquierda → Formulario
-
-### Componentes
-
-#### Select Profesor
-
-Dropdown:
-
-- “Seleccione un profesor”
-
----
-
-#### Select Asignatura
-
-Dropdown:
-
-- “Seleccione una asignatura”
-
----
-
-#### Fecha
-
-Input tipo date.
-
----
-
-#### Botón guardar
-
-Texto:
-- “Guardar Asignación”
-
-Color:
-- Verde
-
----
-
-## Columna derecha → Tabla asignaciones
-
-### Columnas
-
-- ID
-- Profesor
-- Asignatura
-- Fecha
-
----
-
-## Botón inferior
-
-- “Ver todas las asignaciones”
-
-Color:
-- Azul
-
----
-
-# 7. Estilo Visual General
-
-## Diseño
-
-- Minimalista
-- Moderno
-- Administrativo
-- Tipo dashboard SaaS
-
----
-
-## Colores principales
-
-### Azul oscuro sidebar
-
-```css
-#0B1F3A
-```
-
-### Azul botones
-
-```css
-#2563EB
-```
-
-### Verde
-
-```css
-#16A34A
-```
-
-### Naranja
-
-```css
-#F59E0B
-```
-
-### Fondo
-
-```css
-#F5F7FB
-```
-
----
-
-# 8. Tipografía
-
-Estilo recomendado:
-
-- Inter
-- Poppins
-- Nunito
-
----
-
-# 9. Componentes técnicos recomendados para Codex
-
-## Frontend
-
-- React
-- Next.js
-- TailwindCSS
-
----
-
-## Componentes UI
-
-- Cards
-- Sidebar
-- Navbar
-- DataTable
-- Modal CRUD
-- Forms
-- Selects
-- Charts
-
----
-
-# 10. Responsive Design
-
-## Desktop
-
-- Sidebar fija
-- Tablas completas
-
-## Tablet
-
-- Sidebar colapsable
-
-## Mobile
-
-- Menú hamburguesa
-- Cards verticales
-- Tablas con scroll horizontal
-
----
-
-# 11. Estructura recomendada de carpetas
-
-```txt
-src/
- ├── components/
- │    ├── sidebar/
- │    ├── navbar/
- │    ├── cards/
- │    ├── tables/
- │    └── forms/
- │
- ├── pages/
- │    ├── dashboard/
- │    ├── profesores/
- │    ├── asignaturas/
- │    └── asignaciones/
- │
- ├── services/
- │
- ├── hooks/
- │
- ├── layouts/
- │
- └── styles/
-```
-
----
-
-# 12. Funcionalidades CRUD necesarias
+- Estado de conexion con la API.
+- Total de profesores.
+- Total de asignaturas.
+- Total de asignaciones.
+- Eventos del mes.
+- Proximos eventos o clases.
+- Asignaciones recientes.
+- Promedio general y ultimas notas.
 
 ## Profesores
 
-- Crear profesor
-- Editar profesor
-- Eliminar profesor
-- Listar profesores
-- Buscar profesores
+Funcionalidades:
 
----
+- Listar profesores.
+- Buscar profesores.
+- Crear profesor.
+- Editar profesor.
+- Activar o desactivar profesor.
+- Eliminar profesor.
+
+Campos principales:
+
+- Nombre
+- Apellido
+- Correo
+- Telefono
+- Especialidad
+- Estado
 
 ## Asignaturas
 
-- Crear asignatura
-- Editar asignatura
-- Eliminar asignatura
-- Buscar asignaturas
+Funcionalidades:
 
----
+- Listar asignaturas.
+- Buscar asignaturas.
+- Crear asignatura.
+- Editar asignatura.
+- Activar o desactivar asignatura.
+- Eliminar asignatura.
+
+Campos principales:
+
+- Nombre
+- Codigo
+- Descripcion
+- Nivel
+- Horas semanales
+- Estado
 
 ## Asignaciones
 
-- Asignar profesor a asignatura
-- Ver asignaciones
-- Eliminar asignaciones
-- Filtrar asignaciones
+Funcionalidades:
+
+- Asignar una asignatura a un profesor.
+- Listar asignaciones.
+- Eliminar asignaciones.
+- Ver resumen mensual.
+
+Campos principales:
+
+- Profesor
+- Asignatura
+- Fecha de asignacion
+
+## Calendario Academico
+
+Funcionalidades:
+
+- Ver calendario mensual.
+- Ver lista de eventos del mes.
+- Crear cursos.
+- Crear eventos academicos.
+- Crear horarios semanales.
+- Filtrar por tipo, curso, profesor, asignatura y anio.
+
+Validaciones esperadas:
+
+- Eventos con titulo, tipo y fecha de inicio.
+- Horarios con curso, profesor, asignatura, dia y horas.
+- Hora de fin mayor que hora de inicio.
+- Bloqueo de choques por profesor.
+- Bloqueo de choques por curso.
+
+## Notas
+
+Funcionalidades:
+
+- Crear estudiantes asociados a cursos.
+- Crear periodos academicos.
+- Crear evaluaciones con ponderacion.
+- Registrar o actualizar notas por evaluacion.
+- Ver resumen de promedios ponderados.
+- Filtrar por anio, curso, asignatura, profesor y periodo.
+
+Validaciones esperadas:
+
+- Notas entre `1.0` y `7.0`.
+- Maximo un decimal por nota.
+- Una nota por estudiante y evaluacion.
+- Estudiante perteneciente al curso de la evaluacion.
+- Ponderacion activa acumulada hasta `100`.
+
+## Estilo Visual
+
+La interfaz mantiene un estilo administrativo:
+
+- Colores sobrios.
+- Tablas claras.
+- Formularios directos.
+- Cards para informacion resumida.
+- Sidebar persistente.
+- Diseno responsive.
+
+## URLs Locales
+
+- Frontend: `http://localhost:8001/`
+- Dashboard: `http://localhost:8001/templates/index.html`
+- Notas: `http://localhost:8001/templates/notas.html`
+- API docs: `http://localhost:8000/docs`
+- API health: `http://localhost:8000/health`
+
+## Criterios de Orden
+
+- Mantener HTML en `frontend/templates/`.
+- Mantener CSS en `frontend/static/css/`.
+- Mantener JavaScript en `frontend/static/js/`.
+- Mantener imagenes e iconos en `frontend/static/img/`.
+- No guardar logs ni cache en Git.
+- No duplicar logica de API en las paginas HTML.

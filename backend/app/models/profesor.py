@@ -19,3 +19,4 @@ class Profesor(Base):
     asignaciones = relationship("Asignacion", back_populates="profesor", cascade="all, delete-orphan")
     eventos_academicos = relationship("EventoAcademico", back_populates="profesor")
     horarios_clases = relationship("HorarioClase", back_populates="profesor")
+    evaluaciones = relationship("Evaluacion", back_populates="profesor")

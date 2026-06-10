@@ -1,16 +1,28 @@
+import sys
+from pathlib import Path
+
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
+BACKEND_DIR = Path(__file__).resolve().parent
+if str(BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(BACKEND_DIR))
+
 from app.database import SessionLocal
 from app.routes import (
     asignaciones_router,
     asignaturas_router,
+    asistencias_router,
     calendario_router,
     cursos_router,
     dashboard_router,
+    estudiantes_router,
+    evaluaciones_router,
+    notas_router,
+    periodos_router,
     profesores_router,
 )
 from config import get_settings
@@ -30,8 +42,13 @@ app.add_middleware(
 app.include_router(profesores_router, prefix="/api")
 app.include_router(asignaturas_router, prefix="/api")
 app.include_router(asignaciones_router, prefix="/api")
+app.include_router(asistencias_router, prefix="/api")
 app.include_router(cursos_router, prefix="/api")
 app.include_router(calendario_router, prefix="/api")
+app.include_router(estudiantes_router, prefix="/api")
+app.include_router(periodos_router, prefix="/api")
+app.include_router(evaluaciones_router, prefix="/api")
+app.include_router(notas_router, prefix="/api")
 app.include_router(dashboard_router, prefix="/api")
 
 

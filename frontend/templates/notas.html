@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Intranet Escolar - Notas</title>
+    <link rel="icon" type="image/svg+xml" href="/static/img/kairos-logo.svg">
+    <link rel="stylesheet" href="/static/css/styles.css">
+  </head>
+  <body data-page="notas">
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <img class="brand-logo" src="/static/img/kairos-logo.svg" alt="Colegio Kairos">
+          <div>
+            <strong>Colegio Kairos</strong>
+            <small>Administracion academica</small>
+          </div>
+        </div>
+        <nav class="nav-menu">
+          <a href="index.html"><span class="nav-icon nav-home"></span> Inicio</a>
+          <a href="cursos.html"><span class="nav-icon nav-course"></span> Cursos</a>
+          <a href="estudiantes.html"><span class="nav-icon nav-students"></span> Estudiantes</a>
+          <a href="profesores.html"><span class="nav-icon nav-users"></span> Profesores</a>
+          <a href="asignaturas.html"><span class="nav-icon nav-book"></span> Asignaturas</a>
+          <a href="asignaciones.html"><span class="nav-icon nav-link"></span> Asignaciones</a>
+          <a href="calendario.html"><span class="nav-icon nav-calendar"></span> Calendario</a>
+          <a class="active" href="notas.html"><span class="nav-icon nav-notes"></span> Notas</a>
+          <a href="asistencia.html"><span class="nav-icon nav-attendance"></span> Asistencia</a>
+        </nav>
+      </aside>
+
+      <main class="main-content notes-main">
+        <nav class="topbar notes-topbar">
+          <button class="icon-button menu-toggle" type="button" aria-label="Abrir menu"><span class="hamburger"><span></span><span></span><span></span></span></button>
+          <h1><span class="notes-title-icon"></span>Gestion de Notas</h1>
+          <div class="notes-user-area">
+            <button class="notes-bell" type="button" title="Notificaciones"><span>2</span></button>
+            <button class="admin-chip" type="button" data-logout title="Cerrar sesion">
+              <span class="avatar">A</span>
+              <span>Administracion</span>
+            </button>
+          </div>
+        </nav>
+
+        <section class="notes-filter-card">
+          <label>Curso
+            <select id="gradebook-curso"><option value="">Seleccione curso</option></select>
+          </label>
+          <label>Asignatura
+            <select id="gradebook-asignatura"><option value="">Todas</option></select>
+          </label>
+          <label>Profesor
+            <select id="gradebook-profesor"><option value="">Todos</option></select>
+          </label>
+          <button class="button button-blue notes-filter-button" id="gradebook-filtrar" type="button">
+            <span class="filter-mark"></span>Filtrar
+          </button>
+        </section>
+
+        <section class="notes-grade-layout">
+          <article class="panel notes-grade-panel">
+            <div class="table-wrap notes-grade-table-wrap">
+              <table class="notes-grade-table">
+                <thead id="gradebook-head"></thead>
+                <tbody id="gradebook-body"></tbody>
+              </table>
+            </div>
+            <p id="gradebook-empty" class="empty-state hidden">Selecciona un curso con estudiantes y evaluaciones para ingresar notas.</p>
+            <div class="notes-grade-actions">
+              <button class="button button-green" id="gradebook-guardar" type="button"><span class="save-mark"></span>Guardar Notas</button>
+              <button class="button button-light" id="gradebook-exportar" type="button"><span class="download-mark-small"></span>Exportar Excel</button>
+            </div>
+          </article>
+
+          <aside class="notes-side-stack">
+            <article class="panel notes-summary-card">
+              <div class="notes-card-header"><span class="trend-mark"></span><h3>Resumen del Curso</h3></div>
+              <div class="notes-summary-grid">
+                <div><span>Promedio General</span><strong id="gradebook-promedio">-</strong></div>
+                <div><span>Nota Maxima</span><strong id="gradebook-maxima">-</strong></div>
+                <div><span>Nota Minima</span><strong id="gradebook-minima">-</strong></div>
+                <div><span>Alumnos Aprobados</span><strong id="gradebook-aprobados">0 / 0</strong></div>
+              </div>
+            </article>
+
+            <article class="panel notes-distribution-card">
+              <div class="notes-card-header"><span class="clock-mark"></span><h3>Distribucion de Notas</h3></div>
+              <div class="notes-distribution-body">
+                <div class="notes-donut" id="gradebook-donut"></div>
+                <div class="notes-distribution-legend" id="gradebook-distribution"></div>
+              </div>
+            </article>
+
+            <article class="panel notes-info-card">
+              <div class="notes-card-header"><span class="info-mark"></span><h3>Información</h3></div>
+              <p>Las notas se calculan automáticamente. Guarda los cambios antes de salir o cambiar de filtro.</p>
+            </article>
+          </aside>
+        </section>
+
+        <details class="notes-admin-details">
+          <summary>
+            <span>Administración académica</span>
+            <small>Estudiantes, periodos, evaluaciones e ingreso avanzado de notas</small>
+          </summary>
+
+        <nav class="topbar notes-admin-bar">
+          <h1>Configuracion academica</h1>
+          <button class="admin-chip" type="button" data-logout title="Cerrar sesion">
+            <span class="avatar">A</span>
+            <span>Administracion</span>
+          </button>
+        </nav>
+
+        <section class="welcome-panel">
+          <div>
+            <p>Gestión académica</p>
+            <h2>Registro de notas ponderadas</h2>
+          </div>
+          <div id="api-status" class="api-status">Conectando API</div>
+        </section>
+
+        <p id="notas-message" class="message hidden"></p>
+
+        <section class="stats-grid notes-stats">
+          <article class="stat-card stat-blue">
+            <span class="stat-icon stat-users"></span>
+            <div>
+              <strong id="notas-total-estudiantes">0</strong>
+              <small>Estudiantes</small>
+            </div>
+          </article>
+          <article class="stat-card stat-orange">
+            <span class="stat-icon stat-calendar"></span>
+            <div>
+              <strong id="notas-total-evaluaciones">0</strong>
+              <small>Evaluaciones activas</small>
+            </div>
+          </article>
+          <article class="stat-card stat-green">
+            <span class="stat-icon stat-notes"></span>
+            <div>
+              <strong id="notas-total-notas">0</strong>
+              <small>Notas registradas</small>
+            </div>
+          </article>
+          <article class="stat-card stat-purple">
+            <span class="stat-icon stat-book"></span>
+            <div>
+              <strong id="notas-promedio-general">-</strong>
+              <small>Promedio ponderado</small>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel notes-filters-panel">
+          <div class="module-header compact">
+            <div>
+              <p class="section-kicker">Filtros</p>
+              <h2>Vista academica</h2>
+            </div>
+          </div>
+          <div class="notes-filters">
+            <label>Año<input id="nota-filter-anio" type="number" min="2000" max="2100" value="2026"></label>
+            <label>Curso<select id="nota-filter-curso"><option value="">Todos</option></select></label>
+            <label>Asignatura<select id="nota-filter-asignatura"><option value="">Todas</option></select></label>
+            <label>Profesor<select id="nota-filter-profesor"><option value="">Todos</option></select></label>
+            <label>Periodo<select id="nota-filter-periodo"><option value="">Todos</option></select></label>
+          </div>
+        </section>
+
+        <section class="notes-layout">
+          <article class="panel">
+            <div class="module-header compact">
+              <div>
+                <p class="section-kicker">Estudiantes</p>
+                <h2 id="estudiante-form-title">Nuevo estudiante</h2>
+              </div>
+            </div>
+            <form class="form-grid single" id="estudiante-form">
+              <input id="estudiante-id" type="hidden">
+              <label>RUT<input id="estudiante-rut" maxlength="12" placeholder="12345678-9"></label>
+              <label>Nombre<input id="estudiante-nombre" required></label>
+              <label>Apellido<input id="estudiante-apellido" required></label>
+              <label>Correo<input id="estudiante-correo" type="email"></label>
+              <label>Curso<select id="estudiante-curso" required><option value="">Seleccione</option></select></label>
+              <label>Año<input id="estudiante-anio" type="number" min="2000" max="2100" value="2026" required></label>
+              <div class="form-actions">
+                <button class="button button-light" id="estudiante-cancelar" type="button">Limpiar</button>
+                <button class="button button-blue" type="submit">Guardar estudiante</button>
+              </div>
+              <p id="estudiante-message" class="message hidden"></p>
+            </form>
+          </article>
+
+          <article class="panel">
+            <div class="module-header compact">
+              <div>
+                <p class="section-kicker">Periodos</p>
+                <h2 id="periodo-form-title">Nuevo periodo</h2>
+              </div>
+            </div>
+            <form class="form-grid single" id="periodo-form">
+              <input id="periodo-id" type="hidden">
+              <label>Nombre<input id="periodo-nombre" placeholder="Primer Semestre" required></label>
+              <label>Fecha inicio<input id="periodo-inicio" type="date" required></label>
+              <label>Fecha fin<input id="periodo-fin" type="date" required></label>
+              <label>Año<input id="periodo-anio" type="number" min="2000" max="2100" value="2026" required></label>
+              <div class="form-actions">
+                <button class="button button-light" id="periodo-cancelar" type="button">Limpiar</button>
+                <button class="button button-blue" type="submit">Guardar periodo</button>
+              </div>
+              <p id="periodo-message" class="message hidden"></p>
+            </form>
+          </article>
+
+          <article class="panel">
+            <div class="module-header compact">
+              <div>
+                <p class="section-kicker">Evaluaciones</p>
+                <h2 id="evaluacion-form-title">Nueva evaluación</h2>
+              </div>
+            </div>
+            <form class="form-grid single" id="evaluacion-form">
+              <input id="evaluacion-id" type="hidden">
+              <label>Titulo<input id="evaluacion-titulo" placeholder="Prueba unidad 1" required></label>
+              <label>Curso<select id="evaluacion-curso" required><option value="">Seleccione</option></select></label>
+              <label>Asignatura<select id="evaluacion-asignatura" required><option value="">Seleccione</option></select></label>
+              <label>Profesor<select id="evaluacion-profesor" required><option value="">Seleccione</option></select></label>
+              <label>Periodo<select id="evaluacion-periodo" required><option value="">Seleccione</option></select></label>
+              <label>Fecha<input id="evaluacion-fecha" type="date" required></label>
+              <label>Ponderacion %<input id="evaluacion-ponderacion" type="number" min="0" max="100" step="0.01" value="10" required></label>
+              <label>Estado
+                <select id="evaluacion-estado">
+                  <option value="activa">Activa</option>
+                  <option value="cerrada">Cerrada</option>
+                  <option value="cancelada">Cancelada</option>
+                </select>
+              </label>
+              <label>Descripción<textarea id="evaluacion-descripcion" rows="3"></textarea></label>
+              <div class="form-actions">
+                <button class="button button-light" id="evaluacion-cancelar" type="button">Limpiar</button>
+                <button class="button button-green" type="submit">Guardar evaluación</button>
+              </div>
+              <p id="evaluacion-message" class="message hidden"></p>
+            </form>
+          </article>
+        </section>
+
+        <section class="notes-management-grid">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="section-kicker">Gestion</p>
+                <h3>Estudiantes</h3>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Curso</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="estudiantes-table"></tbody>
+              </table>
+            </div>
+            <p id="estudiantes-empty" class="empty-state hidden">No hay estudiantes para los filtros actuales. Crea un estudiante o cambia el curso seleccionado.</p>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="section-kicker">Gestion</p>
+                <h3>Periodos</h3>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Periodo</th>
+                    <th>Fechas</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="periodos-table"></tbody>
+              </table>
+            </div>
+            <p id="periodos-empty" class="empty-state hidden">No hay periodos registrados para este año. Crea un periodo para asociar evaluaciones.</p>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="section-kicker">Gestion</p>
+                <h3>Evaluaciones</h3>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Evaluacion</th>
+                    <th>Curso</th>
+                    <th>Pond.</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="evaluaciones-table"></tbody>
+              </table>
+            </div>
+            <p id="evaluaciones-empty" class="empty-state hidden">No hay evaluaciones para los filtros actuales. Crea una evaluación para ingresar notas.</p>
+          </article>
+        </section>
+
+        <section class="dashboard-grid notes-dashboard-grid">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="section-kicker">Ingreso</p>
+                <h3>Notas por evaluación</h3>
+              </div>
+              <select id="nota-evaluacion-select"><option value="">Seleccione evaluación</option></select>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Estudiante</th>
+                    <th>Nota</th>
+                    <th>Observacion</th>
+                    <th>Accion</th>
+                  </tr>
+                </thead>
+                <tbody id="nota-ingreso-table"></tbody>
+              </table>
+            </div>
+            <p id="nota-ingreso-empty" class="empty-state">Seleccione una evaluación para ingresar notas.</p>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="section-kicker">Resumen</p>
+                <h3>Promedios ponderados</h3>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Estudiante</th>
+                    <th>Curso</th>
+                    <th>Asignatura</th>
+                    <th>Promedio</th>
+                  </tr>
+                </thead>
+                <tbody id="nota-resumen-table"></tbody>
+              </table>
+            </div>
+            <p id="nota-resumen-empty" class="empty-state hidden">Aún no hay notas para resumir. Registra notas en una evaluación activa.</p>
+          </article>
+        </section>
+        </details>
+      </main>
+    </div>
+    <script src="/static/js/main.js"></script>
+  </body>
+</html>

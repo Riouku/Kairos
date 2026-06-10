@@ -37,14 +37,16 @@ El sistema contara inicialmente con:
 - Gestion de profesores.
 - Gestion de asignaturas.
 - Asignacion de asignaturas a profesores.
+- Gestion basica de cursos.
+- Calendario academico con eventos y horarios semanales.
+- Gestion de estudiantes, evaluaciones y notas ponderadas.
+- Registro diario de asistencia por curso.
 - Visualizacion de listados.
 - Base de datos centralizada.
 - Panel administrativo simple.
 
 No incluira inicialmente:
 
-- Gestion de alumnos.
-- Sistema de notas.
 - Pagos.
 - Autenticacion avanzada.
 - Reportes complejos.
@@ -61,6 +63,10 @@ Podra:
 - Eliminar profesores.
 - Crear asignaturas.
 - Asignar asignaturas.
+- Crear cursos.
+- Administrar eventos y horarios academicos.
+- Registrar estudiantes, evaluaciones y notas.
+- Registrar asistencia diaria y revisar porcentaje mensual.
 - Visualizar informacion.
 
 ---
@@ -115,6 +121,70 @@ Podra:
 
 ---
 
+## 5.4 Modulo de Cursos
+
+### Funcionalidades
+- Registrar cursos.
+- Editar cursos.
+- Eliminar cursos.
+- Listar cursos.
+
+### Datos del Curso
+- Nombre
+- Nivel
+- Letra
+- Jornada
+- Anio academico
+- Estado
+
+---
+
+## 5.5 Modulo de Calendario Academico
+
+### Funcionalidades
+- Registrar eventos academicos.
+- Editar eventos academicos.
+- Eliminar eventos academicos.
+- Registrar horarios semanales.
+- Visualizar eventos y clases por mes.
+- Bloquear choques de horario por profesor o curso.
+
+### Datos Principales
+- Titulo
+- Tipo
+- Fecha inicio
+- Fecha fin
+- Curso
+- Profesor
+- Asignatura
+- Anio academico
+- Estado
+
+---
+
+## 5.6 Modulo de Notas
+
+### Funcionalidades
+- Registrar estudiantes.
+- Registrar periodos academicos.
+- Crear evaluaciones con ponderacion.
+- Registrar y actualizar notas.
+- Calcular promedios ponderados.
+- Visualizar resumen por estudiante, curso, asignatura y periodo.
+
+### Datos Principales
+- Estudiante
+- Curso
+- Periodo academico
+- Evaluacion
+- Asignatura
+- Profesor
+- Ponderacion
+- Nota
+- Observacion
+
+---
+
 # 6. Requerimientos Funcionales
 
 ## RF-01
@@ -146,6 +216,24 @@ El sistema debe mostrar listados de asignaturas.
 
 ## RF-10
 El sistema debe mostrar listados de asignaciones.
+
+## RF-11
+El sistema debe permitir administrar cursos.
+
+## RF-12
+El sistema debe permitir administrar eventos academicos.
+
+## RF-13
+El sistema debe permitir administrar horarios semanales y bloquear choques.
+
+## RF-14
+El sistema debe permitir registrar estudiantes por curso y anio academico.
+
+## RF-15
+El sistema debe permitir registrar evaluaciones con ponderacion.
+
+## RF-16
+El sistema debe permitir registrar notas y calcular promedios ponderados.
 
 ---
 
@@ -232,7 +320,9 @@ intranet-escolar/
 |   |   |-- index.html
 |   |   |-- profesores.html
 |   |   |-- asignaturas.html
-|   |   `-- asignaciones.html
+|   |   |-- asignaciones.html
+|   |   |-- calendario.html
+|   |   `-- notas.html
 |   |
 |   |-- static/
 |   |   |-- css/
@@ -280,6 +370,112 @@ intranet-escolar/
 
 ---
 
+## Tabla: cursos
+
+| Campo | Tipo |
+|---|---|
+| id | SERIAL |
+| nombre | VARCHAR(120) |
+| nivel | VARCHAR(80) |
+| letra | VARCHAR(10) |
+| jornada | VARCHAR(40) |
+| anio_academico | INTEGER |
+| activo | BOOLEAN |
+
+---
+
+## Tabla: eventos_academicos
+
+| Campo | Tipo |
+|---|---|
+| id | SERIAL |
+| titulo | VARCHAR(160) |
+| descripcion | TEXT |
+| fecha_inicio | TIMESTAMP |
+| fecha_fin | TIMESTAMP |
+| tipo | VARCHAR(40) |
+| curso_id | INTEGER |
+| profesor_id | INTEGER |
+| asignatura_id | INTEGER |
+| anio_academico | INTEGER |
+| estado | VARCHAR(30) |
+
+---
+
+## Tabla: horarios_clases
+
+| Campo | Tipo |
+|---|---|
+| id | SERIAL |
+| curso_id | INTEGER |
+| profesor_id | INTEGER |
+| asignatura_id | INTEGER |
+| dia_semana | INTEGER |
+| hora_inicio | TIME |
+| hora_fin | TIME |
+| anio_academico | INTEGER |
+| activo | BOOLEAN |
+
+---
+
+## Tabla: estudiantes
+
+| Campo | Tipo |
+|---|---|
+| id | SERIAL |
+| rut | VARCHAR(12) |
+| nombre | VARCHAR(100) |
+| apellido | VARCHAR(100) |
+| correo | VARCHAR(150) |
+| curso_id | INTEGER |
+| anio_academico | INTEGER |
+| activo | BOOLEAN |
+
+---
+
+## Tabla: periodos_academicos
+
+| Campo | Tipo |
+|---|---|
+| id | SERIAL |
+| nombre | VARCHAR(100) |
+| fecha_inicio | DATE |
+| fecha_fin | DATE |
+| anio_academico | INTEGER |
+| activo | BOOLEAN |
+
+---
+
+## Tabla: evaluaciones
+
+| Campo | Tipo |
+|---|---|
+| id | SERIAL |
+| titulo | VARCHAR(150) |
+| curso_id | INTEGER |
+| asignatura_id | INTEGER |
+| profesor_id | INTEGER |
+| periodo_id | INTEGER |
+| fecha | DATE |
+| ponderacion | NUMERIC |
+| anio_academico | INTEGER |
+| estado | VARCHAR(30) |
+
+---
+
+## Tabla: notas
+
+| Campo | Tipo |
+|---|---|
+| id | SERIAL |
+| estudiante_id | INTEGER |
+| evaluacion_id | INTEGER |
+| nota | NUMERIC |
+| observacion | TEXT |
+| fecha_registro | TIMESTAMP |
+
+---
+
 # 12. Relaciones de Base de Datos
 
 ```text
@@ -294,6 +490,10 @@ asignaciones
 asignaturas
 ```
 
+El calendario se relaciona opcionalmente con profesores, asignaturas y cursos.
+Los horarios semanales se relacionan obligatoriamente con profesor, asignatura y curso.
+Las notas se relacionan con estudiantes y evaluaciones, y las evaluaciones se relacionan con curso, profesor, asignatura y periodo.
+
 ---
 
 # 13. Flujo General del Sistema
@@ -304,7 +504,10 @@ asignaturas
 2. Registra profesores.
 3. Registra asignaturas.
 4. Asigna asignaturas a profesores.
-5. Visualiza informacion almacenada.
+5. Registra cursos.
+6. Administra eventos y horarios.
+7. Registra estudiantes, evaluaciones y notas.
+8. Visualiza informacion almacenada.
 
 ---
 
@@ -316,6 +519,8 @@ asignaturas
 - Profesores
 - Asignaturas
 - Asignaciones
+- Calendario
+- Notas
 
 ## Caracteristicas del Dashboard
 
@@ -341,6 +546,13 @@ Caracteristicas:
 - Compatible con Django.
 - Compatible con Node.js.
 
+### Vercel
+Caracteristicas:
+- Frontend estatico.
+- Funciones Python para FastAPI.
+- Deploy automatico desde GitHub.
+- Requiere PostgreSQL externo.
+
 # 16. Recomendaciones Tecnicas
 
 ## Backend
@@ -364,9 +576,7 @@ PostgreSQL es recomendado por:
 # 17. Posibles Mejoras Futuras
 
 - Sistema de inicio de sesion.
-- Gestion de alumnos.
 - Registro de asistencia.
-- Gestion de notas.
 - Reportes PDF.
 - Exportacion Excel.
 - Panel estadistico.

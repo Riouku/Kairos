@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Intranet Escolar - Profesores</title>
+    <title>Intranet Escolar - Estudiantes</title>
     <link rel="icon" type="image/svg+xml" href="/static/img/kairos-logo.svg">
     <link rel="stylesheet" href="/static/css/styles.css">
   </head>
-  <body data-page="profesores">
+  <body data-page="estudiantes">
     <div class="app-shell">
       <aside class="sidebar" id="sidebar">
         <div class="brand">
@@ -17,8 +17,8 @@
         <nav class="nav-menu">
           <a href="index.html"><span class="nav-icon nav-home"></span> Inicio</a>
           <a href="cursos.html"><span class="nav-icon nav-course"></span> Cursos</a>
-          <a href="estudiantes.html"><span class="nav-icon nav-students"></span> Estudiantes</a>
-          <a class="active" href="profesores.html"><span class="nav-icon nav-users"></span> Profesores</a>
+          <a class="active" href="estudiantes.html"><span class="nav-icon nav-students"></span> Estudiantes</a>
+          <a href="profesores.html"><span class="nav-icon nav-users"></span> Profesores</a>
           <a href="asignaturas.html"><span class="nav-icon nav-book"></span> Asignaturas</a>
           <a href="asignaciones.html"><span class="nav-icon nav-link"></span> Asignaciones</a>
           <a href="calendario.html"><span class="nav-icon nav-calendar"></span> Calendario</a>
@@ -30,32 +30,60 @@
       <main class="main-content">
         <nav class="topbar">
           <button class="icon-button menu-toggle" type="button" aria-label="Abrir menu"><span class="hamburger"><span></span><span></span><span></span></span></button>
-          <h1>Profesores</h1>
+          <h1>Estudiantes</h1>
           <button class="admin-chip" type="button" data-logout title="Cerrar sesion"><span class="avatar">A</span><span>Administracion</span></button>
         </nav>
+
+        <section class="stats-grid student-summary-grid">
+          <article class="stat-card stat-blue">
+            <span class="stat-icon stat-users"></span>
+            <div>
+              <strong id="estudiantes-total">0</strong>
+              <small>Total estudiantes</small>
+            </div>
+          </article>
+          <article class="stat-card stat-green">
+            <span class="stat-icon stat-link"></span>
+            <div>
+              <strong id="estudiantes-activos">0</strong>
+              <small>Estudiantes activos</small>
+            </div>
+          </article>
+          <article class="stat-card stat-purple">
+            <span class="stat-icon stat-book"></span>
+            <div>
+              <strong id="estudiantes-cursos">0</strong>
+              <small>Cursos con estudiantes</small>
+            </div>
+          </article>
+        </section>
 
         <section class="panel">
           <div class="module-header">
             <div>
-              <p class="section-kicker">CRUD academico</p>
-              <h2>Lista de Profesores</h2>
+              <p class="section-kicker">Gestion academica</p>
+              <h2>Lista de Estudiantes</h2>
             </div>
-            <button class="button button-blue" type="button" id="nuevo-profesor">Nuevo Profesor</button>
+            <button class="button button-blue" type="button" id="nuevo-estudiante-admin">Nuevo Estudiante</button>
           </div>
 
-          <div class="filters-row">
+          <div class="filters-row student-filters-row">
             <div class="search-row">
-              <input id="profesor-search" class="search-input" placeholder="Buscar por nombre, RUT, correo o especialidad...">
+              <input id="estudiante-admin-search" class="search-input" placeholder="Buscar por nombre, RUT o correo...">
               <span class="search-icon" aria-hidden="true"></span>
             </div>
-            <select id="profesor-estado-filter" aria-label="Filtrar por estado">
+            <select id="estudiante-admin-curso-filter" aria-label="Filtrar por curso">
+              <option value="">Todos los cursos</option>
+            </select>
+            <select id="estudiante-admin-estado-filter" aria-label="Filtrar por estado">
               <option value="">Todos los estados</option>
               <option value="true">Activos</option>
               <option value="false">Inactivos</option>
             </select>
+            <input id="estudiante-admin-anio-filter" type="number" min="2000" max="2100" value="2026" aria-label="Filtrar por anio academico">
           </div>
 
-          <p id="profesor-message" class="message hidden"></p>
+          <p id="estudiante-admin-message" class="message hidden"></p>
 
           <div class="table-wrap">
             <table>
@@ -64,16 +92,17 @@
                   <th>ID</th>
                   <th>RUT</th>
                   <th>Nombre</th>
-                  <th>Correo Electronico</th>
-                  <th>Especialidad</th>
+                  <th>Correo</th>
+                  <th>Curso</th>
+                  <th>Año</th>
                   <th>Estado</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
-              <tbody id="profesores-table"></tbody>
+              <tbody id="estudiantes-admin-table"></tbody>
             </table>
           </div>
-          <p id="profesores-empty" class="empty-state hidden">No hay profesores para mostrar.</p>
+          <p id="estudiantes-admin-empty" class="empty-state hidden">No hay estudiantes para mostrar.</p>
           <div class="pagination">
             <button class="button button-light" disabled>Anterior</button>
             <span>Pagina 1</span>
@@ -83,22 +112,22 @@
       </main>
     </div>
 
-    <div class="modal hidden" id="profesor-modal" aria-hidden="true">
+    <div class="modal hidden" id="estudiante-admin-modal" aria-hidden="true">
       <div class="modal-card">
         <div class="modal-header">
-          <h2 id="profesor-form-title">Nuevo Profesor</h2>
+          <h2 id="estudiante-admin-form-title">Nuevo Estudiante</h2>
           <button class="icon-button" type="button" data-close-modal>x</button>
         </div>
-        <form id="profesor-form" class="form-grid">
-          <input type="hidden" id="profesor-id">
-          <label>Nombre<input id="profesor-nombre" required maxlength="100"></label>
-          <label>Apellido<input id="profesor-apellido" required maxlength="100"></label>
-          <label>RUT<input id="profesor-rut" maxlength="12" placeholder="12345678-9"></label>
-          <label>Correo Electronico<input id="profesor-correo" type="email" required maxlength="150"></label>
-          <label>Telefono<input id="profesor-telefono" maxlength="20"></label>
-          <label>Especialidad<input id="profesor-especialidad" maxlength="120"></label>
+        <form id="estudiante-admin-form" class="form-grid">
+          <input type="hidden" id="estudiante-admin-id">
+          <label>RUT<input id="estudiante-admin-rut" maxlength="12" placeholder="12345678-9"></label>
+          <label>Nombre<input id="estudiante-admin-nombre" required maxlength="100"></label>
+          <label>Apellido<input id="estudiante-admin-apellido" required maxlength="100"></label>
+          <label>Correo<input id="estudiante-admin-correo" type="email" maxlength="150"></label>
+          <label>Curso<select id="estudiante-admin-curso" required><option value="">Seleccione</option></select></label>
+          <label>Año academico<input id="estudiante-admin-anio" type="number" min="2000" max="2100" value="2026" required></label>
           <label>Estado
-            <select id="profesor-activo">
+            <select id="estudiante-admin-activo">
               <option value="true">Activo</option>
               <option value="false">Inactivo</option>
             </select>
@@ -111,13 +140,13 @@
       </div>
     </div>
 
-    <div class="modal hidden" id="profesor-detail-modal" aria-hidden="true">
+    <div class="modal hidden" id="estudiante-admin-detail-modal" aria-hidden="true">
       <div class="modal-card detail-card">
         <div class="modal-header">
-          <h2>Detalle del Profesor</h2>
+          <h2>Detalle del Estudiante</h2>
           <button class="icon-button" type="button" data-close-modal>x</button>
         </div>
-        <div id="profesor-detail" class="detail-grid"></div>
+        <div id="estudiante-admin-detail" class="detail-grid"></div>
       </div>
     </div>
     <script src="/static/js/main.js"></script>
