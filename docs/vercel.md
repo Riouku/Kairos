@@ -6,6 +6,7 @@ El proyecto queda preparado para Vercel con:
 
 - `api/index.py`: entrypoint serverless para FastAPI.
 - `requirements.txt`: instala dependencias del backend.
+- `.python-version`: fija Python 3.12 para evitar errores con dependencias nativas.
 - `build_vercel.py`: copia `frontend/templates/*.html` y `frontend/static/` a `public/`.
 - `vercel.json`: configura build, salida estatica y rutas hacia FastAPI.
 
