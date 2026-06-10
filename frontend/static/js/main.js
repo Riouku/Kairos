@@ -1,10 +1,5 @@
-const API_ORIGIN =
-  window.KAIROS_API_ORIGIN ||
-  (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://localhost:8000"
-    : window.location.origin);
-const API_BASE_URL = `${API_ORIGIN}/api`;
-const HEALTH_URL = `${API_ORIGIN}/health`;
+const API_BASE_URL = "http://localhost:8000/api";
+const HEALTH_URL = "http://localhost:8000/health";
 
 const state = {
   profesores: [],

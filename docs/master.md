@@ -341,16 +341,6 @@ Caracteristicas:
 - Compatible con Django.
 - Compatible con Node.js.
 
-### Vercel
-Caracteristicas:
-- Hosting gratuito.
-- Integracion con GitHub.
-- Deploy automatico.
-- Facil configuracion.
-- Ideal para frontend.
-
----
-
 # 16. Recomendaciones Tecnicas
 
 ## Backend
