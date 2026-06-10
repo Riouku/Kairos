@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 260" role="img" aria-labelledby="title desc">
+  <title id="title">Colegio Kairos Curico</title>
+  <desc id="desc">Escudo azul de Colegio Kairos con cruz, antorcha y texto institucional.</desc>
+  <path d="M110 10 198 35v82c0 68-36 111-88 133C58 228 22 185 22 117V35Z" fill="#2d8bd0"/>
+  <path d="M110 20 188 42v76c0 60-31 99-78 120-47-21-78-60-78-120V42Z" fill="#2482c8" stroke="#b8dcff" stroke-width="8"/>
+  <path d="M57 55h34v24h22v33H91v82H57v-82H35V79h22Z" fill="#ffe232" stroke="#f4c900" stroke-width="4"/>
+  <path d="M150 133c17-18 8-38-2-50 1 23-23 27-23 51 0 14 11 25 25 25s25-11 25-25c0-11-6-21-15-27 3 13-2 21-10 26Z" fill="#ffd447"/>
+  <path d="M133 156h34v49h-34Z" fill="#8f8170"/>
+  <path d="M139 162h22v37h-22Z" fill="#a99a86"/>
+  <text x="132" y="82" fill="#ffffff" font-family="Georgia, serif" font-size="27" font-weight="700" transform="rotate(-24 132 82)">COLEGIO</text>
+  <text x="120" y="116" fill="#ffffff" font-family="Georgia, serif" font-size="31" font-weight="700" transform="rotate(-24 120 116)">KAIROS</text>
+  <text x="54" y="212" fill="#ffffff" font-family="Georgia, serif" font-size="28" font-weight="700" transform="rotate(21 54 212)">CURICO</text>
+</svg>

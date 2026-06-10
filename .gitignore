@@ -8,3 +8,4 @@ backend/.venv/
 .ruff_cache/
 dist/
 build/
+outputs/

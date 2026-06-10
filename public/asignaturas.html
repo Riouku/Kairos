@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Intranet Escolar - Asignaturas</title>
+    <link rel="icon" type="image/svg+xml" href="/static/img/kairos-logo.svg">
+    <link rel="stylesheet" href="/static/css/styles.css">
+  </head>
+  <body data-page="asignaturas">
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <img class="brand-logo" src="/static/img/kairos-logo.svg" alt="Colegio Kairos">
+          <div><strong>Colegio Kairos</strong><small>Administracion academica</small></div>
+        </div>
+        <nav class="nav-menu">
+          <a href="index.html"><span class="nav-icon nav-home"></span> Inicio</a>
+          <a href="profesores.html"><span class="nav-icon nav-users"></span> Profesores</a>
+          <a class="active" href="asignaturas.html"><span class="nav-icon nav-book"></span> Asignaturas</a>
+          <a href="asignaciones.html"><span class="nav-icon nav-link"></span> Asignaciones</a>
+          <a href="calendario.html"><span class="nav-icon nav-calendar"></span> Calendario</a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <nav class="topbar">
+          <button class="icon-button menu-toggle" type="button" aria-label="Abrir menu"><span class="hamburger"><span></span><span></span><span></span></span></button>
+          <h1>Asignaturas</h1>
+          <button class="admin-chip" type="button" data-logout title="Cerrar sesion"><span class="avatar">A</span><span>Administracion</span></button>
+        </nav>
+
+        <section class="panel">
+          <div class="module-header">
+            <div>
+              <p class="section-kicker">CRUD academico</p>
+              <h2>Lista de Asignaturas</h2>
+            </div>
+            <button class="button button-blue" type="button" id="nueva-asignatura">Nueva Asignatura</button>
+          </div>
+
+          <div class="filters-row">
+            <div class="search-row">
+              <input id="asignatura-search" class="search-input" placeholder="Buscar por nombre, codigo, nivel o descripcion...">
+              <span class="search-icon" aria-hidden="true"></span>
+            </div>
+            <select id="asignatura-estado-filter" aria-label="Filtrar por estado">
+              <option value="">Todos los estados</option>
+              <option value="true">Activas</option>
+              <option value="false">Inactivas</option>
+            </select>
+          </div>
+
+          <p id="asignatura-message" class="message hidden"></p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Asignatura</th>
+                  <th>Codigo</th>
+                  <th>Nivel</th>
+                  <th>Horas</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="asignaturas-table"></tbody>
+            </table>
+          </div>
+          <p id="asignaturas-empty" class="empty-state hidden">No hay asignaturas para mostrar.</p>
+          <div class="pagination">
+            <button class="button button-light" disabled>Anterior</button>
+            <span>Pagina 1</span>
+            <button class="button button-light" disabled>Siguiente</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal hidden" id="asignatura-modal" aria-hidden="true">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 id="asignatura-form-title">Nueva Asignatura</h2>
+          <button class="icon-button" type="button" data-close-modal>x</button>
+        </div>
+        <form id="asignatura-form" class="form-grid">
+          <input type="hidden" id="asignatura-id">
+          <label>Asignatura<input id="asignatura-nombre" required maxlength="100"></label>
+          <label>Codigo<input id="asignatura-codigo" required maxlength="20"></label>
+          <label>Nivel Educativo<input id="asignatura-nivel" maxlength="80" placeholder="Ej: 1 Medio"></label>
+          <label>Horas Semanales<input id="asignatura-horas" type="number" min="1" max="60"></label>
+          <label>Estado
+            <select id="asignatura-activo">
+              <option value="true">Activa</option>
+              <option value="false">Inactiva</option>
+            </select>
+          </label>
+          <label class="span-2">Descripcion<textarea id="asignatura-descripcion" rows="4"></textarea></label>
+          <div class="form-actions span-2">
+            <button class="button button-blue" type="submit">Guardar</button>
+            <button class="button button-light" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="asignatura-detail-modal" aria-hidden="true">
+      <div class="modal-card detail-card">
+        <div class="modal-header">
+          <h2>Detalle de la Asignatura</h2>
+          <button class="icon-button" type="button" data-close-modal>x</button>
+        </div>
+        <div id="asignatura-detail" class="detail-grid"></div>
+      </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+  </body>
+</html>
