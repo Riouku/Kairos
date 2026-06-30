@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
@@ -72,6 +72,12 @@ def health_check():
 
 @app.get("/health/db", tags=["Sistema"])
 def database_health_check():
-    with SessionLocal() as db:
-        db.execute(text("SELECT 1"))
+    try:
+        with SessionLocal() as db:
+            db.execute(text("SELECT 1"))
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="PostgreSQL no esta disponible. Revisa DATABASE_URL y que las migraciones esten aplicadas.",
+        ) from exc
     return {"status": "ok", "database": "connected"}
