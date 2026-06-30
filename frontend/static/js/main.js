@@ -1,6 +1,6 @@
 const isLocalHost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
 const API_BASE_URL = window.KAIROS_API_BASE_URL || (isLocalHost ? "http://localhost:8000/api" : "/api");
-const HEALTH_URL = window.KAIROS_HEALTH_URL || (isLocalHost ? "http://localhost:8000/health" : "/health");
+const HEALTH_URL = window.KAIROS_HEALTH_URL || (isLocalHost ? "http://localhost:8000/health/db" : "/health/db");
 
 const state = {
   cursos: [],
@@ -156,7 +156,7 @@ function renderMonthlyChart(items = []) {
   const max = Math.max(...items.map((item) => item.total), 1);
   chart.innerHTML = items
     .map((item) => {
-      const height = Math.max((item.total / max) * 170, item.total > 0 ? 18 : 8);
+      const height = Math.max((item.total / max) * 104, item.total > 0 ? 18 : 8);
       return `
         <div class="month-bar">
           <div class="month-bar-fill" style="height: ${height}px" title="${item.total} asignaciones"></div>
@@ -604,6 +604,15 @@ async function initEstudiantesAdmin() {
   bindEstudiantesAdmin();
   await loadEstudianteAdminCursos();
   await loadEstudiantesAdmin();
+  const editId = Number(new URLSearchParams(window.location.search).get("edit") || 0);
+  if (editId) {
+    const estudiante = state.estudiantesAdmin.estudiantes.find((item) => item.id === editId) || await api(`/estudiantes/${editId}`).catch(() => null);
+    if (estudiante) {
+      await loadEstudianteAdminCursos(estudiante.curso_id);
+      fillEstudianteAdminForm(estudiante);
+      openModal("#estudiante-admin-modal");
+    }
+  }
 }
 
 function perfilEstudianteId() {
@@ -2426,14 +2435,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (page === "asistencia") await initAsistencia();
   } catch (error) {
     console.error(error);
-    if (page === "calendario") {
-      showMessage("#calendario-message", `No se pudo cargar el calendario: ${error.message}`, true);
-    }
-    if (page === "notas") {
-      showMessage("#notas-message", `No se pudo cargar notas: ${error.message}`, true);
-    }
-    if (page === "asistencia") {
-      showMessage("#asistencia-message", `No se pudo cargar asistencia: ${error.message}`, true);
+    const pageMessages = {
+      cursos: ["#curso-message", "cursos"],
+      estudiantes: ["#estudiante-admin-message", "estudiantes"],
+      profesores: ["#profesor-message", "profesores"],
+      asignaturas: ["#asignatura-message", "asignaturas"],
+      asignaciones: ["#asignacion-message", "asignaciones"],
+      calendario: ["#calendario-message", "calendario"],
+      notas: ["#notas-message", "notas"],
+      asistencia: ["#asistencia-message", "asistencia"],
+      "perfil-estudiante": ["#perfil-message", "perfil"],
+    };
+    const pageMessage = pageMessages[page];
+    if (pageMessage) {
+      showMessage(pageMessage[0], `No se pudo cargar ${pageMessage[1]}: ${error.message}`, true);
     }
   }
 });

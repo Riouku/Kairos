@@ -327,6 +327,19 @@ textarea {
   padding: 24px;
 }
 
+body[data-page="dashboard"] {
+  overflow-x: hidden;
+}
+
+body[data-page="dashboard"] .main-content,
+body[data-page="dashboard"] .dashboard-overview,
+body[data-page="dashboard"] .dashboard-overview > *,
+body[data-page="dashboard"] .dashboard-side-stack,
+body[data-page="dashboard"] .dashboard-side-stack > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
 .topbar {
   align-items: center;
   background: transparent;
@@ -621,7 +634,7 @@ body[data-page="dashboard"] .stats-grid {
   align-items: start;
   display: grid;
   gap: 16px;
-  grid-template-columns: minmax(0, 1.35fr) minmax(330px, 0.65fr);
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
 }
 
 body[data-page="dashboard"] .dashboard-grid > .panel:first-child {
@@ -638,8 +651,11 @@ body[data-page="dashboard"] .dashboard-chart-panel {
 }
 
 .dashboard-side-stack {
+  justify-self: stretch;
   display: grid;
   gap: 16px;
+  max-width: 420px;
+  width: 100%;
 }
 
 body[data-page="dashboard"] .dashboard-side-stack .panel {
@@ -899,12 +915,13 @@ th {
 }
 
 body[data-page="dashboard"] table {
-  min-width: 520px;
+  min-width: 0;
 }
 
 body[data-page="dashboard"] th,
 body[data-page="dashboard"] td {
   padding: 10px 8px;
+  overflow-wrap: anywhere;
 }
 
 .actions {
@@ -4020,10 +4037,24 @@ body[data-page="asistencia"] .panel {
   border: 1px solid rgba(255, 255, 255, 0.82);
 }
 
-@media (max-width: 1120px) {
-  body[data-page="dashboard"] .stats-grid,
+@media (max-width: 1280px) {
   body[data-page="dashboard"] .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="dashboard"] .dashboard-side-stack {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
+  }
+}
+
+@media (max-width: 1120px) {
+  body[data-page="dashboard"] .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body[data-page="dashboard"] .dashboard-grid {
+    grid-template-columns: 1fr;
   }
 
   body[data-page="dashboard"] .dashboard-grid > .panel:first-child {
@@ -4034,6 +4065,7 @@ body[data-page="asistencia"] .panel {
   .dashboard-side-stack {
     grid-column: 1 / -1;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
   }
 
   body[data-page="notas"] .app-shell {
