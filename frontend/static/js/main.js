@@ -90,13 +90,21 @@ async function api(path, options = {}) {
 
   if (response.status === 204) return null;
 
-  const data = await response.json().catch(() => ({}));
+  const rawText = await response.text();
+  let data = {};
+  if (rawText) {
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      data = {};
+    }
+  }
   if (!response.ok) {
     const detail = data.detail;
     const message = Array.isArray(detail)
       ? detail.map((item) => item.msg || item.detail || JSON.stringify(item)).join(" ")
-      : detail || "No se pudo completar la solicitud.";
-    throw new Error(message);
+      : detail || data.error || rawText || "No se pudo completar la solicitud.";
+    throw new Error(`Error ${response.status}: ${message}`);
   }
   return data;
 }
@@ -105,7 +113,8 @@ async function checkApiStatus() {
   const status = qs("#api-status");
   if (!status) return;
   try {
-    await fetch(HEALTH_URL);
+    const response = await fetch(HEALTH_URL);
+    if (!response.ok) throw new Error("API no disponible");
     status.textContent = "API conectada";
     status.classList.add("ok");
     status.classList.remove("error");
