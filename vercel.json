@@ -3,11 +3,6 @@
   "installCommand": "python -m pip install -r requirements.txt",
   "buildCommand": "python scripts/build_vercel.py",
   "outputDirectory": "public",
-  "functions": {
-    "api/index.py": {
-      "excludeFiles": "{.git/**,.venv/**,backend/.venv/**,docs/**,outputs/**,frontend/**,public/**,**/__pycache__/**,**/*.pyc}"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
