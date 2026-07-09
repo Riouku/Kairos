@@ -16,3 +16,6 @@ dependencies = [
 
 [tool.vercel]
 entrypoint = "backend.main:app"
+
+[tool.vercel.scripts]
+build = "python scripts/build_vercel.py"
