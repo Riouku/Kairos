@@ -70,6 +70,11 @@ def health_check():
     return {"status": "ok", "app": settings.app_name}
 
 
+@app.get("/api/health", tags=["Sistema"])
+def api_health_check():
+    return health_check()
+
+
 @app.get("/health/db", tags=["Sistema"])
 def database_health_check():
     try:
@@ -81,3 +86,8 @@ def database_health_check():
             detail="PostgreSQL no esta disponible. Revisa DATABASE_URL y que las migraciones esten aplicadas.",
         ) from exc
     return {"status": "ok", "database": "connected"}
+
+
+@app.get("/api/health/db", tags=["Sistema"])
+def api_database_health_check():
+    return database_health_check()

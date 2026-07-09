@@ -3,24 +3,20 @@
   "outputDirectory": "public",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.py"
-    },
-    {
       "source": "/health",
-      "destination": "/api/index.py"
+      "destination": "/api/health"
     },
     {
       "source": "/health/db",
-      "destination": "/api/index.py"
+      "destination": "/api/health/db"
     },
     {
       "source": "/docs",
-      "destination": "/api/index.py"
+      "destination": "/api/docs"
     },
     {
       "source": "/openapi.json",
-      "destination": "/api/index.py"
+      "destination": "/api/openapi.json"
     }
   ]
 }

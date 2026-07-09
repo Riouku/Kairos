@@ -1,6 +1,6 @@
 const isLocalHost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
 const API_BASE_URL = window.KAIROS_API_BASE_URL || (isLocalHost ? "http://localhost:8000/api" : "/api");
-const HEALTH_URL = window.KAIROS_HEALTH_URL || (isLocalHost ? "http://localhost:8000/health/db" : "/health/db");
+const HEALTH_URL = window.KAIROS_HEALTH_URL || (isLocalHost ? "http://localhost:8000/health/db" : "/api/health/db");
 
 const state = {
   cursos: [],
