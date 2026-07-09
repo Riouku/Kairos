@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -91,3 +92,29 @@ def database_health_check():
 @app.get("/api/health/db", tags=["Sistema"])
 def api_database_health_check():
     return database_health_check()
+
+
+@app.get("/api/diagnostico/db", tags=["Sistema"])
+def database_diagnostics():
+    parsed_url = urlsplit(settings.database_url)
+    diagnostic = {
+        "database_url_configurada": bool(settings.database_url),
+        "driver": parsed_url.scheme,
+        "host": parsed_url.hostname,
+        "puerto": parsed_url.port,
+        "base": parsed_url.path.lstrip("/") or None,
+    }
+    try:
+        with SessionLocal() as db:
+            db.execute(text("SELECT 1"))
+    except Exception as exc:
+        diagnostic.update(
+            {
+                "conexion": "error",
+                "error_tipo": exc.__class__.__name__,
+                "error": str(exc).splitlines()[0][:300],
+            }
+        )
+        return JSONResponse(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, content=diagnostic)
+    diagnostic["conexion"] = "ok"
+    return diagnostic
