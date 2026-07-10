@@ -2221,7 +2221,7 @@ function bindNotas() {
       try {
         await api(`/notas/${deleteButton.dataset.deleteNota}`, { method: "DELETE" });
         showMessage("#notas-message", "Nota eliminada correctamente.");
-        await Promise.all([loadNotasDashboardStats(), loadNotasResumen(), renderIngresoNotas()]);
+        await Promise.all([loadNotasDashboardStats(), loadNotasResumen(), renderIngresoNotas(), renderGradebook()]);
       } catch (error) {
         showMessage("#notas-message", error.message, true);
       }
