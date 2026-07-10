@@ -1,10 +1,13 @@
 import sys
 from pathlib import Path
+from typing import Any, Literal
 from urllib.parse import urlsplit
 
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
+from httpx import ASGITransport, AsyncClient
+from pydantic import BaseModel, Field
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -32,6 +35,12 @@ settings = get_settings()
 
 app = FastAPI(title=settings.app_name, version="1.0.0")
 
+
+class RpcRequest(BaseModel):
+    method: Literal["GET", "POST", "PUT", "PATCH", "DELETE"]
+    path: str = Field(..., min_length=1)
+    body: dict[str, Any] | None = None
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
@@ -51,6 +60,23 @@ app.include_router(periodos_router, prefix="/api")
 app.include_router(evaluaciones_router, prefix="/api")
 app.include_router(notas_router, prefix="/api")
 app.include_router(dashboard_router, prefix="/api")
+
+
+@app.post("/api/rpc", tags=["Sistema"])
+async def api_rpc(payload: RpcRequest):
+    if not payload.path.startswith("/api/") or payload.path.startswith("/api/rpc"):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Ruta RPC no permitida.")
+
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://kairos.internal") as client:
+        response = await client.request(payload.method, payload.path, json=payload.body)
+
+    if response.status_code == status.HTTP_204_NO_CONTENT:
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+    content_type = response.headers.get("content-type", "")
+    if "application/json" in content_type:
+        return JSONResponse(status_code=response.status_code, content=response.json())
+    return Response(status_code=response.status_code, content=response.content, media_type=content_type or None)
 
 
 @app.exception_handler(SQLAlchemyError)
