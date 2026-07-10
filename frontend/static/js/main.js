@@ -85,7 +85,7 @@ function closeModal(modal) {
 async function api(path, options = {}) {
   const method = (options.method || "GET").toUpperCase();
   const pathParts = path.split("?")[0].split("/").filter(Boolean);
-  const shouldUseRpc = !isLocalHost && pathParts.length > 1 && method !== "GET";
+  const shouldUseRpc = !isLocalHost && pathParts.length > 1;
   let requestUrl = `${API_BASE_URL}${path}`;
   let requestOptions = {
     headers: { "Content-Type": "application/json", ...(options.headers || {}) },
