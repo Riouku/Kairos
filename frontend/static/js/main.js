@@ -70,6 +70,36 @@ function clearMessage(selector) {
   if (element) element.classList.add("hidden");
 }
 
+function animateNumberElement(element) {
+  const rawValue = element.textContent.trim();
+  const match = rawValue.match(/^(-?\d+(?:[.,]\d+)?)(.*)$/);
+  if (!match) return;
+
+  const finalValue = Number(match[1].replace(",", "."));
+  if (!Number.isFinite(finalValue)) return;
+
+  const decimals = match[1].includes(".") || match[1].includes(",") ? 1 : 0;
+  const suffix = match[2] || "";
+  const duration = 650;
+  const start = performance.now();
+
+  function step(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = finalValue * eased;
+    element.textContent = `${current.toFixed(decimals)}${suffix}`;
+    if (progress < 1) requestAnimationFrame(step);
+  }
+
+  requestAnimationFrame(step);
+}
+
+function enhanceInterfaceMotion() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  document.body.classList.add("motion-ready");
+  qsa(".stat-card strong, .summary-card strong, .notes-summary-value").forEach(animateNumberElement);
+}
+
 function openModal(selector) {
   const modal = qs(selector);
   if (!modal) return;
@@ -2477,4 +2507,5 @@ document.addEventListener("DOMContentLoaded", async () => {
       showMessage(pageMessage[0], `No se pudo cargar ${pageMessage[1]}: ${error.message}`, true);
     }
   }
+  enhanceInterfaceMotion();
 });

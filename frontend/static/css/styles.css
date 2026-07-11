@@ -4453,3 +4453,166 @@ body[data-page="dashboard"] table {
     border-radius: 8px;
   }
 }
+
+@keyframes kairosFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes kairosBarGrow {
+  from {
+    transform: scaleY(0.08);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes kairosPulseSoft {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(91, 53, 230, 0.18);
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px rgba(91, 53, 230, 0);
+  }
+}
+
+.nav-menu a,
+.button,
+.icon-button,
+.action-button,
+.quick-action,
+.stat-card,
+.panel,
+.welcome-panel,
+.modal-card,
+input,
+select,
+textarea,
+tbody td {
+  transition:
+    background-color 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    color 0.22s ease,
+    opacity 0.22s ease,
+    transform 0.22s ease;
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+  transform: translateX(4px);
+}
+
+.nav-menu a:hover .nav-icon,
+.nav-menu a.active .nav-icon {
+  transform: scale(1.06);
+}
+
+.button:hover,
+.icon-button:hover,
+.action-button:hover {
+  transform: translateY(-1px);
+}
+
+.button:active,
+.icon-button:active,
+.action-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.stat-card:hover,
+.panel:hover,
+.quick-action:hover {
+  transform: translateY(-3px);
+}
+
+.stat-card:hover {
+  box-shadow: 0 28px 80px rgba(34, 21, 111, 0.22);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  transform: translateY(-1px);
+}
+
+.message:not(.hidden) {
+  animation: kairosFadeUp 0.28s ease both;
+}
+
+.modal:not(.hidden) .modal-card {
+  animation: kairosFadeUp 0.26s ease both;
+}
+
+.api-status.ok {
+  animation: kairosPulseSoft 1.9s ease 1;
+}
+
+.month-bar-fill {
+  transform-origin: bottom;
+}
+
+.motion-ready .welcome-panel,
+.motion-ready .stat-card,
+.motion-ready .panel,
+.motion-ready .quick-actions-panel,
+.motion-ready .notes-grade-panel,
+.motion-ready .notes-filters-panel {
+  animation: kairosFadeUp 0.48s ease both;
+}
+
+.motion-ready .stat-card:nth-child(2),
+.motion-ready .panel:nth-child(2),
+.motion-ready .quick-action:nth-child(2) {
+  animation-delay: 0.05s;
+}
+
+.motion-ready .stat-card:nth-child(3),
+.motion-ready .panel:nth-child(3),
+.motion-ready .quick-action:nth-child(3) {
+  animation-delay: 0.1s;
+}
+
+.motion-ready .stat-card:nth-child(4),
+.motion-ready .panel:nth-child(4),
+.motion-ready .quick-action:nth-child(4) {
+  animation-delay: 0.15s;
+}
+
+.motion-ready .month-bar-fill {
+  animation: kairosBarGrow 0.62s cubic-bezier(0.2, 0.85, 0.32, 1.2) both;
+}
+
+.motion-ready .month-bar:nth-child(2) .month-bar-fill { animation-delay: 0.03s; }
+.motion-ready .month-bar:nth-child(3) .month-bar-fill { animation-delay: 0.06s; }
+.motion-ready .month-bar:nth-child(4) .month-bar-fill { animation-delay: 0.09s; }
+.motion-ready .month-bar:nth-child(5) .month-bar-fill { animation-delay: 0.12s; }
+.motion-ready .month-bar:nth-child(6) .month-bar-fill { animation-delay: 0.15s; }
+.motion-ready .month-bar:nth-child(7) .month-bar-fill { animation-delay: 0.18s; }
+.motion-ready .month-bar:nth-child(8) .month-bar-fill { animation-delay: 0.21s; }
+.motion-ready .month-bar:nth-child(9) .month-bar-fill { animation-delay: 0.24s; }
+.motion-ready .month-bar:nth-child(10) .month-bar-fill { animation-delay: 0.27s; }
+.motion-ready .month-bar:nth-child(11) .month-bar-fill { animation-delay: 0.3s; }
+.motion-ready .month-bar:nth-child(12) .month-bar-fill { animation-delay: 0.33s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
