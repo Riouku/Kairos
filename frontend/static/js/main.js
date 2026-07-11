@@ -187,7 +187,9 @@ function renderMonthlyChart(items = []) {
       const height = Math.max((item.total / max) * 104, item.total > 0 ? 18 : 8);
       return `
         <div class="month-bar">
-          <div class="month-bar-fill" style="height: ${height}px" title="${item.total} asignaciones"></div>
+          <div class="month-bar-track">
+            <div class="month-bar-fill" style="height: ${height}px" title="${item.total} asignaciones"></div>
+          </div>
           <strong>${item.total}</strong>
           <span>${escapeHtml(item.mes)}</span>
         </div>

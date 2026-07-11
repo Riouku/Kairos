@@ -697,15 +697,20 @@ body[data-page="dashboard"] .dashboard-side-stack .panel {
 .month-bar {
   align-items: center;
   display: grid;
-  gap: 8px;
-  grid-template-rows: 1fr auto auto;
-  height: 116px;
+  gap: 7px;
+  grid-template-rows: 112px auto auto;
   justify-items: center;
   min-width: 34px;
 }
 
+.month-bar-track {
+  align-items: end;
+  display: flex;
+  height: 112px;
+  width: 100%;
+}
+
 .month-bar-fill {
-  align-self: end;
   background: linear-gradient(180deg, var(--blue), #38bdf8);
   border-radius: 8px 8px 3px 3px;
   min-height: 8px;
