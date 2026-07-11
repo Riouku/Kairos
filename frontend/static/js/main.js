@@ -391,7 +391,6 @@ function bindCursos() {
       await loadCursos();
     } catch (error) {
       showMessage("#curso-message", error.message, true);
-      window.alert(error.message);
     }
   });
 
@@ -575,7 +574,6 @@ function bindEstudiantesAdmin() {
       await refreshEstudiantesAdmin(true);
     } catch (error) {
       showMessage("#estudiante-admin-message", error.message, true);
-      window.alert(error.message);
     }
   });
 
@@ -853,7 +851,6 @@ function bindProfesores() {
       await loadProfesores();
     } catch (error) {
       showMessage("#profesor-message", error.message, true);
-      window.alert(error.message);
     }
   });
 
@@ -995,7 +992,6 @@ function bindAsignaturas() {
       await loadAsignaturas();
     } catch (error) {
       showMessage("#asignatura-message", error.message, true);
-      window.alert(error.message);
     }
   });
 
