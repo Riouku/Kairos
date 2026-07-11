@@ -1,6 +1,8 @@
 const isLocalHost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
 const API_BASE_URL = window.KAIROS_API_BASE_URL || (isLocalHost ? "http://localhost:8000/api" : "/api");
 const HEALTH_URL = window.KAIROS_HEALTH_URL || (isLocalHost ? "http://localhost:8000/health/db" : "/api/health/db");
+const LOGIN_EMAIL = "manuelgarridos2002@kairos.cl";
+const LOGIN_PASSWORD = "Manueleito2800";
 
 const state = {
   cursos: [],
@@ -247,7 +249,15 @@ function renderMonthlyChart(items = []) {
 function bindLogin() {
   qs("#login-form")?.addEventListener("submit", (event) => {
     event.preventDefault();
-    sessionStorage.setItem("kairos-user", qs("#login-email").value.trim() || "admin@kairos.cl");
+    const email = qs("#login-email").value.trim().toLowerCase();
+    const password = qs("#login-password").value;
+    if (email !== LOGIN_EMAIL || password !== LOGIN_PASSWORD) {
+      sessionStorage.removeItem("kairos-user");
+      showMessage("#login-message", "Correo o contraseña incorrecta.", true);
+      return;
+    }
+
+    sessionStorage.setItem("kairos-user", email);
     showMessage("#login-message", "Acceso correcto. Redirigiendo al panel...");
     window.setTimeout(() => {
       window.location.href = "index.html";
