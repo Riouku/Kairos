@@ -193,6 +193,22 @@ function bindShell() {
       if (event.target === modal) closeModal(modal);
     });
   });
+
+  qsa(".button, .icon-button, .action-button").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const ripple = document.createElement("span");
+      const rect = button.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      ripple.className = "button-ripple";
+      ripple.style.width = `${size}px`;
+      ripple.style.height = `${size}px`;
+      ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
+      ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
+      button.appendChild(ripple);
+      window.setTimeout(() => ripple.remove(), 520);
+    });
+  });
 }
 
 function debounce(callback, delay = 250) {
