@@ -43,6 +43,9 @@ def migrate_database() -> None:
     if not host.endswith(".supabase.com"):
         raise RuntimeError("Refusing to run Vercel migrations: the selected database is not Supabase.")
 
+    migration_env = os.environ.copy()
+    migration_env.pop("PYTHONPATH", None)
+    migration_env.pop("PYTHONHOME", None)
     subprocess.run(
         [
             "uv",
@@ -58,8 +61,10 @@ def migrate_database() -> None:
             "head",
         ],
         cwd=BACKEND,
+        env=migration_env,
         check=True,
     )
+
 
 def main() -> None:
     migrate_database()
