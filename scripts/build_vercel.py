@@ -27,13 +27,8 @@ def remove_tree(path: Path) -> None:
 
 
 def migrate_database() -> None:
-    if os.environ.get("VERCEL_ENV") not in {"preview", "production"}:
+    if os.environ.get("VERCEL_ENV") != "production":
         return
-
-    # Preview also has a Neon integration variable. Require the explicit Supabase
-    # override so schema changes cannot be applied to the wrong database.
-    if os.environ["VERCEL_ENV"] == "preview" and not os.environ.get("SUPABASE_DATABASE_URL"):
-        raise RuntimeError("Define SUPABASE_DATABASE_URL for this Preview branch before deploying.")
 
     sys.path.insert(0, str(BACKEND))
     from alembic import command
@@ -50,8 +45,6 @@ def migrate_database() -> None:
         command.upgrade(Config(str(BACKEND / "alembic.ini")), "head")
     finally:
         os.chdir(previous_directory)
-
-
 def main() -> None:
     migrate_database()
     if PUBLIC.exists():
