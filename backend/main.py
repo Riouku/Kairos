@@ -20,6 +20,8 @@ from app.routes import (
     asignaciones_router,
     asignaturas_router,
     asistencias_router,
+    biblioteca_router,
+    retiros_router,
     calendario_router,
     cursos_router,
     dashboard_router,
@@ -53,6 +55,8 @@ app.include_router(profesores_router, prefix="/api")
 app.include_router(asignaturas_router, prefix="/api")
 app.include_router(asignaciones_router, prefix="/api")
 app.include_router(asistencias_router, prefix="/api")
+app.include_router(biblioteca_router, prefix="/api")
+app.include_router(retiros_router, prefix="/api")
 app.include_router(cursos_router, prefix="/api")
 app.include_router(calendario_router, prefix="/api")
 app.include_router(estudiantes_router, prefix="/api")

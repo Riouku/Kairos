@@ -54,6 +54,8 @@ Kairos/
 - Calendario academico con eventos y horarios semanales.
 - Gestion de estudiantes, evaluaciones y notas ponderadas.
 - Registro diario de asistencia por curso.
+- Catálogo de biblioteca, pedidos de libros, préstamos, fechas de devolución y libros pendientes o atrasados.
+- Registro de retiros de estudiantes, persona que retira, autorización y motivo.
 
 ## Backend
 
@@ -119,6 +121,13 @@ Endpoints principales:
 - `POST /api/asistencias/bulk`
 - `PUT|DELETE /api/asistencias/{id}`
 - `GET /api/asistencias/resumen`
+- `GET|POST /api/biblioteca/libros`
+- `GET|POST /api/biblioteca/prestamos`
+- `GET /api/biblioteca/prestamos?pendientes=true`
+- `PATCH /api/biblioteca/prestamos/{id}/devolver`
+- `GET|POST /api/biblioteca/pedidos`
+- `PATCH /api/biblioteca/pedidos/{id}`
+- `GET|POST /api/retiros`
 - `GET /api/calendario`
 - `GET /api/calendario/proximos`
 - `GET|POST /api/calendario/eventos`
@@ -145,6 +154,8 @@ Abrir:
 - `http://localhost:8001/templates/calendario.html`
 - `http://localhost:8001/templates/notas.html`
 - `http://localhost:8001/templates/asistencia.html`
+- `http://localhost:8001/templates/biblioteca.html`
+- `http://localhost:8001/templates/retiros.html`
 
 El frontend consume automaticamente:
 
@@ -186,12 +197,12 @@ El proyecto incluye configuracion para desplegar en Vercel:
 Variables necesarias en Vercel:
 
 ```text
-DATABASE_URL=postgresql://usuario:password@host:5432/base
+DATABASE_URL=postgresql://postgres.PROJECT_REF:DB_PASSWORD@aws-REGION.pooler.supabase.com:6543/postgres?sslmode=require
 FRONTEND_ORIGINS=https://tu-proyecto.vercel.app
 APP_NAME=Intranet Escolar
 ```
 
-Vercel no levanta el PostgreSQL de `docker-compose.yml`, por lo que se debe usar una base PostgreSQL externa.
+Vercel no levanta el PostgreSQL de `docker-compose.yml`, por lo que se debe usar una base PostgreSQL externa. Para Supabase se recomienda usar la URL de Transaction pooler porque Vercel ejecuta el backend como funcion serverless.
 
 Mas detalle: `docs/vercel.md`.
 
@@ -219,4 +230,6 @@ No se versionan entornos, cache, logs, salidas generadas ni variables locales:
 8. Crear un evento o horario en calendario.
 9. Crear estudiante, periodo, evaluacion y nota.
 10. Registrar asistencia diaria para un curso.
-11. Revisar el dashboard.
+11. Agregar un libro, registrar un pedido, aprobarlo, prestar el libro y marcar su devolución en Biblioteca.
+12. Registrar un retiro de estudiante y revisar el historial.
+13. Revisar el calendario mensual y el dashboard.

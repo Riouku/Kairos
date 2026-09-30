@@ -7,6 +7,10 @@ from app.database.session import Base
 from app.models import (  # noqa: F401
     Asignacion,
     Asignatura,
+    Asistencia,
+    Libro,
+    PrestamoLibro,
+    RetiroEstudiante,
     Curso,
     Estudiante,
     Evaluacion,

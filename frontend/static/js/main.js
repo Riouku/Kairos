@@ -24,8 +24,8 @@ const state = {
     resumen: [],
   },
   calendario: {
-    anio: 2026,
-    mes: 6,
+    anio: new Date().getFullYear(),
+    mes: new Date().getMonth() + 1,
     cursos: [],
     items: [],
   },
@@ -319,7 +319,7 @@ async function initDashboard() {
     setText("#promedio-general", "-");
     setText("#porcentaje-asistencia", "-");
     renderMonthlyChart(["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"].map((mes) => ({ mes, total: 0 })));
-    setText("#dashboard-empty", "No se pudo cargar el resumen. Verifica que el backend este ejecutandose.");
+    setText("#dashboard-empty", "No se pudo cargar el resumen. Verifica que el backend esté ejecutándose.");
     qs("#dashboard-empty")?.classList.remove("hidden");
   }
 }
@@ -413,7 +413,7 @@ function showCursoDetail(curso) {
     <div><span>Nivel</span><strong>${escapeHtml(curso.nivel)}</strong></div>
     <div><span>Letra</span><strong>${escapeHtml(curso.letra || "Sin letra")}</strong></div>
     <div><span>Jornada</span><strong>${escapeHtml(curso.jornada)}</strong></div>
-    <div><span>Año academico</span><strong>${curso.anio_academico}</strong></div>
+    <div><span>Año académico</span><strong>${curso.anio_academico}</strong></div>
     <div><span>Estudiantes</span><strong>${cursoStudentCount(curso.id)}</strong></div>
     <div><span>Estado</span><strong>${curso.activo ? "Activo" : "Inactivo"}</strong></div>
   `;
@@ -489,7 +489,7 @@ function bindCursos() {
         showMessage("#curso-message", error.message, true);
       }
     }
-    if (deleteId && window.confirm("Deseas eliminar este curso?")) {
+    if (deleteId && window.confirm("¿Deseas eliminar este curso?")) {
       try {
         await api(`/cursos/${deleteId}`, { method: "DELETE" });
         showMessage("#curso-message", "Curso eliminado correctamente.");
@@ -590,7 +590,7 @@ function showEstudianteAdminDetail(estudiante) {
     <div><span>RUT</span><strong>${escapeHtml(estudiante.rut || "Sin registrar")}</strong></div>
     <div><span>Correo</span><strong>${escapeHtml(estudiante.correo || "Sin registrar")}</strong></div>
     <div><span>Curso</span><strong>${escapeHtml(estudiante.curso_nombre || "Sin curso")}</strong></div>
-    <div><span>Año academico</span><strong>${estudiante.anio_academico}</strong></div>
+    <div><span>Año académico</span><strong>${estudiante.anio_academico}</strong></div>
     <div><span>Estado</span><strong>${estudiante.activo ? "Activo" : "Inactivo"}</strong></div>
   `;
   openModal("#estudiante-admin-detail-modal");
@@ -672,7 +672,7 @@ function bindEstudiantesAdmin() {
         showMessage("#estudiante-admin-message", error.message, true);
       }
     }
-    if (deleteId && window.confirm("Deseas eliminar este estudiante?")) {
+    if (deleteId && window.confirm("¿Deseas eliminar este estudiante?")) {
       try {
         await api(`/estudiantes/${deleteId}`, { method: "DELETE" });
         showMessage("#estudiante-admin-message", "Estudiante eliminado correctamente.");
@@ -772,7 +772,7 @@ function renderPerfilCurso(estudiante, curso) {
     <div><span>Nivel</span><strong>${escapeHtml(curso?.nivel || "-")}</strong></div>
     <div><span>Letra</span><strong>${escapeHtml(curso?.letra || "-")}</strong></div>
     <div><span>Jornada</span><strong>${escapeHtml(curso?.jornada || "-")}</strong></div>
-    <div><span>Año academico</span><strong>${estudiante.anio_academico}</strong></div>
+    <div><span>Año académico</span><strong>${estudiante.anio_academico}</strong></div>
     <div><span>Estado curso</span><strong>${curso ? (curso.activo ? "Activo" : "Inactivo") : "-"}</strong></div>
   `;
 }
@@ -872,7 +872,7 @@ function showProfesorDetail(profesor) {
     <div><span>Nombre completo</span><strong>${escapeHtml(profesor.nombre)} ${escapeHtml(profesor.apellido)}</strong></div>
     <div><span>RUT</span><strong>${escapeHtml(profesor.rut || "Sin registrar")}</strong></div>
     <div><span>Correo</span><strong>${escapeHtml(profesor.correo)}</strong></div>
-    <div><span>Telefono</span><strong>${escapeHtml(profesor.telefono || "Sin registrar")}</strong></div>
+    <div><span>Teléfono</span><strong>${escapeHtml(profesor.telefono || "Sin registrar")}</strong></div>
     <div><span>Especialidad</span><strong>${escapeHtml(profesor.especialidad || "Sin registrar")}</strong></div>
     <div><span>Estado</span><strong>${profesor.activo ? "Activo" : "Inactivo"}</strong></div>
   `;
@@ -943,7 +943,7 @@ function bindProfesores() {
         showMessage("#profesor-message", error.message, true);
       }
     }
-    if (deleteId && window.confirm("Deseas eliminar este profesor?")) {
+    if (deleteId && window.confirm("¿Deseas eliminar este profesor?")) {
       try {
         await api(`/profesores/${deleteId}`, { method: "DELETE" });
         showMessage("#profesor-message", "Profesor eliminado correctamente.");
@@ -1012,11 +1012,11 @@ function fillAsignaturaForm(asignatura) {
 function showAsignaturaDetail(asignatura) {
   qs("#asignatura-detail").innerHTML = `
     <div><span>Asignatura</span><strong>${escapeHtml(asignatura.nombre)}</strong></div>
-    <div><span>Codigo</span><strong>${escapeHtml(asignatura.codigo)}</strong></div>
+    <div><span>Código</span><strong>${escapeHtml(asignatura.codigo)}</strong></div>
     <div><span>Nivel educativo</span><strong>${escapeHtml(asignatura.nivel || "Sin registrar")}</strong></div>
     <div><span>Horas semanales</span><strong>${asignatura.horas_semanales || "Sin registrar"}</strong></div>
     <div><span>Estado</span><strong>${asignatura.activo ? "Activa" : "Inactiva"}</strong></div>
-    <div><span>Descripcion</span><strong>${escapeHtml(asignatura.descripcion || "Sin registrar")}</strong></div>
+    <div><span>Descripción</span><strong>${escapeHtml(asignatura.descripcion || "Sin registrar")}</strong></div>
   `;
   openModal("#asignatura-detail-modal");
 }
@@ -1084,7 +1084,7 @@ function bindAsignaturas() {
         showMessage("#asignatura-message", error.message, true);
       }
     }
-    if (deleteId && window.confirm("Deseas eliminar esta asignatura?")) {
+    if (deleteId && window.confirm("¿Deseas eliminar esta asignatura?")) {
       try {
         await api(`/asignaturas/${deleteId}`, { method: "DELETE" });
         showMessage("#asignatura-message", "Asignatura eliminada correctamente.");
@@ -1124,7 +1124,7 @@ async function loadAsignaciones() {
           <td>${asignacion.asignatura_nombre}</td>
           <td>${formatDate(asignacion.fecha_asignacion)}</td>
           <td class="actions">
-            <button class="button button-red action-button" data-delete-asignacion="${asignacion.id}" title="Eliminar asignacion">Eliminar</button>
+            <button class="button button-red action-button" data-delete-asignacion="${asignacion.id}" title="Eliminar asignación">Eliminar</button>
           </td>
         </tr>
       `
@@ -1146,7 +1146,7 @@ function validateAsignacionSelection() {
   );
   submitButton.disabled = exists;
   if (exists) {
-    showMessage("#asignacion-message", "Esta asignatura ya esta asignada a ese profesor. Elige otra combinacion.", true);
+    showMessage("#asignacion-message", "Esta asignatura ya está asignada a ese profesor. Elige otra combinación.", true);
   } else {
     clearMessage("#asignacion-message");
   }
@@ -1168,7 +1168,7 @@ function bindAsignaciones() {
     };
     try {
       await api("/asignaciones", { method: "POST", body: JSON.stringify(payload) });
-      showMessage("#asignacion-message", "Asignacion registrada correctamente.");
+      showMessage("#asignacion-message", "Asignación registrada correctamente.");
       qs("#asignacion-form").reset();
       await loadAsignaciones();
       validateAsignacionSelection();
@@ -1179,10 +1179,10 @@ function bindAsignaciones() {
 
   qs("#asignaciones-table").addEventListener("click", async (event) => {
     const deleteId = event.target.dataset.deleteAsignacion;
-    if (deleteId && window.confirm("Deseas eliminar esta asignacion?")) {
+    if (deleteId && window.confirm("¿Deseas eliminar esta asignación?")) {
       try {
         await api(`/asignaciones/${deleteId}`, { method: "DELETE" });
-        showMessage("#asignacion-message", "Asignacion eliminada correctamente.");
+        showMessage("#asignacion-message", "Asignación eliminada correctamente.");
         await loadAsignaciones();
       } catch (error) {
         showMessage("#asignacion-message", error.message, true);
@@ -1196,10 +1196,10 @@ const WEEKDAYS = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"];
 const EVENT_LABELS = {
   clase: "Clase",
   evaluacion: "Evaluación",
-  reunion: "Reunion",
+  reunion: "Reunión",
   feriado: "Feriado",
   actividad: "Actividad",
-  periodo: "Periodo",
+  periodo: "Período",
 };
 const EVENT_CLASS = {
   clase: "class",
@@ -1387,7 +1387,7 @@ function renderCalendarAgenda(items) {
   agenda.innerHTML = items.length
     ? items
         .map((item) => {
-          const deleteAttr = item.source === "evento" ? `data-delete-evento="${item.source_id}"` : `data-delete-horario="${item.source_id}"`;
+          const deleteAttr = item.source === "evento" ? `data-delete-evento="${item.source_id}"` : item.source === "horario" ? `data-delete-horario="${item.source_id}"` : "";
           const meta = calendarItemMeta(item) || EVENT_LABELS[item.tipo] || "Evento";
           return `
             <article>
@@ -1396,7 +1396,7 @@ function renderCalendarAgenda(items) {
                 <strong>${escapeHtml(item.titulo)}</strong>
                 <span>${escapeHtml(formatTime(item.fecha_inicio))}${item.fecha_fin ? ` - ${escapeHtml(formatTime(item.fecha_fin))}` : ""} - ${escapeHtml(meta)}</span>
               </div>
-              <button class="button button-red action-button" type="button" ${deleteAttr}>Eliminar</button>
+              ${deleteAttr ? `<button class="button button-red action-button" type="button" ${deleteAttr}>Eliminar</button>` : ""}
             </article>
           `;
         })
@@ -1446,8 +1446,8 @@ function bindCalendario() {
   });
 
   qs("#calendar-today")?.addEventListener("click", async () => {
-    state.calendario.anio = 2026;
-    state.calendario.mes = 6;
+    state.calendario.anio = new Date().getFullYear();
+    state.calendario.mes = new Date().getMonth() + 1;
     await refreshCalendar(true);
   });
 
@@ -1550,7 +1550,7 @@ function bindCalendario() {
     if (!button) return;
     const eventoId = button.dataset.deleteEvento;
     const horarioId = button.dataset.deleteHorario;
-    if (eventoId && window.confirm("Deseas eliminar este evento?")) {
+    if (eventoId && window.confirm("¿Deseas eliminar este evento?")) {
       try {
         await api(`/calendario/eventos/${eventoId}`, { method: "DELETE" });
         showMessage("#calendario-message", "Evento eliminado correctamente.");
@@ -1559,7 +1559,7 @@ function bindCalendario() {
         showMessage("#calendario-message", error.message, true);
       }
     }
-    if (horarioId && window.confirm("Deseas eliminar este horario semanal?")) {
+    if (horarioId && window.confirm("¿Deseas eliminar este horario semanal?")) {
       try {
         await api(`/calendario/horarios/${horarioId}`, { method: "DELETE" });
         showMessage("#calendario-message", "Horario eliminado correctamente.");
@@ -2032,7 +2032,7 @@ function resetPeriodoForm() {
   qs("#periodo-id").value = "";
   qs("#periodo-form")?.reset();
   qs("#periodo-anio").value = notasAnio();
-  setText("#periodo-form-title", "Nuevo periodo");
+  setText("#periodo-form-title", "Nuevo período");
 }
 
 function fillPeriodoForm(periodo) {
@@ -2041,7 +2041,7 @@ function fillPeriodoForm(periodo) {
   qs("#periodo-inicio").value = periodo.fecha_inicio;
   qs("#periodo-fin").value = periodo.fecha_fin;
   qs("#periodo-anio").value = periodo.anio_academico;
-  setText("#periodo-form-title", "Editar periodo");
+  setText("#periodo-form-title", "Editar período");
   qs("#periodo-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -2109,7 +2109,7 @@ function bindNotas() {
     };
     try {
       await api(id ? `/periodos/${id}` : "/periodos", { method: id ? "PUT" : "POST", body: JSON.stringify(payload) });
-      showMessage("#periodo-message", id ? "Periodo actualizado correctamente." : "Periodo guardado correctamente.");
+      showMessage("#periodo-message", id ? "Período actualizado correctamente." : "Período guardado correctamente.");
       resetPeriodoForm();
       await refreshNotas(true);
     } catch (error) {
@@ -2194,7 +2194,7 @@ function bindNotas() {
         showMessage("#notas-message", error.message, true);
       }
     }
-    if (deleteId && window.confirm("Deseas eliminar este estudiante?")) {
+    if (deleteId && window.confirm("¿Deseas eliminar este estudiante?")) {
       try {
         await api(`/estudiantes/${deleteId}`, { method: "DELETE" });
         showMessage("#notas-message", "Estudiante eliminado correctamente.");
@@ -2220,16 +2220,16 @@ function bindNotas() {
       const periodo = state.notas.periodos.find((item) => item.id === Number(toggleId));
       try {
         await api(`/periodos/${toggleId}`, { method: "PUT", body: JSON.stringify({ activo: !periodo.activo }) });
-        showMessage("#notas-message", "Estado del periodo actualizado.");
+        showMessage("#notas-message", "Estado del período actualizado.");
         await refreshNotas(true);
       } catch (error) {
         showMessage("#notas-message", error.message, true);
       }
     }
-    if (deleteId && window.confirm("Deseas eliminar este periodo?")) {
+    if (deleteId && window.confirm("¿Deseas eliminar este período?")) {
       try {
         await api(`/periodos/${deleteId}`, { method: "DELETE" });
-        showMessage("#notas-message", "Periodo eliminado correctamente.");
+        showMessage("#notas-message", "Período eliminado correctamente.");
         resetPeriodoForm();
         await refreshNotas(true);
       } catch (error) {
@@ -2257,7 +2257,7 @@ function bindNotas() {
         showMessage("#notas-message", error.message, true);
       }
     }
-    if (deleteId && window.confirm("Deseas eliminar esta evaluación?")) {
+    if (deleteId && window.confirm("¿Deseas eliminar esta evaluación?")) {
       try {
         await api(`/evaluaciones/${deleteId}`, { method: "DELETE" });
         showMessage("#notas-message", "Evaluación eliminada correctamente.");
@@ -2271,7 +2271,7 @@ function bindNotas() {
 
   qs("#nota-ingreso-table")?.addEventListener("click", async (event) => {
     const deleteButton = event.target.closest("button[data-delete-nota]");
-    if (deleteButton && window.confirm("Deseas eliminar esta nota?")) {
+    if (deleteButton && window.confirm("¿Deseas eliminar esta nota?")) {
       try {
         await api(`/notas/${deleteButton.dataset.deleteNota}`, { method: "DELETE" });
         showMessage("#notas-message", "Nota eliminada correctamente.");

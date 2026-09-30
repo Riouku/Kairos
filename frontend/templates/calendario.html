@@ -12,7 +12,7 @@
       <aside class="sidebar" id="sidebar">
         <div class="brand">
           <img class="brand-logo" src="/static/img/kairos-logo.svg" alt="Colegio Kairos">
-          <div><strong>Colegio Kairos</strong><small>Administracion academica</small></div>
+          <div><strong>Colegio Kairos</strong><small>Administración académica</small></div>
         </div>
         <nav class="nav-menu">
           <a href="index.html"><span class="nav-icon nav-home"></span> Inicio</a>
@@ -24,6 +24,8 @@
           <a class="active" href="calendario.html"><span class="nav-icon nav-calendar"></span> Calendario</a>
           <a href="notas.html"><span class="nav-icon nav-notes"></span> Notas</a>
           <a href="asistencia.html"><span class="nav-icon nav-attendance"></span> Asistencia</a>
+          <a href="biblioteca.html">Biblioteca</a>
+          <a href="retiros.html">Retiros</a>
         </nav>
       </aside>
 
@@ -31,12 +33,12 @@
         <nav class="topbar ordered-calendar-topbar">
           <button class="icon-button menu-toggle" type="button" aria-label="Abrir menu"><span class="hamburger"><span></span><span></span><span></span></span></button>
           <h1>Calendario</h1>
-          <button class="admin-chip" type="button" data-logout title="Cerrar sesion"><span class="avatar">A</span><span>Administracion</span></button>
+          <button class="admin-chip" type="button" data-logout title="Cerrar sesión"><span class="avatar">A</span><span>Administración</span></button>
         </nav>
 
         <section class="ordered-calendar-hero">
           <div>
-            <p class="section-kicker">Calendario academico</p>
+            <p class="section-kicker">Calendario académico</p>
             <h2 id="calendar-title">Junio 2026</h2>
             <span id="calendar-subtitle">Año académico 2026</span>
           </div>
@@ -98,10 +100,10 @@
                 <option value="">Todos</option>
                 <option value="clase">Clase</option>
                 <option value="evaluacion">Evaluación</option>
-                <option value="reunion">Reunion</option>
+                <option value="reunion">Reunión</option>
                 <option value="feriado">Feriado</option>
                 <option value="actividad">Actividad</option>
-                <option value="periodo">Periodo</option>
+                <option value="periodo">Período</option>
               </select>
             </label>
             <label>Curso
@@ -145,8 +147,8 @@
 
             <div class="ordered-legend">
               <span><i class="class"></i> Clase</span>
-              <span><i class="test"></i> Evaluacion</span>
-              <span><i class="meeting"></i> Reunion</span>
+              <span><i class="test"></i> Evaluación</span>
+              <span><i class="meeting"></i> Reunión</span>
               <span><i class="activity"></i> Actividad</span>
               <span><i class="period"></i> Periodo</span>
               <span><i class="holiday"></i> Feriado</span>
@@ -168,7 +170,7 @@
               <label>Letra<input id="curso-letra" placeholder="A" maxlength="5"></label>
               <label>Jornada
                 <select id="curso-jornada" required>
-                  <option value="Manana">Manana</option>
+                  <option value="Manana">Mañana</option>
                   <option value="Tarde">Tarde</option>
                   <option value="Completa">Completa</option>
                 </select>
@@ -187,14 +189,14 @@
               </div>
             </div>
             <form class="form-grid single" id="evento-form">
-              <label>Titulo<input id="evento-titulo" placeholder="Evaluacion parcial" required></label>
+              <label>Título<input id="evento-titulo" placeholder="Evaluación parcial" required></label>
               <label>Tipo
                 <select id="evento-tipo" required>
                   <option value="evaluacion">Evaluación</option>
-                  <option value="reunion">Reunion</option>
+                  <option value="reunion">Reunión</option>
                   <option value="feriado">Feriado</option>
                   <option value="actividad">Actividad</option>
-                  <option value="periodo">Periodo</option>
+                  <option value="periodo">Período</option>
                   <option value="clase">Clase puntual</option>
                 </select>
               </label>
@@ -203,7 +205,7 @@
               <label>Curso<select id="evento-curso"><option value="">Sin curso</option></select></label>
               <label>Profesor<select id="evento-profesor"><option value="">Sin profesor</option></select></label>
               <label>Asignatura<select id="evento-asignatura"><option value="">Sin asignatura</option></select></label>
-              <label>Descripcion<textarea id="evento-descripcion" rows="3" placeholder="Detalle opcional"></textarea></label>
+              <label>Descripción<textarea id="evento-descripcion" rows="3" placeholder="Detalle opcional"></textarea></label>
               <button class="button button-blue" type="submit">Guardar Evento</button>
               <p id="evento-message" class="message hidden"></p>
             </form>
