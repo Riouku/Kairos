@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 import shutil
 import stat
-import sys
+import subprocess
 from urllib.parse import urlsplit
 
 
@@ -26,25 +26,41 @@ def remove_tree(path: Path) -> None:
     shutil.rmtree(path, onerror=handle_remove_error)
 
 
+def selected_database_url() -> str:
+    for name in ("SUPABASE_DATABASE_URL", "DATABASE_URL", "POSTGRES_URL"):
+        value = os.environ.get(name)
+        if value:
+            return value
+    raise RuntimeError("Set a PostgreSQL connection URL before running production migrations.")
+
+
 def migrate_database() -> None:
     if os.environ.get("VERCEL_ENV") != "production":
         return
 
-    sys.path.insert(0, str(BACKEND))
-    from alembic import command
-    from alembic.config import Config
-    from config import get_settings
-
-    host = urlsplit(get_settings().database_url).hostname or ""
+    database_url = selected_database_url()
+    host = urlsplit(database_url).hostname or ""
     if not host.endswith(".supabase.com"):
         raise RuntimeError("Refusing to run Vercel migrations: the selected database is not Supabase.")
 
-    previous_directory = Path.cwd()
-    try:
-        os.chdir(BACKEND)
-        command.upgrade(Config(str(BACKEND / "alembic.ini")), "head")
-    finally:
-        os.chdir(previous_directory)
+    subprocess.run(
+        [
+            "uv",
+            "run",
+            "--project",
+            str(ROOT),
+            "--python",
+            "3.12",
+            "alembic",
+            "-c",
+            "alembic.ini",
+            "upgrade",
+            "head",
+        ],
+        cwd=BACKEND,
+        check=True,
+    )
+
 def main() -> None:
     migrate_database()
     if PUBLIC.exists():
