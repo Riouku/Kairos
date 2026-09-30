@@ -12,7 +12,7 @@
       <aside class="sidebar" id="sidebar">
         <div class="brand">
           <img class="brand-logo" src="/static/img/kairos-logo.svg" alt="Colegio Kairos">
-          <div><strong>Colegio Kairos</strong><small>Administracion academica</small></div>
+          <div><strong>Colegio Kairos</strong><small>Administración académica</small></div>
         </div>
         <nav class="nav-menu">
           <a href="index.html"><span class="nav-icon nav-home"></span> Inicio</a>
@@ -24,6 +24,8 @@
           <a href="calendario.html"><span class="nav-icon nav-calendar"></span> Calendario</a>
           <a href="notas.html"><span class="nav-icon nav-notes"></span> Notas</a>
           <a href="asistencia.html"><span class="nav-icon nav-attendance"></span> Asistencia</a>
+          <a href="biblioteca.html">Biblioteca</a>
+          <a href="retiros.html">Retiros</a>
         </nav>
       </aside>
 
@@ -31,13 +33,13 @@
         <nav class="topbar">
           <button class="icon-button menu-toggle" type="button" aria-label="Abrir menu"><span class="hamburger"><span></span><span></span><span></span></span></button>
           <h1>Profesores</h1>
-          <button class="admin-chip" type="button" data-logout title="Cerrar sesion"><span class="avatar">A</span><span>Administracion</span></button>
+          <button class="admin-chip" type="button" data-logout title="Cerrar sesión"><span class="avatar">A</span><span>Administración</span></button>
         </nav>
 
         <section class="panel">
           <div class="module-header">
             <div>
-              <p class="section-kicker">CRUD academico</p>
+              <p class="section-kicker">CRUD académico</p>
               <h2>Lista de Profesores</h2>
             </div>
             <button class="button button-blue" type="button" id="nuevo-profesor">Nuevo Profesor</button>
@@ -95,7 +97,7 @@
           <label>Apellido<input id="profesor-apellido" required maxlength="100"></label>
           <label>RUT<input id="profesor-rut" maxlength="12" placeholder="12345678-9"></label>
           <label>Correo Electronico<input id="profesor-correo" type="email" required maxlength="150"></label>
-          <label>Telefono<input id="profesor-telefono" maxlength="20"></label>
+          <label>Teléfono<input id="profesor-telefono" maxlength="20"></label>
           <label>Especialidad<input id="profesor-especialidad" maxlength="120"></label>
           <label>Estado
             <select id="profesor-activo">

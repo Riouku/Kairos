@@ -125,7 +125,7 @@ class HorarioClaseRead(HorarioClaseBase):
 
 class CalendarioItem(BaseModel):
     id: str
-    source: Literal["evento", "horario"]
+    source: Literal["evento", "horario", "evaluacion"]
     source_id: int
     titulo: str
     tipo: EventoTipo

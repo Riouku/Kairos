@@ -12,7 +12,7 @@
       <aside class="sidebar" id="sidebar">
         <div class="brand">
           <img class="brand-logo" src="/static/img/kairos-logo.svg" alt="Colegio Kairos">
-          <div><strong>Colegio Kairos</strong><small>Administracion academica</small></div>
+          <div><strong>Colegio Kairos</strong><small>Administración académica</small></div>
         </div>
         <nav class="nav-menu">
           <a href="index.html"><span class="nav-icon nav-home"></span> Inicio</a>
@@ -24,6 +24,8 @@
           <a href="calendario.html"><span class="nav-icon nav-calendar"></span> Calendario</a>
           <a href="notas.html"><span class="nav-icon nav-notes"></span> Notas</a>
           <a href="asistencia.html"><span class="nav-icon nav-attendance"></span> Asistencia</a>
+          <a href="biblioteca.html">Biblioteca</a>
+          <a href="retiros.html">Retiros</a>
         </nav>
       </aside>
 
@@ -31,7 +33,7 @@
         <nav class="topbar">
           <button class="icon-button menu-toggle" type="button" aria-label="Abrir menu"><span class="hamburger"><span></span><span></span><span></span></span></button>
           <h1>Asignaciones</h1>
-          <button class="admin-chip" type="button" data-logout title="Cerrar sesion"><span class="avatar">A</span><span>Administracion</span></button>
+          <button class="admin-chip" type="button" data-logout title="Cerrar sesión"><span class="avatar">A</span><span>Administración</span></button>
         </nav>
 
         <section class="assignment-layout">
@@ -39,14 +41,14 @@
             <div class="module-header compact">
               <div>
                 <p class="section-kicker">Nueva relacion</p>
-                <h2>Guardar Asignacion</h2>
+                <h2>Guardar Asignación</h2>
               </div>
             </div>
             <form id="asignacion-form" class="form-grid single">
               <label>Profesor<select id="asignacion-profesor" required></select></label>
               <label>Asignatura<select id="asignacion-asignatura" required></select></label>
               <label>Fecha<input id="asignacion-fecha" type="date"></label>
-              <button class="button button-green" type="submit">Guardar Asignacion</button>
+              <button class="button button-green" type="submit">Guardar Asignación</button>
             </form>
             <p id="asignacion-message" class="message hidden"></p>
           </article>

@@ -12,7 +12,7 @@
       <aside class="sidebar" id="sidebar">
         <div class="brand">
           <img class="brand-logo" src="/static/img/kairos-logo.svg" alt="Colegio Kairos">
-          <div><strong>Colegio Kairos</strong><small>Administracion academica</small></div>
+          <div><strong>Colegio Kairos</strong><small>Administración académica</small></div>
         </div>
         <nav class="nav-menu">
           <a href="index.html"><span class="nav-icon nav-home"></span> Inicio</a>
@@ -24,6 +24,8 @@
           <a href="calendario.html"><span class="nav-icon nav-calendar"></span> Calendario</a>
           <a href="notas.html"><span class="nav-icon nav-notes"></span> Notas</a>
           <a href="asistencia.html"><span class="nav-icon nav-attendance"></span> Asistencia</a>
+          <a href="biblioteca.html">Biblioteca</a>
+          <a href="retiros.html">Retiros</a>
         </nav>
       </aside>
 
@@ -31,7 +33,7 @@
         <nav class="topbar">
           <button class="icon-button menu-toggle" type="button" aria-label="Abrir menu"><span class="hamburger"><span></span><span></span><span></span></span></button>
           <h1>Estudiantes</h1>
-          <button class="admin-chip" type="button" data-logout title="Cerrar sesion"><span class="avatar">A</span><span>Administracion</span></button>
+          <button class="admin-chip" type="button" data-logout title="Cerrar sesión"><span class="avatar">A</span><span>Administración</span></button>
         </nav>
 
         <section class="stats-grid student-summary-grid">
@@ -61,7 +63,7 @@
         <section class="panel">
           <div class="module-header">
             <div>
-              <p class="section-kicker">Gestion academica</p>
+              <p class="section-kicker">Gestión académica</p>
               <h2>Lista de Estudiantes</h2>
             </div>
             <button class="button button-blue" type="button" id="nuevo-estudiante-admin">Nuevo Estudiante</button>
@@ -80,7 +82,7 @@
               <option value="true">Activos</option>
               <option value="false">Inactivos</option>
             </select>
-            <input id="estudiante-admin-anio-filter" type="number" min="2000" max="2100" value="2026" aria-label="Filtrar por anio academico">
+            <input id="estudiante-admin-anio-filter" type="number" min="2000" max="2100" value="2026" aria-label="Filtrar por año académico">
           </div>
 
           <p id="estudiante-admin-message" class="message hidden"></p>
@@ -125,7 +127,7 @@
           <label>Apellido<input id="estudiante-admin-apellido" required maxlength="100"></label>
           <label>Correo<input id="estudiante-admin-correo" type="email" maxlength="150"></label>
           <label>Curso<select id="estudiante-admin-curso" required><option value="">Seleccione</option></select></label>
-          <label>Año academico<input id="estudiante-admin-anio" type="number" min="2000" max="2100" value="2026" required></label>
+          <label>Año académico<input id="estudiante-admin-anio" type="number" min="2000" max="2100" value="2026" required></label>
           <label>Estado
             <select id="estudiante-admin-activo">
               <option value="true">Activo</option>

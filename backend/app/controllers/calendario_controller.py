@@ -497,6 +497,28 @@ def get_calendario_mes(
             eventos_query = eventos_query.filter(EventoAcademico.asignatura_id == asignatura_id)
         items.extend(_item_from_evento(evento) for evento in eventos_query.all())
 
+    if tipo in (None, "evaluacion"):
+        evaluaciones = db.query(Evaluacion).options(
+            joinedload(Evaluacion.curso), joinedload(Evaluacion.profesor), joinedload(Evaluacion.asignatura)
+        ).filter(
+            Evaluacion.anio_academico == anio,
+            Evaluacion.fecha.between(date(anio, mes, 1), date(anio, mes, last_day)),
+            Evaluacion.estado == "activa",
+        )
+        if curso_id:
+            evaluaciones = evaluaciones.filter(Evaluacion.curso_id == curso_id)
+        if profesor_id:
+            evaluaciones = evaluaciones.filter(Evaluacion.profesor_id == profesor_id)
+        if asignatura_id:
+            evaluaciones = evaluaciones.filter(Evaluacion.asignatura_id == asignatura_id)
+        items.extend(CalendarioItem(
+            id=f"evaluacion-{e.id}", source="evaluacion", source_id=e.id, titulo=e.titulo,
+            tipo="evaluacion", fecha_inicio=datetime.combine(e.fecha, time.min), curso_id=e.curso_id,
+            curso_nombre=e.curso.nombre if e.curso else None, profesor_id=e.profesor_id,
+            profesor_nombre=_nombre_profesor(e.profesor), asignatura_id=e.asignatura_id,
+            asignatura_nombre=e.asignatura.nombre if e.asignatura else None,
+        ) for e in evaluaciones.all())
+
     if not tipo or tipo == "clase":
         horarios_query = db.query(HorarioClase).options(
             joinedload(HorarioClase.curso),
