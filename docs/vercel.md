@@ -7,12 +7,12 @@ Este proyecto queda preparado para desplegarse en Vercel como frontend estatico 
 Configura estas variables en Vercel, dentro de Project Settings > Environment Variables:
 
 ```text
-DATABASE_URL=postgresql://usuario:password@host:puerto/base?sslmode=require
+SUPABASE_DATABASE_URL=postgresql://usuario:password@host:puerto/base?sslmode=require
 FRONTEND_ORIGINS=https://tu-proyecto.vercel.app
 APP_NAME=Intranet Escolar
 ```
 
-La base de datos debe ser PostgreSQL externa, por ejemplo Supabase, Neon, Railway o Vercel Postgres. Vercel no levanta el servicio `db` de `docker-compose.yml`.
+Cuando `SUPABASE_DATABASE_URL` está definida, la aplicación la prefiere a `DATABASE_URL`. Esto permite usar Supabase aunque una integración como Neon cree y administre `DATABASE_URL`. Si no se define, se usa `DATABASE_URL` y luego `POSTGRES_URL`. Vercel no levanta el servicio `db` de `docker-compose.yml`.
 
 ## Supabase
 
@@ -35,9 +35,9 @@ En Supabase Dashboard:
 2. Abre Connect.
 3. Copia la URI de Transaction pooler.
 4. Agrega `?sslmode=require` si la URL no lo incluye.
-5. Pegala en Vercel como `DATABASE_URL`, para Production, Preview y Development si corresponde.
+5. Pegala en Vercel como `SUPABASE_DATABASE_URL`, con tipo Secret y alcance Preview para la rama que quieras probar; agrega Production si también la desplegarás en producción.
 
-Para migraciones con Alembic, puedes usar la conexion directa de Supabase desde tu equipo si tu red soporta IPv6, o el pooler si no tienes acceso directo. Lo importante es que la variable `DATABASE_URL` apunte a la misma base antes de ejecutar `alembic upgrade head`.
+Para migraciones con Alembic, puedes usar la conexion directa de Supabase desde tu equipo si tu red soporta IPv6, o el pooler si no tienes acceso directo. Lo importante es que la variable `SUPABASE_DATABASE_URL` apunte a la misma base antes de ejecutar `alembic upgrade head`.
 
 ## Rutas esperadas
 
@@ -72,6 +72,6 @@ Antes de usar la app en produccion, ejecuta las migraciones contra la base de da
 
 ```powershell
 cd backend
-$env:DATABASE_URL="postgresql://postgres.PROJECT_REF:DB_PASSWORD@aws-REGION.pooler.supabase.com:6543/postgres?sslmode=require"
+$env:SUPABASE_DATABASE_URL="postgresql://postgres.PROJECT_REF:DB_PASSWORD@aws-REGION.pooler.supabase.com:6543/postgres?sslmode=require"
 alembic upgrade head
 ```

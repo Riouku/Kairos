@@ -12,7 +12,11 @@ class Settings(BaseSettings):
     app_name: str = "Intranet Escolar"
     database_url: str = Field(
         default="postgresql://postgres:postgres@localhost:5432/intranet_escolar",
-        validation_alias=AliasChoices("DATABASE_URL", "POSTGRES_URL"),
+        validation_alias=AliasChoices(
+            "SUPABASE_DATABASE_URL",
+            "DATABASE_URL",
+            "POSTGRES_URL",
+        ),
     )
     frontend_origins: str = (
         "http://localhost:5500,http://127.0.0.1:5500,"
