@@ -37,7 +37,7 @@ En Supabase Dashboard:
 4. Agrega `?sslmode=require` si la URL no lo incluye.
 5. Pegala en Vercel como `SUPABASE_DATABASE_URL`, con tipo Secret y alcance Preview para la rama que quieras probar; agrega Production si también la desplegarás en producción.
 
-Para migraciones con Alembic, puedes usar la conexion directa de Supabase desde tu equipo si tu red soporta IPv6, o el pooler si no tienes acceso directo. Lo importante es que la variable `SUPABASE_DATABASE_URL` apunte a la misma base antes de ejecutar `alembic upgrade head`.
+Para migraciones con Alembic, puedes usar la conexion directa de Supabase desde tu equipo si tu red soporta IPv6, o el pooler si no tienes acceso directo. El build de Preview y Production ejecuta `alembic upgrade head` antes de publicar, usando `SUPABASE_DATABASE_URL` cuando está definida. El build de Preview se detiene si falta esa variable o no apunta a Supabase, para evitar migrar por accidente la base de Neon.
 
 ## Rutas esperadas
 
