@@ -13,6 +13,12 @@ class LibroIn(BaseModel):
     autor: str = Field(min_length=1, max_length=150)
     isbn: str | None = None
     ejemplares: int = Field(default=1, ge=1)
+    editorial: str | None = Field(default=None, max_length=150)
+    anio_publicacion: str | None = Field(default=None, max_length=20)
+    pais: str | None = Field(default=None, max_length=80)
+    ubicacion: str | None = Field(default=None, max_length=200)
+    clasificacion: str | None = Field(default=None, max_length=500)
+    observaciones: str | None = None
 class PedidoIn(BaseModel):
     estudiante_id: int
     libro_id: int | None = None
@@ -33,7 +39,11 @@ class PrestamoIn(BaseModel):
 
 @router.get("/libros")
 def libros(db: Session = Depends(get_db)):
-    return [{"id": x.id, "titulo": x.titulo, "autor": x.autor, "isbn": x.isbn, "ejemplares": x.ejemplares, "disponibles": max(0, x.ejemplares-sum(1 for p in x.prestamos if p.devuelto_en is None))} for x in db.query(Libro).order_by(Libro.titulo).all()]
+    return [{"id": x.id, "titulo": x.titulo, "autor": x.autor, "isbn": x.isbn, "ejemplares": x.ejemplares,
+        "editorial": x.editorial, "anio_publicacion": x.anio_publicacion, "pais": x.pais,
+        "ubicacion": x.ubicacion, "clasificacion": x.clasificacion, "observaciones": x.observaciones,
+        "disponibles": max(0, x.ejemplares-sum(1 for p in x.prestamos if p.devuelto_en is None))}
+        for x in db.query(Libro).order_by(Libro.titulo).all()]
 @router.post("/libros", status_code=201)
 def crear_libro(data: LibroIn, db: Session = Depends(get_db)):
     values=data.model_dump(); values["isbn"]=(values["isbn"] or "").strip() or None

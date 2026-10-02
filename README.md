@@ -55,6 +55,7 @@ Kairos/
 - Gestion de estudiantes, evaluaciones y notas ponderadas.
 - Registro diario de asistencia por curso.
 - Catálogo de biblioteca, pedidos de libros, préstamos, fechas de devolución y libros pendientes o atrasados.
+- El catálogo inicial de biblioteca se carga desde la hoja `Título` del inventario 2025 mediante la migración `20261002_0009`; conserva 266 ejemplares agrupados por título, autor, ISBN, editorial y año, junto con sus ubicaciones.
 - Registro de retiros de estudiantes, persona que retira, autorización y motivo.
 
 ## Backend

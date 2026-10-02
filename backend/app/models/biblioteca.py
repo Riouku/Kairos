@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from sqlalchemy import Date, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Date, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database.session import Base
 
@@ -8,8 +8,14 @@ class Libro(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     titulo: Mapped[str] = mapped_column(String(200), nullable=False, index=True)
     autor: Mapped[str] = mapped_column(String(150), nullable=False)
-    isbn: Mapped[str | None] = mapped_column(String(20), unique=True, nullable=True)
+    isbn: Mapped[str | None] = mapped_column(String(20), nullable=True, index=True)
     ejemplares: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    editorial: Mapped[str | None] = mapped_column(String(150), nullable=True)
+    anio_publicacion: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    pais: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    ubicacion: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    clasificacion: Mapped[str | None] = mapped_column(Text, nullable=True)
+    observaciones: Mapped[str | None] = mapped_column(Text, nullable=True)
     prestamos = relationship("PrestamoLibro", back_populates="libro")
 
 class PrestamoLibro(Base):
