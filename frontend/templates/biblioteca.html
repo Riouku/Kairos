@@ -201,12 +201,13 @@
 
     document.querySelector('#book-form').addEventListener('submit', async (event) => {
       event.preventDefault();
+      const form = event.currentTarget;
       try {
-        const data = Object.fromEntries(new FormData(event.currentTarget));
+        const data = Object.fromEntries(new FormData(form));
         data.ejemplares = Number(data.ejemplares);
         for (const key of ['isbn', 'editorial', 'anio_publicacion', 'pais', 'ubicacion', 'clasificacion', 'observaciones']) data[key] = data[key]?.trim() || null;
         await req('/biblioteca/libros', {method: 'POST', body: JSON.stringify(data)});
-        event.currentTarget.reset();
+        form.reset();
         await refresh();
         msg('Libro agregado al catálogo.');
       } catch (error) { msg(error.message, true); }
@@ -214,14 +215,15 @@
 
     document.querySelector('#request-form').addEventListener('submit', async (event) => {
       event.preventDefault();
+      const form = event.currentTarget;
       try {
-        const data = Object.fromEntries(new FormData(event.currentTarget));
+        const data = Object.fromEntries(new FormData(form));
         data.estudiante_id = Number(data.estudiante_id);
         data.libro_id = data.libro_id ? Number(data.libro_id) : null;
         data.titulo_solicitado = data.titulo_solicitado?.trim() || null;
         data.observacion = data.observacion?.trim() || null;
         await req('/biblioteca/pedidos', {method: 'POST', body: JSON.stringify(data)});
-        event.currentTarget.reset();
+        form.reset();
         syncRequestedTitle();
         await refresh();
         msg('Pedido registrado.');
@@ -230,12 +232,13 @@
 
     document.querySelector('#loan-form').addEventListener('submit', async (event) => {
       event.preventDefault();
+      const form = event.currentTarget;
       try {
-        const data = Object.fromEntries(new FormData(event.currentTarget));
+        const data = Object.fromEntries(new FormData(form));
         data.libro_id = Number(data.libro_id);
         data.estudiante_id = Number(data.estudiante_id);
         await req('/biblioteca/prestamos', {method: 'POST', body: JSON.stringify(data)});
-        event.currentTarget.reset();
+        form.reset();
         document.querySelector('#loan-date').value = new Date().toISOString().slice(0, 10);
         await refresh();
         msg('Préstamo registrado.');
