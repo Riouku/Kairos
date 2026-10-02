@@ -2494,6 +2494,218 @@ body[data-page="calendario"] .download-mark::after {
   }
 }
 
+/* Student withdrawal register */
+body[data-page="retiros"] {
+  overflow-x: hidden;
+}
+
+body[data-page="retiros"] .main-content {
+  min-width: 0;
+  width: 100%;
+}
+
+body[data-page="retiros"] .withdrawal-welcome {
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+body[data-page="retiros"] .withdrawal-welcome > div:first-child > span,
+body[data-page="retiros"] .withdrawal-subtitle {
+  color: var(--ink-soft);
+  display: block;
+  font-size: 0.9rem;
+  margin: 6px 0 0;
+}
+
+body[data-page="retiros"] .withdrawal-stats {
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0 0 22px;
+}
+
+body[data-page="retiros"] .withdrawal-stat {
+  align-items: center;
+  border-radius: 16px;
+  gap: 14px;
+  min-height: 96px;
+  padding: 18px 20px;
+}
+
+body[data-page="retiros"] .withdrawal-stat-icon {
+  align-items: center;
+  background: #e9f6f3;
+  border-radius: 14px;
+  color: #287663;
+  display: inline-flex;
+  flex: 0 0 44px;
+  font-size: 0.95rem;
+  font-weight: 900;
+  height: 44px;
+  justify-content: center;
+}
+
+body[data-page="retiros"] .withdrawal-stat-icon.total-icon {
+  background: #eeebff;
+  color: #5946a8;
+}
+
+body[data-page="retiros"] .withdrawal-panel {
+  border-radius: 18px;
+  margin-bottom: 18px;
+  min-width: 0;
+  padding: 22px;
+}
+
+body[data-page="retiros"] .withdrawal-form > label { min-width: 0; }
+body[data-page="retiros"] .withdrawal-form input,
+body[data-page="retiros"] .withdrawal-form select,
+body[data-page="retiros"] .withdrawal-form textarea { min-width: 0; width: 100%; }
+body[data-page="retiros"] .withdrawal-form textarea { padding: 10px 12px; resize: vertical; }
+body[data-page="retiros"] .withdrawal-form .withdrawal-submit { align-self: end; justify-self: start; }
+
+body[data-page="retiros"] .optional-label {
+  color: #828ba1;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+body[data-page="retiros"] .withdrawal-history-header {
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+body[data-page="retiros"] .withdrawal-search-label {
+  color: var(--ink-soft);
+  display: grid;
+  font-size: 0.82rem;
+  font-weight: 800;
+  gap: 6px;
+  min-width: min(100%, 300px);
+}
+
+body[data-page="retiros"] .withdrawal-records {
+  display: grid;
+  gap: 11px;
+}
+
+body[data-page="retiros"] .withdrawal-record {
+  background: linear-gradient(145deg, #fff, #fafbff);
+  border: 1px solid #e5e9f2;
+  border-radius: 14px;
+  display: grid;
+  gap: 12px 18px;
+  grid-template-columns: minmax(175px, 0.7fr) minmax(160px, 0.75fr) minmax(240px, 1.55fr);
+  min-width: 0;
+  padding: 16px 18px;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+body[data-page="retiros"] .withdrawal-record:hover {
+  border-color: #c9c0ee;
+  box-shadow: 0 10px 26px rgba(47, 40, 107, 0.09);
+  transform: translateY(-1px);
+}
+
+body[data-page="retiros"] .withdrawal-record-date {
+  align-items: center;
+  color: #5b6681;
+  display: flex;
+  font-size: 0.82rem;
+  gap: 9px;
+}
+
+body[data-page="retiros"] .withdrawal-date-icon {
+  align-items: center;
+  background: #e8f6ef;
+  border-radius: 11px;
+  color: #27724e;
+  display: inline-flex;
+  flex: 0 0 34px;
+  font-size: 0.8rem;
+  font-weight: 900;
+  height: 34px;
+  justify-content: center;
+}
+
+body[data-page="retiros"] .withdrawal-record-student,
+body[data-page="retiros"] .withdrawal-record-people > span {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+body[data-page="retiros"] .withdrawal-record-student strong,
+body[data-page="retiros"] .withdrawal-record-people strong {
+  color: var(--ink);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+body[data-page="retiros"] .withdrawal-record-student > span {
+  color: #6855b0;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+body[data-page="retiros"] .withdrawal-record-people {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body[data-page="retiros"] .withdrawal-record-people small {
+  color: #828ba1;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+body[data-page="retiros"] .withdrawal-reason {
+  border-top: 1px solid #eceef5;
+  color: #5d6883;
+  font-size: 0.82rem;
+  grid-column: 2 / -1;
+  margin: 0;
+  padding-top: 10px;
+  overflow-wrap: anywhere;
+}
+
+body[data-page="retiros"] .withdrawal-pagination {
+  align-items: center;
+  border-top: 1px solid #edf0f6;
+  color: var(--ink-soft);
+  display: flex;
+  font-size: 0.82rem;
+  justify-content: space-between;
+  margin-top: 18px;
+  padding-top: 14px;
+}
+
+body[data-page="retiros"] .withdrawal-pagination > div { display: flex; gap: 8px; }
+body[data-page="retiros"] .button-ghost { background: #f5f3ff; border: 1px solid #e2dcfb; color: #53439d; }
+body[data-page="retiros"] .button-ghost:disabled { cursor: not-allowed; opacity: 0.45; }
+body[data-page="retiros"] .message.success { background: #eaf7ef; border-color: #c4ebd1; color: #176b43; }
+
+@media (max-width: 1020px) {
+  body[data-page="retiros"] .withdrawal-record { grid-template-columns: minmax(145px, 0.7fr) minmax(150px, 0.8fr); }
+  body[data-page="retiros"] .withdrawal-record-people { grid-column: 1 / -1; }
+  body[data-page="retiros"] .withdrawal-reason { grid-column: 1 / -1; }
+}
+
+@media (max-width: 720px) {
+  body[data-page="retiros"] .withdrawal-stats,
+  body[data-page="retiros"] .withdrawal-form { grid-template-columns: 1fr; }
+  body[data-page="retiros"] .withdrawal-welcome { align-items: flex-start; }
+  body[data-page="retiros"] .withdrawal-panel { padding: 17px; }
+  body[data-page="retiros"] .withdrawal-search-label { min-width: 0; width: 100%; }
+  body[data-page="retiros"] .withdrawal-record { grid-template-columns: 1fr; padding: 14px; }
+  body[data-page="retiros"] .withdrawal-record-people,
+  body[data-page="retiros"] .withdrawal-reason { grid-column: auto; }
+  body[data-page="retiros"] .withdrawal-pagination { align-items: flex-start; flex-direction: column; gap: 10px; }
+}
+
 /* Calendar visual reset: cleaner weekly dashboard inspired by the provided mockup. */
 body[data-page="calendario"] {
   background: #f8fafc;

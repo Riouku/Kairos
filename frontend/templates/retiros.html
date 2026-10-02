@@ -1,7 +1,172 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Retiros de estudiantes - Kairos</title><link rel="stylesheet" href="/static/css/styles.css"></head><body><main style="max-width:1100px;margin:32px auto;padding:24px;background:white;border-radius:18px"><a href="index.html">← Inicio</a><h1>Retiros de estudiantes</h1><p id="msg"></p><nav><a href="index.html">Inicio</a> · <a href="biblioteca.html">Biblioteca</a> · <a href="retiros.html">Retiros</a></nav><p>Registra el retiro del alumno, la persona que lo retira y quién lo autoriza.</p><form id="form"><label>Estudiante<select name="estudiante_id" id="students" required></select></label><label>Retirado por<input name="retirado_por" required maxlength="150"></label><label>Autorizado por<input name="autorizado_por" required maxlength="150"></label><label>Motivo (opcional)<textarea name="motivo"></textarea></label><button>Registrar retiro ahora</button></form><h2>Historial reciente</h2><div id="rows"></div><script>
-if(!sessionStorage.getItem('kairos-user')) location.href='login.html';
-const API=(location.hostname==='localhost'||location.hostname==='127.0.0.1')?'http://localhost:8000/api':'/api';
-async function req(path,opts={}){let r=await fetch(API+path,{headers:{'Content-Type':'application/json'},...opts});let d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.detail||'No se pudo guardar');return d}
-function say(x){document.querySelector('#msg').textContent=x}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Retiros de estudiantes - Kairos</title>
+  <link rel="icon" type="image/svg+xml" href="/static/img/kairos-logo.svg">
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body data-page="retiros">
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img class="brand-logo" src="/static/img/kairos-logo.svg" alt="Colegio Kairos">
+        <div><strong>Colegio Kairos</strong><small>Administración académica</small></div>
+      </div>
+      <nav class="nav-menu">
+        <a href="index.html">Inicio</a>
+        <a href="cursos.html">Cursos</a>
+        <a href="estudiantes.html">Estudiantes</a>
+        <a href="profesores.html">Profesores</a>
+        <a href="asignaturas.html">Asignaturas</a>
+        <a href="calendario.html">Calendario</a>
+        <a href="notas.html">Notas</a>
+        <a href="asistencia.html">Asistencia</a>
+        <a href="biblioteca.html">Biblioteca</a>
+        <a class="active" href="retiros.html">Retiros</a>
+      </nav>
+    </aside>
 
-async function load(){try{let [s,rows]=await Promise.all([req('/estudiantes?activo=true'),req('/retiros')]);document.querySelector('#students').innerHTML=s.map(x=>`<option value="${x.id}">${x.nombre} ${x.apellido} — ${x.curso_nombre||''}</option>`).join('');document.querySelector('#rows').innerHTML='<ul>'+rows.map(x=>`<li>${new Date(x.fecha_hora).toLocaleString()} — ${x.estudiante} (${x.curso}); retiró ${x.retirado_por}, autorizado por ${x.autorizado_por}${x.motivo?'; '+x.motivo:''}</li>`).join('')+'</ul>'}catch(e){say(e.message)}}document.querySelector('#form').onsubmit=async e=>{e.preventDefault();try{let d=Object.fromEntries(new FormData(e.target));d.estudiante_id=Number(d.estudiante_id);await req('/retiros',{method:'POST',body:JSON.stringify(d)});say('Retiro guardado.');e.target.reset();await load()}catch(x){say(x.message)}};load();</script></main></body></html>
+    <main class="main-content withdrawal-page">
+      <nav class="topbar">
+        <button class="icon-button menu-toggle" type="button" aria-label="Abrir menú"><span class="hamburger"><span></span><span></span><span></span></span></button>
+        <h1>Retiros de estudiantes</h1>
+        <button class="admin-chip" type="button" data-logout title="Cerrar sesión"><span class="avatar">A</span><span>Administración</span></button>
+      </nav>
+
+      <section class="welcome-panel withdrawal-welcome">
+        <div><p>Control de salida</p><h2>Registro seguro de retiros</h2><span>Deja constancia de quién retira al estudiante y quién autoriza su salida.</span></div>
+        <div id="api-status" class="api-status">Conectando API</div>
+      </section>
+      <p id="msg" class="message hidden" role="status" aria-live="polite"></p>
+
+      <section class="stats-grid withdrawal-stats" aria-label="Resumen de retiros">
+        <article class="stat-card withdrawal-stat"><span class="withdrawal-stat-icon today-icon" aria-hidden="true">H</span><div><strong id="today-count">0</strong><small>Retiros registrados hoy</small></div></article>
+        <article class="stat-card withdrawal-stat"><span class="withdrawal-stat-icon total-icon" aria-hidden="true">R</span><div><strong id="total-count">0</strong><small>Registros en el historial</small></div></article>
+      </section>
+
+      <section class="panel withdrawal-panel">
+        <div class="module-header"><div><p class="section-kicker">Nuevo registro</p><h2>Registrar retiro</h2><p class="withdrawal-subtitle">Completa los datos de la persona que retira y la autorización.</p></div></div>
+        <form id="withdrawal-form" class="form-grid withdrawal-form">
+          <label>Estudiante<select name="estudiante_id" id="students" required></select></label>
+          <label>Persona que retira<input name="retirado_por" required maxlength="150" autocomplete="off" placeholder="Nombre y apellido"></label>
+          <label>Autorizado por<input name="autorizado_por" required maxlength="150" autocomplete="off" placeholder="Nombre y apellido"></label>
+          <label>Motivo <span class="optional-label">Opcional</span><textarea name="motivo" maxlength="1000" rows="3" placeholder="Agrega un detalle si es necesario"></textarea></label>
+          <button class="button button-blue withdrawal-submit" type="submit"><span aria-hidden="true">+</span> Registrar retiro</button>
+        </form>
+      </section>
+
+      <section class="panel withdrawal-panel">
+        <div class="module-header withdrawal-history-header">
+          <div><p class="section-kicker">Actividad</p><h2>Historial reciente</h2><p class="withdrawal-subtitle">Últimos retiros registrados en el establecimiento.</p></div>
+          <label class="withdrawal-search-label" for="history-search">Buscar registros<input id="history-search" type="search" placeholder="Estudiante, curso o persona"></label>
+        </div>
+        <div id="rows" class="withdrawal-records" aria-live="polite"></div>
+        <div class="withdrawal-pagination"><span id="history-range"></span><div><button id="history-prev" class="button button-ghost" type="button">Anterior</button><button id="history-next" class="button button-ghost" type="button">Siguiente</button></div></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/js/main.js?v=rpc-v4"></script>
+  <script>
+    const req = api;
+    const PAGE_SIZE = 12;
+    let withdrawalRecords = [];
+    let historyPage = 0;
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    }
+
+    function localDateKey(date = new Date()) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function showMessage(text, error = false) {
+      const message = document.querySelector('#msg');
+      message.textContent = text;
+      message.classList.toggle('error', error);
+      message.classList.toggle('success', !error);
+      message.classList.remove('hidden');
+    }
+
+    function clearMessage() {
+      document.querySelector('#msg').classList.add('hidden');
+    }
+
+    function searchKey(value) {
+      return String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es').trim();
+    }
+
+    function renderHistory() {
+      const query = searchKey(document.querySelector('#history-search').value);
+      const filtered = withdrawalRecords.filter((record) => searchKey([
+        record.estudiante, record.curso, record.retirado_por, record.autorizado_por, record.motivo,
+      ].join(' ')).includes(query));
+      const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      historyPage = Math.min(historyPage, pages - 1);
+      const start = historyPage * PAGE_SIZE;
+      const visible = filtered.slice(start, start + PAGE_SIZE);
+      document.querySelector('#history-range').textContent = filtered.length ? `Mostrando ${start + 1}–${Math.min(start + PAGE_SIZE, filtered.length)} de ${filtered.length}` : '';
+      document.querySelector('#history-prev').disabled = historyPage === 0;
+      document.querySelector('#history-next').disabled = historyPage >= pages - 1;
+      const container = document.querySelector('#rows');
+      if (!visible.length) {
+        container.innerHTML = `<p class="empty-state">${withdrawalRecords.length ? 'No hay registros que coincidan con la búsqueda.' : 'Todavía no hay retiros registrados.'}</p>`;
+        return;
+      }
+      container.innerHTML = visible.map((record) => {
+        const date = new Date(record.fecha_hora);
+        const dateLabel = Number.isNaN(date.getTime()) ? '' : date.toLocaleString('es-CL', {dateStyle: 'medium', timeStyle: 'short'});
+        return `<article class="withdrawal-record"><div class="withdrawal-record-date"><span class="withdrawal-date-icon" aria-hidden="true">✓</span><time datetime="${Number.isNaN(date.getTime()) ? '' : date.toISOString()}">${escapeHtml(dateLabel)}</time></div><div class="withdrawal-record-student"><strong>${escapeHtml(record.estudiante)}</strong><span>${escapeHtml(record.curso || 'Curso no registrado')}</span></div><div class="withdrawal-record-people"><span><small>Retira</small><strong>${escapeHtml(record.retirado_por)}</strong></span><span><small>Autoriza</small><strong>${escapeHtml(record.autorizado_por)}</strong></span></div>${record.motivo ? `<p class="withdrawal-reason">${escapeHtml(record.motivo)}</p>` : ''}</article>`;
+      }).join('');
+    }
+
+    async function loadHistory() {
+      try {
+        const [students, records] = await Promise.all([req('/estudiantes?activo=true'), req('/retiros')]);
+        clearMessage();
+        withdrawalRecords = records;
+        const select = document.querySelector('#students');
+        select.innerHTML = '<option value="">Selecciona un estudiante</option>' + students.map((student) => `<option value="${student.id}">${escapeHtml(student.nombre + ' ' + student.apellido)}${student.curso_nombre ? ` — ${escapeHtml(student.curso_nombre)}` : ''}</option>`).join('');
+        document.querySelector('#total-count').textContent = records.length;
+        document.querySelector('#today-count').textContent = records.filter((record) => {
+          const date = new Date(record.fecha_hora);
+          return !Number.isNaN(date.getTime()) && localDateKey(date) === localDateKey();
+        }).length;
+        renderHistory();
+      } catch (error) {
+        showMessage(error.message, true);
+      }
+    }
+
+    document.querySelector('#withdrawal-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      try {
+        const data = Object.fromEntries(new FormData(form));
+        data.estudiante_id = Number(data.estudiante_id);
+        data.retirado_por = data.retirado_por.trim();
+        data.autorizado_por = data.autorizado_por.trim();
+        data.motivo = data.motivo.trim() || null;
+        await req('/retiros', {method: 'POST', body: JSON.stringify(data)});
+        form.reset();
+        historyPage = 0;
+        await loadHistory();
+        showMessage('Retiro registrado correctamente.');
+      } catch (error) {
+        showMessage(error.message, true);
+      }
+    });
+
+    document.querySelector('#history-search').addEventListener('input', () => { historyPage = 0; renderHistory(); });
+    document.querySelector('#history-prev').addEventListener('click', () => { historyPage = Math.max(0, historyPage - 1); renderHistory(); });
+    document.querySelector('#history-next').addEventListener('click', () => { historyPage += 1; renderHistory(); });
+    loadHistory();
+  </script>
+</body>
+</html>
