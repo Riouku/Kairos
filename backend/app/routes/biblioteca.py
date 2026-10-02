@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import Literal
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 from sqlalchemy.orm import Session, joinedload
 from app.database import get_db
 from app.models import Estudiante
@@ -24,6 +24,14 @@ class PedidoIn(BaseModel):
     libro_id: int | None = None
     titulo_solicitado: str | None = Field(default=None, min_length=1, max_length=200)
     observacion: str | None = Field(default=None, max_length=500)
+
+    @field_validator("titulo_solicitado", "observacion", mode="before")
+    @classmethod
+    def limpiar_campos_opcionales(cls, value):
+        if isinstance(value, str) and not value.strip():
+            return None
+        return value
+
     @model_validator(mode="after")
     def validar_libro(self):
         if self.libro_id is None and not (self.titulo_solicitado or "").strip():

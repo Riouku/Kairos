@@ -1,30 +1,249 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Biblioteca - Kairos</title><link rel="stylesheet" href="/static/css/styles.css"></head>
-<body data-page="biblioteca"><div class="app-shell"><aside class="sidebar"><div class="brand"><img class="brand-logo" src="/static/img/kairos-logo.svg" alt=""><div><strong>Colegio Kairos</strong><small>Administración académica</small></div></div><nav class="nav-menu"><a href="index.html">Inicio</a><a href="cursos.html">Cursos</a><a href="estudiantes.html">Estudiantes</a><a href="profesores.html">Profesores</a><a href="asignaturas.html">Asignaturas</a><a href="calendario.html">Calendario</a><a href="notas.html">Notas</a><a href="asistencia.html">Asistencia</a><a class="active" href="biblioteca.html">Biblioteca</a><a href="retiros.html">Retiros</a></nav></aside>
-<main class="main-content"><nav class="topbar"><button class="icon-button menu-toggle" type="button" aria-label="Abrir menú"><span class="hamburger"><span></span><span></span><span></span></span></button><h1>Biblioteca</h1><button class="admin-chip" type="button" data-logout title="Cerrar sesión"><span class="avatar">A</span><span>Administración</span></button></nav>
-<section class="welcome-panel"><div><p>Gestión de biblioteca</p><h2>Libros, pedidos y préstamos</h2></div><div id="api-status" class="api-status">Conectando API</div></section><p id="msg" class="message hidden"></p>
-<section class="stats-grid"><article class="stat-card stat-blue"><div><strong id="stat-pedidos">0</strong><small>Pedidos pendientes</small></div></article><article class="stat-card stat-orange"><div><strong id="stat-atrasados">0</strong><small>Préstamos atrasados</small></div></article><article class="stat-card stat-green"><div><strong id="stat-disponibles">0</strong><small>Ejemplares disponibles</small></div></article></section>
-<section class="panel"><div class="module-header"><div><p class="section-kicker">Solicitudes</p><h2>Pedido de libro</h2></div></div><form id="request-form" class="form-grid"><label>Estudiante<select name="estudiante_id" id="request-student" required></select></label><label>Libro del catálogo<select name="libro_id" id="request-book"><option value="">Otro título (especificar)</option></select></label><label>Título solicitado<input name="titulo_solicitado" id="request-title" maxlength="200" placeholder="Se requiere si no está en el catálogo"></label><label>Observación<textarea name="observacion" maxlength="500" rows="2" placeholder="Opcional"></textarea></label><button class="button button-blue" type="submit">Registrar pedido</button></form></section>
-<section class="panel"><div class="module-header"><div><p class="section-kicker">Seguimiento</p><h2>Pedidos recientes</h2></div><select id="request-filter" aria-label="Filtrar pedidos"><option value="">Todos los estados</option><option value="pendiente">Pendientes</option><option value="aprobado">Aprobados</option><option value="rechazado">Rechazados</option><option value="entregado">Entregados</option></select></div><div id="requests-list"></div></section>
-<section class="panel"><div class="module-header"><div><p class="section-kicker">Circulación</p><h2>Registrar préstamo</h2></div></div><form id="loan-form" class="form-grid"><label>Ejemplar disponible<select name="libro_id" id="loan-book" required></select></label><label>Estudiante<select name="estudiante_id" id="loan-student" required></select></label><label>Fecha de préstamo<input name="fecha_prestamo" type="date" id="loan-date" required></label><label>Fecha límite de devolución<input name="fecha_devolucion" type="date" required></label><button class="button button-green" type="submit">Guardar préstamo</button></form></section>
-<section class="panel"><div class="module-header"><div><p class="section-kicker">Inventario</p><h2>Agregar libro</h2></div></div><form id="book-form" class="form-grid"><label>Título<input name="titulo" required maxlength="200"></label><label>Autor<input name="autor" required maxlength="150"></label><label>ISBN<input name="isbn" maxlength="20"></label><label>Ejemplares<input name="ejemplares" type="number" min="1" value="1" required></label><label>Editorial<input name="editorial" maxlength="150"></label><label>Año de publicación<input name="anio_publicacion" maxlength="20"></label><label>País<input name="pais" maxlength="80"></label><label>Ubicación<input name="ubicacion" maxlength="200" placeholder="Ej.: Bloque A - 1"></label><label>Clasificación<input name="clasificacion" maxlength="100"></label><label>Observaciones<textarea name="observaciones" rows="2"></textarea></label><button class="button button-blue" type="submit">Agregar al catálogo</button></form><div id="catalog-list"></div></section>
-<section class="panel"><div class="module-header"><div><p class="section-kicker">Devoluciones</p><h2>Préstamos activos e historial</h2></div></div><div id="loans-list"></div></section>
-</main></div><script src="/static/js/main.js"></script><script>
-const req = api;
-function msg(s,error=false){const el=document.querySelector('#msg');el.textContent=s;el.classList.toggle('error',error);el.classList.remove('hidden')}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-async function refresh(){try{const filter=document.querySelector('#request-filter').value;const [books,students,loans,pedidos]=await Promise.all([req('/biblioteca/libros'),req('/estudiantes?activo=true'),req('/biblioteca/prestamos'),req('/biblioteca/pedidos'+(filter?'?estado='+filter:''))]);
-const studentOpts=students.map(s=>`<option value="${s.id}">${esc(s.nombre+' '+s.apellido)} — ${esc(s.curso_nombre||'')}</option>`).join('');document.querySelector('#request-student').innerHTML=studentOpts;document.querySelector('#loan-student').innerHTML=studentOpts;
-const disponibles=books.filter(b=>b.disponibles>0);document.querySelector('#loan-book').innerHTML=disponibles.map(b=>`<option value="${b.id}">${esc(b.titulo)} (${b.disponibles} disponibles)</option>`).join('');document.querySelector('#request-book').innerHTML='<option value="">Otro título (especificar)</option>'+books.map(b=>`<option value="${b.id}">${esc(b.titulo)}</option>`).join('');
-document.querySelector('#stat-pedidos').textContent=pedidos.filter(p=>p.estado==='pendiente').length;document.querySelector('#stat-atrasados').textContent=loans.filter(l=>l.vencido).length;document.querySelector('#stat-disponibles').textContent=books.reduce((n,b)=>n+b.disponibles,0);
-document.querySelector('#catalog-list').innerHTML='<ul>'+books.map(b=>{const detail=[b.editorial,b.anio_publicacion,b.pais,b.clasificacion,b.ubicacion,b.isbn?'ISBN '+b.isbn:'',b.observaciones].filter(Boolean).map(esc).join(' · ');return `<li><strong>${esc(b.titulo)}</strong> — ${esc(b.autor)} · ${b.disponibles} de ${b.ejemplares} disponibles${detail?`<br><small>${detail}</small>`:''}</li>`}).join('')+'</ul>';
-document.querySelector('#loans-list').innerHTML=loans.length?'<ul>'+loans.map(l=>`<li><strong>${esc(l.libro)}</strong> — ${esc(l.estudiante)} · devolver ${l.fecha_devolucion} · ${l.devuelto_en?'Devuelto '+new Date(l.devuelto_en).toLocaleDateString():l.vencido?'<b>Atrasado</b>':'Pendiente'} ${l.devuelto_en?'':`<button class="button button-green" onclick="returnBook(${l.id})">Registrar devolución</button>`}</li>`).join('')+'</ul>':'<p class="empty-state">Aún no hay préstamos.</p>';
-document.querySelector('#requests-list').innerHTML=pedidos.length?'<ul>'+pedidos.map(p=>`<li><strong>${esc(p.titulo)}</strong> — ${esc(p.estudiante)} · ${new Date(p.fecha_pedido).toLocaleDateString()} · <strong>${esc(p.estado)}</strong>${p.observacion?' · '+esc(p.observacion):''} ${p.estado==='pendiente'?`<button class="button button-green" onclick="setRequest(${p.id},'aprobado')">Aprobar</button> <button class="button button-red" onclick="setRequest(${p.id},'rechazado')">Rechazar</button>`:p.estado==='aprobado'?`<button class="button button-blue" onclick="setRequest(${p.id},'entregado')">Marcar entregado</button>`:''}</li>`).join('')+'</ul>':'<p class="empty-state">No hay pedidos para este filtro.</p>';
-}catch(e){msg(e.message,true)}}
-async function returnBook(id){try{await req(`/biblioteca/prestamos/${id}/devolver`,{method:'PATCH'});msg('Devolución registrada.');await refresh()}catch(e){msg(e.message,true)}}
-async function setRequest(id,estado){try{await req(`/biblioteca/pedidos/${id}`,{method:'PATCH',body:JSON.stringify({estado})});msg('Estado del pedido actualizado.');await refresh()}catch(e){msg(e.message,true)}}
-document.querySelector('#book-form').onsubmit=async e=>{e.preventDefault();try{let d=Object.fromEntries(new FormData(e.target));d.ejemplares=Number(d.ejemplares);for(const k of ['isbn','editorial','anio_publicacion','pais','ubicacion','clasificacion','observaciones'])d[k]=d[k]?.trim()||null;await req('/biblioteca/libros',{method:'POST',body:JSON.stringify(d)});msg('Libro agregado al catálogo.');e.target.reset();await refresh()}catch(x){msg(x.message,true)}};
-document.querySelector('#request-form').onsubmit=async e=>{e.preventDefault();try{let d=Object.fromEntries(new FormData(e.target));d.estudiante_id=Number(d.estudiante_id);d.libro_id=d.libro_id?Number(d.libro_id):null;await req('/biblioteca/pedidos',{method:'POST',body:JSON.stringify(d)});msg('Pedido registrado.');e.target.reset();await refresh()}catch(x){msg(x.message,true)}};
-document.querySelector('#loan-form').onsubmit=async e=>{e.preventDefault();try{let d=Object.fromEntries(new FormData(e.target));d.libro_id=Number(d.libro_id);d.estudiante_id=Number(d.estudiante_id);await req('/biblioteca/prestamos',{method:'POST',body:JSON.stringify(d)});msg('Préstamo registrado.');e.target.reset();await refresh()}catch(x){msg(x.message,true)}};
-document.querySelector('#request-filter').onchange=refresh;const today=new Date().toISOString().slice(0,10);document.querySelector('#loan-date').value=today;refresh();
-</script></body></html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Biblioteca - Kairos</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body data-page="biblioteca">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <img class="brand-logo" src="/static/img/kairos-logo.svg" alt="">
+        <div><strong>Colegio Kairos</strong><small>Administración académica</small></div>
+      </div>
+      <nav class="nav-menu">
+        <a href="index.html">Inicio</a><a href="cursos.html">Cursos</a><a href="estudiantes.html">Estudiantes</a>
+        <a href="profesores.html">Profesores</a><a href="asignaturas.html">Asignaturas</a>
+        <a href="calendario.html">Calendario</a><a href="notas.html">Notas</a><a href="asistencia.html">Asistencia</a>
+        <a class="active" href="biblioteca.html">Biblioteca</a><a href="retiros.html">Retiros</a>
+      </nav>
+    </aside>
+
+    <main class="main-content library-page">
+      <nav class="topbar">
+        <button class="icon-button menu-toggle" type="button" aria-label="Abrir menú"><span class="hamburger"><span></span><span></span><span></span></span></button>
+        <h1>Biblioteca</h1>
+        <button class="admin-chip" type="button" data-logout title="Cerrar sesión"><span class="avatar">A</span><span>Administración</span></button>
+      </nav>
+
+      <section class="welcome-panel library-welcome">
+        <div><p>Gestión de biblioteca</p><h2>Libros, pedidos y préstamos</h2><span>Inventario y circulación en un solo lugar.</span></div>
+        <div id="api-status" class="api-status">Conectando API</div>
+      </section>
+      <p id="msg" class="message hidden" role="status" aria-live="polite"></p>
+
+      <section class="stats-grid library-stats" aria-label="Resumen de biblioteca">
+        <article class="stat-card library-stat"><span class="library-stat-icon" aria-hidden="true">P</span><div><strong id="stat-pedidos">0</strong><small>Pedidos pendientes</small></div></article>
+        <article class="stat-card library-stat"><span class="library-stat-icon late" aria-hidden="true">D</span><div><strong id="stat-atrasados">0</strong><small>Préstamos atrasados</small></div></article>
+        <article class="stat-card library-stat"><span class="library-stat-icon available" aria-hidden="true">L</span><div><strong id="stat-disponibles">0</strong><small>Ejemplares disponibles</small></div></article>
+      </section>
+
+      <section class="panel library-panel" aria-labelledby="catalog-heading">
+        <div class="module-header library-catalog-header">
+          <div><p class="section-kicker">Inventario</p><h2 id="catalog-heading">Catálogo de libros</h2><p class="library-subtitle">Busca por título, autor, ISBN, ubicación o clasificación.</p></div>
+          <div class="catalog-tools"><label class="catalog-search-label" for="catalog-search">Buscar en el catálogo</label><input id="catalog-search" type="search" placeholder="Ej.: Subterra, Neruda, Bloque A…" autocomplete="off"><span id="catalog-count" class="catalog-count">Cargando libros…</span></div>
+        </div>
+        <div id="catalog-list" class="catalog-grid" aria-live="polite"></div>
+        <div class="catalog-pagination"><span id="catalog-page-label"></span><div><button id="catalog-prev" class="button button-ghost" type="button">Anterior</button><button id="catalog-next" class="button button-ghost" type="button">Siguiente</button></div></div>
+      </section>
+
+      <section class="panel library-panel">
+        <div class="module-header"><div><p class="section-kicker">Solicitudes</p><h2>Pedido de libro</h2><p class="library-subtitle">Selecciona un libro del catálogo o solicita otro título.</p></div></div>
+        <form id="request-form" class="form-grid library-form">
+          <label>Estudiante<select name="estudiante_id" id="request-student" required></select></label>
+          <label>Libro del catálogo<select name="libro_id" id="request-book"><option value="" selected>Otro título (especificar)</option></select></label>
+          <label>Título solicitado<input name="titulo_solicitado" id="request-title" maxlength="200" placeholder="Escribe el título que buscas" required></label>
+          <label>Observación<textarea name="observacion" maxlength="500" rows="2" placeholder="Opcional"></textarea></label>
+          <button class="button button-blue" type="submit">Registrar pedido</button>
+        </form>
+      </section>
+
+      <section class="panel library-panel">
+        <div class="module-header"><div><p class="section-kicker">Circulación</p><h2>Registrar préstamo</h2><p class="library-subtitle">Registra el libro y la fecha acordada de devolución.</p></div></div>
+        <form id="loan-form" class="form-grid library-form">
+          <label>Ejemplar disponible<select name="libro_id" id="loan-book" required></select></label>
+          <label>Estudiante<select name="estudiante_id" id="loan-student" required></select></label>
+          <label>Fecha de préstamo<input name="fecha_prestamo" type="date" id="loan-date" required></label>
+          <label>Fecha límite de devolución<input name="fecha_devolucion" type="date" required></label>
+          <button class="button button-green" type="submit">Guardar préstamo</button>
+        </form>
+      </section>
+
+      <section class="panel library-panel">
+        <div class="module-header"><div><p class="section-kicker">Seguimiento</p><h2>Pedidos recientes</h2></div><label class="request-filter-label">Filtrar pedidos<select id="request-filter" aria-label="Filtrar pedidos"><option value="">Todos los estados</option><option value="pendiente">Pendientes</option><option value="aprobado">Aprobados</option><option value="rechazado">Rechazados</option><option value="entregado">Entregados</option></select></label></div>
+        <div id="requests-list" class="library-record-list"></div>
+      </section>
+
+      <section class="panel library-panel">
+        <div class="module-header"><div><p class="section-kicker">Devoluciones</p><h2>Préstamos activos e historial</h2></div></div>
+        <div id="loans-list" class="library-record-list"></div>
+      </section>
+
+      <section class="panel library-panel library-add-panel">
+        <details class="inventory-disclosure">
+          <summary><span><strong>Agregar un libro al catálogo</strong><small>Completa los datos del ejemplar.</small></span><span class="disclosure-plus" aria-hidden="true">+</span></summary>
+          <form id="book-form" class="form-grid library-form">
+            <label>Título<input name="titulo" required maxlength="200"></label>
+            <label>Autor<input name="autor" required maxlength="150"></label>
+            <label>ISBN<input name="isbn" maxlength="20"></label>
+            <label>Ejemplares<input name="ejemplares" type="number" min="1" value="1" required></label>
+            <label>Editorial<input name="editorial" maxlength="150"></label>
+            <label>Año de publicación<input name="anio_publicacion" maxlength="20"></label>
+            <label>País<input name="pais" maxlength="80"></label>
+            <label>Ubicación<input name="ubicacion" maxlength="200" placeholder="Ej.: Bloque A - 1"></label>
+            <label>Clasificación<input name="clasificacion" maxlength="500"></label>
+            <label>Observaciones<textarea name="observaciones" rows="2"></textarea></label>
+            <button class="button button-blue" type="submit">Agregar al catálogo</button>
+          </form>
+        </details>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/js/main.js?v=rpc-v4"></script>
+  <script>
+    const req = api;
+    const PAGE_SIZE = 24;
+    let allBooks = [];
+    let catalogPage = 0;
+
+    function msg(text, error = false) {
+      const el = document.querySelector('#msg');
+      el.textContent = text;
+      el.classList.toggle('error', error);
+      el.classList.remove('hidden');
+    }
+
+    function clearMsg() { document.querySelector('#msg').classList.add('hidden'); }
+
+    function esc(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    }
+
+    function normalizeSearch(value) {
+      return String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es').trim();
+    }
+
+    function renderCatalog() {
+      const query = normalizeSearch(document.querySelector('#catalog-search').value);
+      const filtered = allBooks.filter((book) => normalizeSearch([book.titulo, book.autor, book.isbn, book.ubicacion, book.clasificacion].join(' ')).includes(query));
+      const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+      catalogPage = Math.min(catalogPage, pageCount - 1);
+      const start = catalogPage * PAGE_SIZE;
+      const visible = filtered.slice(start, start + PAGE_SIZE);
+      document.querySelector('#catalog-count').textContent = query ? `${filtered.length} resultado${filtered.length === 1 ? '' : 's'}` : `${allBooks.length} títulos en el catálogo`;
+      document.querySelector('#catalog-page-label').textContent = filtered.length ? `Mostrando ${start + 1}–${Math.min(start + PAGE_SIZE, filtered.length)} de ${filtered.length}` : '';
+      document.querySelector('#catalog-prev').disabled = catalogPage === 0;
+      document.querySelector('#catalog-next').disabled = catalogPage >= pageCount - 1;
+      const container = document.querySelector('#catalog-list');
+      if (!visible.length) {
+        container.innerHTML = `<p class="empty-state catalog-empty">${allBooks.length ? 'No hay libros que coincidan con esa búsqueda.' : 'Todavía no hay libros en el catálogo.'}</p>`;
+        return;
+      }
+      container.innerHTML = visible.map((book, index) => {
+        const coverTone = ['violet', 'blue', 'green', 'orange'][(start + index) % 4];
+        const classLabel = book.clasificacion || 'Sin clasificación';
+        return `<article class="book-card"><div class="book-cover ${coverTone}" aria-hidden="true"><span>${esc((book.titulo || 'L').trim().slice(0, 1).toLocaleUpperCase('es'))}</span><small>${esc(classLabel.slice(0, 18))}</small></div><div class="book-card-body"><span class="book-classification">${esc(classLabel)}</span><h3>${esc(book.titulo)}</h3><p class="book-author">${esc(book.autor || 'Autor no registrado')}</p><div class="book-meta">${book.editorial ? `<span>${esc(book.editorial)}</span>` : ''}${book.anio_publicacion ? `<span>${esc(book.anio_publicacion)}</span>` : ''}${book.ubicacion ? `<span class="book-location">${esc(book.ubicacion)}</span>` : ''}</div><div class="book-card-footer"><span class="book-stock ${book.disponibles > 0 ? 'in-stock' : 'out-stock'}">${book.disponibles > 0 ? `${book.disponibles} disponible${book.disponibles === 1 ? '' : 's'}` : 'Sin ejemplares disponibles'}</span><span>${book.ejemplares} ejemplar${book.ejemplares === 1 ? '' : 'es'}</span></div></div></article>`;
+      }).join('');
+    }
+
+    function syncRequestedTitle() {
+      const selectedBook = Boolean(document.querySelector('#request-book').value);
+      const title = document.querySelector('#request-title');
+      title.required = !selectedBook;
+      title.disabled = selectedBook;
+      title.placeholder = selectedBook ? 'El título seleccionado ya está en el catálogo' : 'Escribe el título que buscas';
+      if (selectedBook) title.value = '';
+    }
+
+    async function refresh() {
+      try {
+        const filter = document.querySelector('#request-filter').value;
+        const [books, students, loans, pedidos] = await Promise.all([
+          req('/biblioteca/libros'), req('/estudiantes?activo=true'), req('/biblioteca/prestamos'),
+          req('/biblioteca/pedidos' + (filter ? '?estado=' + encodeURIComponent(filter) : '')),
+        ]);
+        clearMsg();
+        allBooks = books;
+        const studentOptions = students.map((student) => `<option value="${student.id}">${esc(student.nombre + ' ' + student.apellido)} — ${esc(student.curso_nombre || '')}</option>`).join('');
+        document.querySelector('#request-student').innerHTML = studentOptions;
+        document.querySelector('#loan-student').innerHTML = studentOptions;
+        const available = books.filter((book) => book.disponibles > 0);
+        document.querySelector('#loan-book').innerHTML = available.map((book) => `<option value="${book.id}">${esc(book.titulo)} (${book.disponibles} disponibles)</option>`).join('');
+        document.querySelector('#request-book').innerHTML = '<option value="" selected>Otro título (especificar)</option>' + books.map((book) => `<option value="${book.id}">${esc(book.titulo)}</option>`).join('');
+        document.querySelector('#stat-pedidos').textContent = pedidos.filter((pedido) => pedido.estado === 'pendiente').length;
+        document.querySelector('#stat-atrasados').textContent = loans.filter((loan) => loan.vencido).length;
+        document.querySelector('#stat-disponibles').textContent = books.reduce((sum, book) => sum + book.disponibles, 0);
+        renderCatalog();
+        syncRequestedTitle();
+        document.querySelector('#loans-list').innerHTML = loans.length ? '<ul>' + loans.map((loan) => `<li><strong>${esc(loan.libro)}</strong><span>${esc(loan.estudiante)} · devolver ${esc(loan.fecha_devolucion)}</span><span>${loan.devuelto_en ? 'Devuelto ' + new Date(loan.devuelto_en).toLocaleDateString('es-CL') : loan.vencido ? '<b>Atrasado</b>' : 'Pendiente'}</span>${loan.devuelto_en ? '' : `<button class="button button-green" onclick="returnBook(${loan.id})">Registrar devolución</button>`}</li>`).join('') + '</ul>' : '<p class="empty-state">Aún no hay préstamos.</p>';
+        document.querySelector('#requests-list').innerHTML = pedidos.length ? '<ul>' + pedidos.map((pedido) => `<li><strong>${esc(pedido.titulo)}</strong><span>${esc(pedido.estudiante)} · ${new Date(pedido.fecha_pedido).toLocaleDateString('es-CL')}</span><span class="request-state">${esc(pedido.estado)}</span>${pedido.observacion ? `<small>${esc(pedido.observacion)}</small>` : ''}${pedido.estado === 'pendiente' ? `<button class="button button-green" onclick="setRequest(${pedido.id},'aprobado')">Aprobar</button><button class="button button-red" onclick="setRequest(${pedido.id},'rechazado')">Rechazar</button>` : pedido.estado === 'aprobado' ? `<button class="button button-blue" onclick="setRequest(${pedido.id},'entregado')">Marcar entregado</button>` : ''}</li>`).join('') + '</ul>' : '<p class="empty-state">No hay pedidos para este filtro.</p>';
+      } catch (error) { msg(error.message, true); }
+    }
+
+    async function returnBook(id) {
+      try { await req(`/biblioteca/prestamos/${id}/devolver`, {method: 'PATCH'}); await refresh(); msg('Devolución registrada.'); }
+      catch (error) { msg(error.message, true); }
+    }
+
+    async function setRequest(id, estado) {
+      try { await req(`/biblioteca/pedidos/${id}`, {method: 'PATCH', body: JSON.stringify({estado})}); await refresh(); msg('Estado del pedido actualizado.'); }
+      catch (error) { msg(error.message, true); }
+    }
+
+    document.querySelector('#catalog-search').addEventListener('input', () => { catalogPage = 0; renderCatalog(); });
+    document.querySelector('#catalog-prev').addEventListener('click', () => { catalogPage = Math.max(0, catalogPage - 1); renderCatalog(); });
+    document.querySelector('#catalog-next').addEventListener('click', () => { catalogPage += 1; renderCatalog(); });
+    document.querySelector('#request-book').addEventListener('change', syncRequestedTitle);
+    document.querySelector('#request-filter').addEventListener('change', refresh);
+
+    document.querySelector('#book-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      try {
+        const data = Object.fromEntries(new FormData(event.currentTarget));
+        data.ejemplares = Number(data.ejemplares);
+        for (const key of ['isbn', 'editorial', 'anio_publicacion', 'pais', 'ubicacion', 'clasificacion', 'observaciones']) data[key] = data[key]?.trim() || null;
+        await req('/biblioteca/libros', {method: 'POST', body: JSON.stringify(data)});
+        event.currentTarget.reset();
+        await refresh();
+        msg('Libro agregado al catálogo.');
+      } catch (error) { msg(error.message, true); }
+    });
+
+    document.querySelector('#request-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      try {
+        const data = Object.fromEntries(new FormData(event.currentTarget));
+        data.estudiante_id = Number(data.estudiante_id);
+        data.libro_id = data.libro_id ? Number(data.libro_id) : null;
+        data.titulo_solicitado = data.titulo_solicitado?.trim() || null;
+        data.observacion = data.observacion?.trim() || null;
+        await req('/biblioteca/pedidos', {method: 'POST', body: JSON.stringify(data)});
+        event.currentTarget.reset();
+        syncRequestedTitle();
+        await refresh();
+        msg('Pedido registrado.');
+      } catch (error) { msg(error.message, true); }
+    });
+
+    document.querySelector('#loan-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      try {
+        const data = Object.fromEntries(new FormData(event.currentTarget));
+        data.libro_id = Number(data.libro_id);
+        data.estudiante_id = Number(data.estudiante_id);
+        await req('/biblioteca/prestamos', {method: 'POST', body: JSON.stringify(data)});
+        event.currentTarget.reset();
+        document.querySelector('#loan-date').value = new Date().toISOString().slice(0, 10);
+        await refresh();
+        msg('Préstamo registrado.');
+      } catch (error) { msg(error.message, true); }
+    });
+
+    document.querySelector('#loan-date').value = new Date().toISOString().slice(0, 10);
+    refresh();
+  </script>
+</body>
+</html>
