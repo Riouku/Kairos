@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any, Literal
 from urllib.parse import urlsplit
 
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from httpx import ASGITransport, AsyncClient
@@ -15,10 +15,12 @@ BACKEND_DIR = Path(__file__).resolve().parent
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from app.database import SessionLocal
+from app.database import SessionLocal, get_db
+from app.routes.auth import COOKIE_NAME, get_session, router as auth_router
 from app.routes import (
     asignaciones_router,
     asignaturas_router,
+    apoderados_router,
     asistencias_router,
     biblioteca_router,
     retiros_router,
@@ -30,6 +32,7 @@ from app.routes import (
     notas_router,
     periodos_router,
     profesores_router,
+    reportes_router,
 )
 from config import get_settings
 
@@ -54,6 +57,7 @@ app.add_middleware(
 app.include_router(profesores_router, prefix="/api")
 app.include_router(asignaturas_router, prefix="/api")
 app.include_router(asignaciones_router, prefix="/api")
+app.include_router(apoderados_router, prefix="/api")
 app.include_router(asistencias_router, prefix="/api")
 app.include_router(biblioteca_router, prefix="/api")
 app.include_router(retiros_router, prefix="/api")
@@ -64,16 +68,54 @@ app.include_router(periodos_router, prefix="/api")
 app.include_router(evaluaciones_router, prefix="/api")
 app.include_router(notas_router, prefix="/api")
 app.include_router(dashboard_router, prefix="/api")
+app.include_router(reportes_router, prefix="/api")
+app.include_router(auth_router)
+
+
+@app.middleware("http")
+async def require_api_session(request: Request, call_next):
+    path = request.url.path
+    if request.method == "OPTIONS" or not path.startswith("/api/") or path in {
+        "/api/auth/login", "/api/auth/solicitar-recuperacion", "/api/auth/restablecer-contrasena",
+        "/api/health", "/api/health/db",
+    }:
+        return await call_next(request)
+    # RPC authenticates the target path itself before forwarding the session cookie.
+    if path == "/api/rpc":
+        return await call_next(request)
+    with SessionLocal() as db:
+        session = get_session(db, request.cookies.get(COOKIE_NAME))
+        if not session:
+            return JSONResponse(status_code=401, content={"detail": "Inicia sesión para continuar."})
+        if session.rol == "alumno" and path not in {
+            "/api/portal/alumno", "/api/auth/me", "/api/auth/logout", "/api/auth/cambiar-contrasena",
+        }:
+            return JSONResponse(status_code=403, content={"detail": "Tu cuenta solo puede acceder a su portal de alumno."})
+        if session.rol != "admin" and path in {"/api/auth/cuentas-alumno"}:
+            return JSONResponse(status_code=403, content={"detail": "Acceso solo para administración."})
+    return await call_next(request)
 
 
 @app.post("/api/rpc", tags=["Sistema"])
-async def api_rpc(payload: RpcRequest):
+async def api_rpc(payload: RpcRequest, request: Request, db=Depends(get_db)):
     if not payload.path.startswith("/api/") or payload.path.startswith("/api/rpc"):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Ruta RPC no permitida.")
 
+    target_path = urlsplit(payload.path).path
+    if target_path == "/api/auth/login":
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="El inicio de sesión debe usar su ruta directa.")
+    session = get_session(db, request.cookies.get(COOKIE_NAME))
+    if not session:
+        raise HTTPException(status_code=401, detail="Inicia sesión para continuar.")
+    if session.rol == "alumno" and target_path not in {
+        "/api/portal/alumno", "/api/auth/me", "/api/auth/logout", "/api/auth/cambiar-contrasena",
+    }:
+        raise HTTPException(status_code=403, detail="Tu cuenta solo puede consultar su propio portal.")
+
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://kairos.internal") as client:
-        response = await client.request(payload.method, payload.path, json=payload.body)
+        response = await client.request(payload.method, payload.path, json=payload.body,
+                                       headers={"cookie": request.headers.get("cookie", "")})
 
     if response.status_code == status.HTTP_204_NO_CONTENT:
         return Response(status_code=status.HTTP_204_NO_CONTENT)

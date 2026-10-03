@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Apoderados y avisos - Kairos</title>
+    <link rel="icon" type="image/svg+xml" href="/static/img/kairos-logo.svg">
+    <link rel="stylesheet" href="/static/css/styles.css?v=guardian-reports-v1">
+  </head>
+  <body data-page="apoderados">
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand"><img class="brand-logo" src="/static/img/kairos-logo.svg" alt="Colegio Kairos"><div><strong>Colegio Kairos</strong><small>Administración académica</small></div></div>
+        <nav class="nav-menu" aria-label="Navegación principal">
+          <a href="index.html">Inicio</a><a href="cursos.html">Cursos</a><a href="estudiantes.html">Estudiantes</a>
+          <a href="profesores.html">Profesores</a><a href="asignaturas.html">Asignaturas</a><a href="asignaciones.html">Asignaciones</a>
+          <a href="calendario.html">Calendario</a><a href="notas.html">Notas</a><a href="asistencia.html">Asistencia</a>
+          <a href="biblioteca.html">Biblioteca</a><a href="retiros.html">Retiros</a>
+          <a class="active" href="apoderados.html" aria-current="page">Apoderados y avisos</a><a href="reportes.html">Reportes</a>
+        </nav>
+      </aside>
+      <main class="main-content">
+        <nav class="topbar"><button class="icon-button menu-toggle" type="button" aria-label="Abrir menú"><span class="hamburger"><span></span><span></span><span></span></span></button><h1>Apoderados y avisos</h1><button class="admin-chip" type="button" data-logout title="Cerrar sesión"><span class="avatar">A</span><span>Administración</span></button></nav>
+        <section class="welcome-panel"><div><p>Comunidad escolar</p><h2>Vínculos y comunicaciones</h2><span>Asocia apoderados con sus estudiantes y consulta avisos escolares relacionados.</span></div><div id="api-status" class="api-status">Conectando API</div></section>
+        <p id="guardian-page-message" class="message hidden" role="status" aria-live="polite"></p>
+        <section class="panel guardian-panel">
+          <div class="module-header"><div><p class="section-kicker">Contactos familiares</p><h2 id="guardian-form-title">Registrar apoderado</h2><p class="guardian-help">Un apoderado puede estar vinculado a más de un estudiante.</p></div></div>
+          <form id="guardian-form" class="form-grid guardian-form">
+            <input id="guardian-id" type="hidden">
+            <label>Nombre<input id="guardian-name" required maxlength="100" autocomplete="off"></label>
+            <label>Apellido<input id="guardian-lastname" required maxlength="100" autocomplete="off"></label>
+            <label>RUT<input id="guardian-rut" maxlength="12" placeholder="Opcional" autocomplete="off"></label>
+            <label>Correo electrónico<input id="guardian-email" type="email" maxlength="150" placeholder="Para contacto escolar" autocomplete="off"></label>
+            <label>Teléfono<input id="guardian-phone" type="tel" maxlength="30" autocomplete="off"></label>
+            <label>Relación<input id="guardian-relationship" maxlength="50" placeholder="Madre, padre, tutor…"></label>
+            <label class="guardian-students-label">Estudiantes vinculados<select id="guardian-students" multiple size="5" aria-describedby="guardian-students-help"></select><small id="guardian-students-help">Mantén Ctrl (Windows) o ⌘ (Mac) para seleccionar varios.</small></label>
+            <label class="guardian-checkbox"><input id="guardian-receives-notices" type="checkbox" checked> Incluir avisos escolares para este contacto</label>
+            <div class="form-actions span-2"><button class="button button-blue" type="submit" id="guardian-save">Guardar apoderado</button><button class="button button-light hidden" type="button" id="guardian-cancel">Cancelar edición</button></div>
+          </form>
+        </section>
+        <section class="panel guardian-panel">
+          <div class="module-header"><div><p class="section-kicker">Directorio</p><h2>Apoderados registrados</h2></div><label class="report-search-label">Buscar contacto<input id="guardian-search" type="search" placeholder="Nombre, RUT o correo…"></label></div>
+          <div class="table-wrap"><table><thead><tr><th>Apoderado</th><th>Contacto</th><th>Estudiantes vinculados</th><th>Avisos</th><th>Acciones</th></tr></thead><tbody id="guardians-table"></tbody></table></div>
+          <p id="guardians-empty" class="empty-state hidden">Todavía no hay apoderados registrados.</p>
+        </section>
+        <section class="panel guardian-panel" aria-labelledby="notice-heading">
+          <div class="module-header"><div><p class="section-kicker">Avisos escolares</p><h2 id="notice-heading">Novedades para los apoderados</h2><p class="guardian-help">Incluye actividades, evaluaciones próximas y registros recientes de asistencia o retiros.</p></div><label>Apoderado<select id="notice-guardian"><option value="">Selecciona un apoderado</option></select></label></div>
+          <p id="notice-summary" class="muted">Los avisos se preparan desde el calendario, las evaluaciones, la asistencia y los retiros registrados.</p>
+          <div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Estudiante</th><th>Tipo</th><th>Aviso</th><th>Detalle</th></tr></thead><tbody id="notices-table"></tbody></table></div>
+          <p id="notices-empty" class="empty-state">Selecciona un apoderado para consultar sus avisos.</p>
+          <p class="guardian-privacy-note">Los avisos se consultan dentro de la intranet; esta pantalla no envía correos automáticamente.</p>
+        </section>
+      </main>
+    </div>
+    <script src="/static/js/main.js?v=guardian-reports-v1"></script>
+  </body>
+</html>

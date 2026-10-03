@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Colegio Kairos - Login</title>
     <link rel="icon" type="image/svg+xml" href="/static/img/kairos-logo.svg">
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/styles.css?v=guardian-reports-v1">
   </head>
   <body data-page="login" class="login-page">
     <main class="login-shell">
@@ -18,17 +18,25 @@
 
       <section class="login-card">
         <div>
-          <p class="section-kicker">Acceso administrativo</p>
+          <p class="section-kicker">Acceso seguro</p>
           <h2>Iniciar sesión</h2>
         </div>
         <form id="login-form" class="form-grid single">
-          <label>Correo electrónico<input id="login-email" type="email" value="manuelgarridos2002@kairos.cl" autocomplete="username" required></label>
+          <label>Correo electrónico<input id="login-email" type="email" autocomplete="username" required></label>
           <label>Contraseña<input id="login-password" type="password" value="" autocomplete="current-password" required></label>
-          <button class="button button-blue" type="submit">Entrar al panel</button>
+          <button class="button button-blue" type="submit">Ingresar</button>
         </form>
         <p id="login-message" class="message hidden"></p>
+        <details class="login-recovery">
+          <summary>¿Olvidaste tu contraseña?</summary>
+          <form id="recovery-form" class="form-grid single">
+            <label>Correo de tu cuenta<input id="recovery-email" type="email" autocomplete="email" required></label>
+            <button class="button button-light" type="submit">Enviar enlace de recuperación</button>
+          </form>
+          <p id="recovery-message" class="message hidden"></p>
+        </details>
       </section>
     </main>
-    <script src="/static/js/main.js?v=rpc-v4"></script>
+    <script src="/static/js/main.js?v=guardian-reports-v1"></script>
   </body>
 </html>

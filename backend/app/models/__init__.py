@@ -3,8 +3,10 @@ from app.models.asignatura import Asignatura
 from app.models.asistencia import Asistencia
 from app.models.biblioteca import Libro, PedidoLibro, PrestamoLibro
 from app.models.retiro_estudiante import RetiroEstudiante
+from app.models.apoderado import Apoderado, VinculoApoderado
 from app.models.curso import Curso
 from app.models.estudiante import Estudiante
+from app.models.cuenta_estudiante import CuentaEstudiante, SesionUsuario, TokenRecuperacion
 from app.models.evaluacion import Evaluacion
 from app.models.evento_academico import EventoAcademico
 from app.models.horario_clase import HorarioClase
@@ -20,8 +22,13 @@ __all__ = [
     "PedidoLibro",
     "PrestamoLibro",
     "RetiroEstudiante",
+    "Apoderado",
+    "VinculoApoderado",
     "Curso",
     "Estudiante",
+    "CuentaEstudiante",
+    "SesionUsuario",
+    "TokenRecuperacion",
     "Evaluacion",
     "EventoAcademico",
     "HorarioClase",

@@ -57,6 +57,8 @@ Kairos/
 - Catálogo de biblioteca, pedidos de libros, préstamos, fechas de devolución y libros pendientes o atrasados.
 - El catálogo inicial de biblioteca se carga desde la hoja `Título` del inventario 2025 mediante la migración `20261002_0009`; conserva 266 ejemplares agrupados por título, autor, ISBN, editorial y año, junto con sus ubicaciones.
 - Registro de retiros de estudiantes, persona que retira, autorización y motivo.
+- Directorio de apoderados con vínculos a uno o varios estudiantes; avisos consolidados sobre eventos, evaluaciones, inasistencias, atrasos y retiros relacionados. Los avisos se consultan dentro de la intranet y no se envían por correo automáticamente.
+- Reportes filtrables por curso y período: asistencia, promedios ponderados, matrículas y préstamos de biblioteca vencidos, con descarga CSV compatible con planillas.
 
 ## Backend
 
@@ -135,6 +137,13 @@ Endpoints principales:
 - `PUT|DELETE /api/calendario/eventos/{id}`
 - `GET|POST /api/calendario/horarios`
 - `PUT|DELETE /api/calendario/horarios/{id}`
+- `GET|POST /api/apoderados`
+- `PUT|DELETE /api/apoderados/{id}`
+- `GET /api/apoderados/{id}/avisos`
+- `GET /api/reportes/asistencia`
+- `GET /api/reportes/promedios`
+- `GET /api/reportes/matriculas`
+- `GET /api/reportes/prestamos-vencidos`
 
 ## Frontend
 
@@ -157,6 +166,8 @@ Abrir:
 - `http://localhost:8001/templates/asistencia.html`
 - `http://localhost:8001/templates/biblioteca.html`
 - `http://localhost:8001/templates/retiros.html`
+- `http://localhost:8001/templates/apoderados.html`
+- `http://localhost:8001/templates/reportes.html`
 
 El frontend consume automaticamente:
 
@@ -234,3 +245,14 @@ No se versionan entornos, cache, logs, salidas generadas ni variables locales:
 11. Agregar un libro, registrar un pedido, aprobarlo, prestar el libro y marcar su devolución en Biblioteca.
 12. Registrar un retiro de estudiante y revisar el historial.
 13. Revisar el calendario mensual y el dashboard.
+# Cuentas de alumnos
+
+El acceso de administración y de alumnos se valida en el backend con una cookie de sesión `HttpOnly`. Configura en Vercel las variables `KAIROS_ADMIN_EMAIL` y `KAIROS_ADMIN_PASSWORD` para el acceso de administración. Usa una contraseña nueva y segura; las credenciales que estuvieron en el JavaScript del navegador deben considerarse expuestas y cambiarse.
+
+Para desarrollo local, agrega esas dos variables a `backend/.env` junto con la URL de PostgreSQL. No subas ese archivo al repositorio.
+
+La compilación de producción ejecuta las migraciones de Alembic automáticamente cuando Vercel despliega y conecta a Supabase. En local, ejecuta `alembic -c alembic.ini upgrade head` desde `backend`.
+
+Para que funcione la recuperación de contraseña, configura además `SMTP_HOST`, `SMTP_PORT` (587 con STARTTLS o 465 con SSL), `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM_EMAIL` y `KAIROS_PUBLIC_URL` en Vercel o en `backend/.env`. El enlace enviado vence a los 30 minutos y solo se puede utilizar una vez.
+
+Con sesión de administración, abre **Estudiantes** y usa **Cuenta alumno** para asignar un correo y una contraseña inicial de al menos 10 caracteres a un estudiante activo. El alumno entra por `login.html`; el sistema lo redirige a `portal-alumno.html`, donde solo se consultan sus propias notas, promedio ponderado y asistencia.

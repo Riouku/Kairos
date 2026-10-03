@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reportes - Kairos</title>
+    <link rel="icon" type="image/svg+xml" href="/static/img/kairos-logo.svg">
+    <link rel="stylesheet" href="/static/css/styles.css?v=guardian-reports-v1">
+  </head>
+  <body data-page="reportes">
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand"><img class="brand-logo" src="/static/img/kairos-logo.svg" alt="Colegio Kairos"><div><strong>Colegio Kairos</strong><small>Administración académica</small></div></div>
+        <nav class="nav-menu" aria-label="Navegación principal">
+          <a href="index.html">Inicio</a><a href="cursos.html">Cursos</a><a href="estudiantes.html">Estudiantes</a>
+          <a href="profesores.html">Profesores</a><a href="asignaturas.html">Asignaturas</a><a href="asignaciones.html">Asignaciones</a>
+          <a href="calendario.html">Calendario</a><a href="notas.html">Notas</a><a href="asistencia.html">Asistencia</a>
+          <a href="biblioteca.html">Biblioteca</a><a href="retiros.html">Retiros</a><a href="apoderados.html">Apoderados y avisos</a>
+          <a class="active" href="reportes.html" aria-current="page">Reportes</a>
+        </nav>
+      </aside>
+      <main class="main-content">
+        <nav class="topbar"><button class="icon-button menu-toggle" type="button" aria-label="Abrir menú"><span class="hamburger"><span></span><span></span><span></span></span></button><h1>Reportes</h1><button class="admin-chip" type="button" data-logout title="Cerrar sesión"><span class="avatar">A</span><span>Administración</span></button></nav>
+        <section class="welcome-panel"><div><p>Información para la gestión</p><h2>Reportes académicos y administrativos</h2><span>Consulta datos por período o curso y descarga los resultados en CSV.</span></div><div id="api-status" class="api-status">Conectando API</div></section>
+        <p id="report-page-message" class="message hidden" role="status" aria-live="polite"></p>
+        <section class="panel report-controls">
+          <div class="module-header"><div><p class="section-kicker">Filtros</p><h2>Período y curso</h2></div></div>
+          <div class="form-grid report-filter-grid">
+            <label>Desde<input id="report-from" type="date"></label>
+            <label>Hasta<input id="report-to" type="date"></label>
+            <label>Año académico<input id="report-year" type="number" min="2000" max="2100"></label>
+            <label>Curso<select id="report-course"><option value="">Todos los cursos</option></select></label>
+          </div>
+        </section>
+        <section class="stats-grid reports-grid" aria-label="Tipos de reporte">
+          <button class="panel report-option active" type="button" data-report="asistencia"><span class="report-option-icon">A</span><span><strong>Asistencia</strong><small>Porcentaje y resumen del período</small></span></button>
+          <button class="panel report-option" type="button" data-report="promedios"><span class="report-option-icon">P</span><span><strong>Promedios</strong><small>Promedio ponderado por estudiante</small></span></button>
+          <button class="panel report-option" type="button" data-report="matriculas"><span class="report-option-icon">M</span><span><strong>Matrículas</strong><small>Estudiantes y estado por curso</small></span></button>
+          <button class="panel report-option" type="button" data-report="prestamos-vencidos"><span class="report-option-icon">L</span><span><strong>Préstamos vencidos</strong><small>Libros que siguen pendientes de devolución</small></span></button>
+        </section>
+        <section class="panel report-results-panel">
+          <div class="module-header"><div><p class="section-kicker">Resultados</p><h2 id="report-title">Reporte de asistencia</h2><p id="report-caption" class="guardian-help">Resumen por estudiante para las fechas seleccionadas.</p></div><button class="button button-blue" type="button" id="report-export" disabled>Exportar CSV</button></div>
+          <p id="report-results-message" class="message hidden" role="status" aria-live="polite"></p>
+          <div class="table-wrap"><table><thead id="report-head"></thead><tbody id="report-body"></tbody></table></div>
+          <p id="report-empty" class="empty-state hidden">No hay datos para los filtros seleccionados.</p>
+        </section>
+      </main>
+    </div>
+    <script src="/static/js/main.js?v=guardian-reports-v1"></script>
+  </body>
+</html>

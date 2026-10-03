@@ -10,6 +10,14 @@ BASE_DIR = Path(__file__).resolve().parent
 
 class Settings(BaseSettings):
     app_name: str = "Intranet Escolar"
+    kairos_admin_email: str = ""
+    kairos_admin_password: str = ""
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_user: str = ""
+    smtp_password: str = ""
+    smtp_from_email: str = ""
+    kairos_public_url: str = ""
     database_url: str = Field(
         default="postgresql://postgres:postgres@localhost:5432/intranet_escolar",
         validation_alias=AliasChoices(

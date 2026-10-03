@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mi portal - Colegio Kairos</title>
+    <link rel="icon" type="image/svg+xml" href="/static/img/kairos-logo.svg">
+    <link rel="stylesheet" href="/static/css/styles.css?v=guardian-reports-v1">
+  </head>
+  <body data-page="portal-alumno">
+    <div class="app-shell">
+      <main class="main-content" style="margin-left:0">
+        <nav class="topbar">
+          <h1>Mi portal de alumno</h1>
+          <button class="admin-chip" type="button" data-logout><span class="avatar">A</span><span>Cerrar sesión</span></button>
+        </nav>
+        <section class="welcome-panel">
+          <div><p>Bienvenido/a</p><h2 id="portal-alumno-nombre">Cargando...</h2><span id="portal-alumno-curso"></span></div>
+          <img src="/static/img/kairos-logo.svg" alt="Colegio Kairos" width="64" height="64">
+        </section>
+        <section class="stats-grid">
+          <article class="stat-card stat-blue"><span class="stat-icon stat-notes"></span><div><strong id="portal-alumno-promedio">—</strong><small>Promedio ponderado</small></div></article>
+          <article class="stat-card stat-green"><span class="stat-icon stat-attendance"></span><div><strong id="portal-alumno-asistencia">—</strong><small>Asistencia del año</small><small id="portal-alumno-asistencia-detalle"></small></div></article>
+        </section>
+        <section class="panel">
+          <div class="module-header"><div><p class="section-kicker">Información personal</p><h2>Mis notas</h2><p>Solo tú puedes ver la información asociada a tu cuenta.</p></div></div>
+          <p id="portal-alumno-message" class="message hidden"></p>
+          <div class="table-wrap">
+            <table><thead><tr><th>Asignatura</th><th>Evaluación</th><th>Periodo</th><th>Nota</th></tr></thead><tbody id="portal-alumno-notas"><tr><td colspan="4">Cargando tus notas...</td></tr></tbody></table>
+          </div>
+        </section>
+        <section class="panel">
+          <div class="module-header"><div><p class="section-kicker">Seguridad</p><h2>Cambiar contraseña</h2></div></div>
+          <form id="change-password-form" class="form-grid">
+            <label>Contraseña actual<input id="current-password" type="password" autocomplete="current-password" required></label>
+            <label>Nueva contraseña<input id="new-password" type="password" minlength="10" maxlength="200" autocomplete="new-password" required></label>
+            <label>Repetir nueva contraseña<input id="confirm-password" type="password" minlength="10" maxlength="200" autocomplete="new-password" required></label>
+            <p id="change-password-message" class="message hidden span-2"></p>
+            <div class="form-actions span-2"><button class="button button-blue" type="submit">Actualizar contraseña</button></div>
+          </form>
+        </section>
+      </main>
+    </div>
+    <script src="/static/js/main.js?v=guardian-reports-v1"></script>
+  </body>
+</html>

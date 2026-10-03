@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Intranet Escolar - Estudiantes</title>
     <link rel="icon" type="image/svg+xml" href="/static/img/kairos-logo.svg">
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/styles.css?v=guardian-reports-v1">
   </head>
   <body data-page="estudiantes">
     <div class="app-shell">
@@ -151,6 +151,26 @@
         <div id="estudiante-admin-detail" class="detail-grid"></div>
       </div>
     </div>
-    <script src="/static/js/main.js?v=rpc-v4"></script>
+    <div class="modal hidden" id="cuenta-alumno-modal" aria-hidden="true">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2>Crear cuenta de alumno</h2>
+          <button class="icon-button" type="button" data-close-modal>x</button>
+        </div>
+        <form id="cuenta-alumno-form" class="form-grid single">
+          <input type="hidden" id="cuenta-alumno-estudiante-id">
+          <p id="cuenta-alumno-nombre"></p>
+          <label>Correo de acceso<input id="cuenta-alumno-correo" type="email" required maxlength="150" autocomplete="off"></label>
+          <label>Contraseña inicial<input id="cuenta-alumno-password" type="password" required minlength="10" maxlength="200" autocomplete="new-password"></label>
+          <p class="muted">Entrega esta contraseña al alumno por un canal privado.</p>
+          <p id="cuenta-alumno-message" class="message hidden"></p>
+          <div class="form-actions">
+            <button class="button button-blue" type="submit">Crear cuenta</button>
+            <button class="button button-light" type="button" data-close-modal>Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="/static/js/main.js?v=guardian-reports-v1"></script>
   </body>
 </html>

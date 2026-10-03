@@ -1,9 +1,6 @@
 const isLocalHost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
 const API_BASE_URL = window.KAIROS_API_BASE_URL || (isLocalHost ? "http://localhost:8000/api" : "/api");
 const HEALTH_URL = window.KAIROS_HEALTH_URL || (isLocalHost ? "http://localhost:8000/health/db" : "/api/health/db");
-const LOGIN_EMAIL = "manuelgarridos2002@kairos.cl";
-const LOGIN_PASSWORD = "Manueleito2800";
-
 const state = {
   cursos: [],
   cursoEstudiantes: [],
@@ -121,6 +118,7 @@ async function api(path, options = {}) {
   let requestUrl = `${API_BASE_URL}${path}`;
   let requestOptions = {
     headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+    credentials: "include",
     ...options,
   };
 
@@ -129,6 +127,7 @@ async function api(path, options = {}) {
     requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json", ...(options.headers || {}) },
+      credentials: "include",
       body: JSON.stringify({
         method,
         path: `${API_BASE_URL}${path}`,
@@ -177,13 +176,30 @@ async function checkApiStatus() {
 }
 
 function bindShell() {
+  if (document.body.dataset.page !== "portal-alumno") {
+    const menu = qs(".nav-menu");
+    const links = [["apoderados.html", "Apoderados y avisos"], ["reportes.html", "Reportes"]];
+    for (const [href, label] of links) {
+      if (menu && !menu.querySelector(`a[href="${href}"]`)) {
+        const link = document.createElement("a");
+        link.href = href;
+        link.textContent = label;
+        if (window.location.pathname.endsWith(href)) {
+          link.classList.add("active");
+          link.setAttribute("aria-current", "page");
+        }
+        menu.append(link);
+      }
+    }
+  }
+
   qs(".menu-toggle")?.addEventListener("click", () => {
     qs("#sidebar")?.classList.toggle("open");
   });
 
   qs("[data-logout]")?.addEventListener("click", () => {
-    sessionStorage.removeItem("kairos-user");
-    window.location.href = "login.html";
+    fetch(`${API_BASE_URL}/auth/logout`, { method: "POST", credentials: "include" })
+      .finally(() => { sessionStorage.removeItem("kairos-user"); window.location.href = "login.html"; });
   });
 
   qsa("[data-close-modal]").forEach((button) => {
@@ -247,22 +263,110 @@ function renderMonthlyChart(items = []) {
 }
 
 function bindLogin() {
-  qs("#login-form")?.addEventListener("submit", (event) => {
+  qs("#login-form")?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const email = qs("#login-email").value.trim().toLowerCase();
-    const password = qs("#login-password").value;
-    if (email !== LOGIN_EMAIL || password !== LOGIN_PASSWORD) {
-      sessionStorage.removeItem("kairos-user");
-      showMessage("#login-message", "Correo o contraseña incorrecta.", true);
+    const button = qs('#login-form button[type="submit"]');
+    button.disabled = true;
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: "POST", credentials: "include", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo: qs("#login-email").value.trim().toLowerCase(), contrasena: qs("#login-password").value }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.detail || "No se pudo iniciar sesión.");
+      showMessage("#login-message", "Acceso correcto. Redirigiendo...");
+      window.location.href = result.redirect;
+    } catch (error) {
+      showMessage("#login-message", error.message, true);
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  qs("#recovery-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const button = qs('#recovery-form button[type="submit"]');
+    button.disabled = true;
+    clearMessage("#recovery-message");
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/solicitar-recuperacion`, {
+        method: "POST", credentials: "include", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo: qs("#recovery-email").value.trim().toLowerCase() }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.detail || "No se pudo solicitar la recuperación.");
+      showMessage("#recovery-message", result.detail);
+    } catch (error) {
+      showMessage("#recovery-message", error.message, true);
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  qs("#change-password-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearMessage("#change-password-message");
+    const next = qs("#new-password").value;
+    if (next !== qs("#confirm-password").value) {
+      showMessage("#change-password-message", "Las contraseñas nuevas no coinciden.", true);
       return;
     }
-
-    sessionStorage.setItem("kairos-user", email);
-    showMessage("#login-message", "Acceso correcto. Redirigiendo al panel...");
-    window.setTimeout(() => {
-      window.location.href = "index.html";
-    }, 450);
+    try {
+      const result = await api("/auth/cambiar-contrasena", {
+        method: "POST",
+        body: JSON.stringify({ contrasena_actual: qs("#current-password").value, contrasena_nueva: next }),
+      });
+      showMessage("#change-password-message", result.detail);
+      qs("#change-password-form").reset();
+    } catch (error) {
+      showMessage("#change-password-message", error.message, true);
+    }
   });
+
+  qs("#reset-password-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearMessage("#reset-password-message");
+    const next = qs("#reset-password").value;
+    if (next !== qs("#reset-password-confirm").value) {
+      showMessage("#reset-password-message", "Las contraseñas no coinciden.", true);
+      return;
+    }
+    const token = new URLSearchParams(window.location.search).get("token");
+    if (!token) {
+      showMessage("#reset-password-message", "Falta el enlace de recuperación. Solicita uno nuevo.", true);
+      return;
+    }
+    const button = qs('#reset-password-form button[type="submit"]');
+    button.disabled = true;
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/restablecer-contrasena`, {
+        method: "POST", credentials: "include", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, contrasena: next }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.detail || "No se pudo restablecer la contraseña.");
+      showMessage("#reset-password-message", result.detail);
+      qs("#reset-password-form").reset();
+      window.setTimeout(() => { window.location.href = "login.html"; }, 1400);
+    } catch (error) {
+      showMessage("#reset-password-message", error.message, true);
+    } finally {
+      button.disabled = false;
+    }
+  });
+}
+
+async function initPortalAlumno() {
+  const portal = await api("/portal/alumno");
+  setText("#portal-alumno-nombre", portal.estudiante.nombre);
+  setText("#portal-alumno-curso", `${portal.estudiante.curso} · ${portal.estudiante.anio_academico}`);
+  setText("#portal-alumno-promedio", portal.promedio == null ? "—" : Number(portal.promedio).toFixed(1));
+  setText("#portal-alumno-asistencia", portal.asistencia.porcentaje == null ? "Sin registros" : `${portal.asistencia.porcentaje}%`);
+  setText("#portal-alumno-asistencia-detalle", `${portal.asistencia.presentes} presentes · ${portal.asistencia.ausentes} ausencias · ${portal.asistencia.atrasos} atrasos`);
+  const table = qs("#portal-alumno-notas");
+  table.innerHTML = portal.notas.length ? portal.notas.map((item) => `
+    <tr><td>${escapeHtml(item.asignatura)}</td><td>${escapeHtml(item.evaluacion)}</td><td>${escapeHtml(item.periodo)}</td><td><strong>${Number(item.nota).toFixed(1)}</strong></td></tr>
+  `).join("") : '<tr><td colspan="4">Aún no hay notas registradas.</td></tr>';
 }
 
 async function initDashboard() {
@@ -552,6 +656,7 @@ async function loadEstudiantesAdmin() {
           <td class="actions">
             <a class="button button-light action-button" href="perfil-estudiante.html?id=${estudiante.id}" title="Ver perfil">Perfil</a>
             <button class="button button-light action-button" data-view-estudiante-admin="${estudiante.id}" title="Ver detalle">Ver</button>
+            <button class="button button-light action-button" data-account-estudiante="${estudiante.id}" title="Crear cuenta de alumno">Cuenta alumno</button>
             <button class="button button-blue action-button" data-edit-estudiante-admin="${estudiante.id}" title="Editar estudiante">Editar</button>
             <button class="button ${estudiante.activo ? "button-light" : "button-green"} action-button" data-toggle-estudiante-admin="${estudiante.id}" title="${estudiante.activo ? "Desactivar" : "Activar"}">${estudiante.activo ? "Desactivar" : "Activar"}</button>
             <button class="button button-red action-button" data-delete-estudiante-admin="${estudiante.id}" title="Eliminar estudiante">Eliminar</button>
@@ -635,6 +740,24 @@ function bindEstudiantesAdmin() {
     }
   });
 
+  qs("#cuenta-alumno-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearMessage("#cuenta-alumno-message");
+    const payload = {
+      estudiante_id: Number(qs("#cuenta-alumno-estudiante-id").value),
+      correo: qs("#cuenta-alumno-correo").value.trim().toLowerCase(),
+      contrasena: qs("#cuenta-alumno-password").value,
+    };
+    try {
+      await api("/auth/cuentas-alumno", { method: "POST", body: JSON.stringify(payload) });
+      showMessage("#cuenta-alumno-message", "Cuenta creada. El alumno ya puede iniciar sesión.");
+      qs("#cuenta-alumno-form").reset();
+      window.setTimeout(() => closeModal(qs("#cuenta-alumno-modal")), 900);
+    } catch (error) {
+      showMessage("#cuenta-alumno-message", error.message, true);
+    }
+  });
+
   qs("#estudiante-admin-search").addEventListener("input", debounce(() => loadEstudiantesAdmin()));
   qs("#estudiante-admin-curso-filter").addEventListener("change", () => loadEstudiantesAdmin());
   qs("#estudiante-admin-estado-filter").addEventListener("change", () => loadEstudiantesAdmin());
@@ -650,6 +773,18 @@ function bindEstudiantesAdmin() {
     const editId = button.dataset.editEstudianteAdmin;
     const toggleId = button.dataset.toggleEstudianteAdmin;
     const deleteId = button.dataset.deleteEstudianteAdmin;
+    const accountId = button.dataset.accountEstudiante;
+    if (accountId) {
+      const student = state.estudiantesAdmin.estudiantes.find((item) => item.id === Number(accountId));
+      if (!student) return;
+      qs("#cuenta-alumno-estudiante-id").value = student.id;
+      setText("#cuenta-alumno-nombre", `${student.nombre} ${student.apellido}`);
+      qs("#cuenta-alumno-correo").value = student.correo || "";
+      qs("#cuenta-alumno-password").value = "";
+      clearMessage("#cuenta-alumno-message");
+      openModal("#cuenta-alumno-modal");
+      return;
+    }
     if (viewId) {
       const estudiante = state.estudiantesAdmin.estudiantes.find((item) => item.id === Number(viewId));
       if (estudiante) showEstudianteAdminDetail(estudiante);
@@ -2481,11 +2616,273 @@ async function initAsistencia() {
   await loadAsistenciaDia();
 }
 
+const guardianState = { apoderados: [], estudiantes: [] };
+const reportState = { type: "asistencia", rows: [], columns: [] };
+
+function guardianStudentName(item) {
+  return `${item.nombre} ${item.apellido}`.trim();
+}
+
+function resetGuardianForm() {
+  qs("#guardian-form")?.reset();
+  setText("#guardian-form-title", "Registrar apoderado");
+  qs("#guardian-id").value = "";
+  qs("#guardian-active").value = "true";
+  qs("#guardian-receives-notices").checked = true;
+  qs("#guardian-save").textContent = "Guardar apoderado";
+  qs("#guardian-cancel").classList.add("hidden");
+}
+
+function renderGuardians() {
+  const search = (qs("#guardian-search")?.value || "").trim().toLocaleLowerCase("es");
+  const visible = guardianState.apoderados.filter((item) =>
+    `${item.nombre} ${item.apellido} ${item.rut || ""} ${item.correo || ""}`.toLocaleLowerCase("es").includes(search));
+  const table = qs("#guardians-table");
+  if (!table) return;
+  table.innerHTML = visible.map((item) => `<tr>
+    <td><strong>${escapeHtml(guardianStudentName(item))}</strong><small class="table-subline">${escapeHtml(item.rut || "Sin RUT")}</small></td>
+    <td>${escapeHtml(item.correo || "Sin correo")}<small class="table-subline">${escapeHtml(item.telefono || "Sin teléfono")}</small></td>
+    <td>${item.estudiantes.length ? item.estudiantes.map((student) => `<span class="guardian-student-chip">${escapeHtml(student.nombre)} · ${escapeHtml(student.curso)}</span>`).join(" ") : "Sin vínculos"}</td>
+    <td><span class="status-badge ${item.activo ? "status-active" : "status-inactive"}">${item.activo ? "Activo" : "Inactivo"}</span></td>
+    <td><div class="actions"><button class="button button-light" type="button" data-guardian-edit="${item.id}">Editar</button><button class="button button-light" type="button" data-guardian-toggle="${item.id}">${item.activo ? "Desactivar" : "Activar"}</button></div></td>
+  </tr>`).join("");
+  qs("#guardians-empty")?.classList.toggle("hidden", visible.length > 0);
+  const selector = qs("#notice-guardian");
+  const previous = selector?.value || "";
+  if (selector) {
+    selector.innerHTML = `<option value="">Selecciona un apoderado</option>${guardianState.apoderados.filter((item) => item.activo).map((item) => `<option value="${item.id}">${escapeHtml(guardianStudentName(item))}</option>`).join("")}`;
+    if (guardianState.apoderados.some((item) => item.activo && String(item.id) === previous)) selector.value = previous;
+  }
+}
+
+async function loadGuardianData() {
+  const [guardians, students] = await Promise.all([api("/apoderados"), api("/estudiantes")]);
+  guardianState.apoderados = guardians;
+  guardianState.estudiantes = students;
+  qs("#guardian-students").innerHTML = students.map((item) => `<option value="${item.id}">${escapeHtml(guardianStudentName(item))} · ${escapeHtml(item.curso_nombre || "Curso")}${item.activo ? "" : " · Inactivo"}</option>`).join("");
+  renderGuardians();
+}
+
+async function loadGuardianNotices() {
+  const id = qs("#notice-guardian").value;
+  const table = qs("#notices-table");
+  table.innerHTML = "";
+  if (!id) {
+    setText("#notice-summary", "Los avisos se preparan desde el calendario, las evaluaciones, la asistencia y los retiros registrados.");
+    qs("#notices-empty").textContent = "Selecciona un apoderado para consultar sus avisos.";
+    qs("#notices-empty").classList.remove("hidden");
+    return;
+  }
+  try {
+    const notices = await api(`/apoderados/${id}/avisos`);
+    table.innerHTML = notices.map((item) => `<tr><td>${escapeHtml(formatReportDate(item.fecha))}</td><td>${escapeHtml(item.estudiante)}</td><td>${escapeHtml(item.tipo)}</td><td><strong>${escapeHtml(item.titulo)}</strong></td><td>${escapeHtml(item.detalle || "—")}</td></tr>`).join("");
+    const selected = guardianState.apoderados.find((item) => String(item.id) === id);
+    setText("#notice-summary", `${notices.length} aviso(s) para ${selected ? guardianStudentName(selected) : "el apoderado seleccionado"}.`);
+    qs("#notices-empty").textContent = notices.length ? "" : "No hay avisos en el período consultado.";
+    qs("#notices-empty").classList.toggle("hidden", notices.length > 0);
+  } catch (error) {
+    showMessage("#guardian-page-message", error.message, true);
+  }
+}
+
+function bindApoderados() {
+  qs("#guardian-form")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearMessage("#guardian-page-message");
+    const id = qs("#guardian-id").value;
+    const payload = {
+      nombre: qs("#guardian-name").value.trim(), apellido: qs("#guardian-lastname").value.trim(),
+      rut: qs("#guardian-rut").value.trim() || null, correo: qs("#guardian-email").value.trim() || null,
+      telefono: qs("#guardian-phone").value.trim() || null, parentesco: qs("#guardian-relationship").value.trim() || null,
+      activo: qs("#guardian-active").value === "true", recibe_avisos: qs("#guardian-receives-notices").checked,
+      estudiante_ids: [...qs("#guardian-students").selectedOptions].map((option) => Number(option.value)),
+    };
+    try {
+      await api(id ? `/apoderados/${id}` : "/apoderados", { method: id ? "PUT" : "POST", body: JSON.stringify(payload) });
+      showMessage("#guardian-page-message", id ? "Apoderado actualizado." : "Apoderado registrado y vinculado.");
+      resetGuardianForm();
+      await loadGuardianData();
+    } catch (error) {
+      showMessage("#guardian-page-message", error.message, true);
+    }
+  });
+  qs("#guardian-cancel")?.addEventListener("click", resetGuardianForm);
+  qs("#guardian-search")?.addEventListener("input", renderGuardians);
+  qs("#guardians-table")?.addEventListener("click", async (event) => {
+    const edit = event.target.closest("[data-guardian-edit]");
+    const toggle = event.target.closest("[data-guardian-toggle]");
+    const itemId = Number(edit?.dataset.guardianEdit || toggle?.dataset.guardianToggle);
+    const item = guardianState.apoderados.find((candidate) => candidate.id === itemId);
+    if (!item) return;
+    if (edit) {
+      qs("#guardian-id").value = item.id;
+      qs("#guardian-name").value = item.nombre;
+      qs("#guardian-lastname").value = item.apellido;
+      qs("#guardian-rut").value = item.rut || "";
+      qs("#guardian-email").value = item.correo || "";
+      qs("#guardian-phone").value = item.telefono || "";
+      qs("#guardian-active").value = String(item.activo);
+      qs("#guardian-relationship").value = item.estudiantes[0]?.parentesco || "";
+      qs("#guardian-receives-notices").checked = item.estudiantes.some((student) => student.recibe_avisos);
+      const studentIds = new Set(item.estudiantes.map((student) => String(student.id)));
+      [...qs("#guardian-students").options].forEach((option) => { option.selected = studentIds.has(option.value); });
+      setText("#guardian-form-title", `Editar a ${guardianStudentName(item)}`);
+      qs("#guardian-save").textContent = "Guardar cambios";
+      qs("#guardian-cancel").classList.remove("hidden");
+      qs("#guardian-form").scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    try {
+      await api(`/apoderados/${item.id}`, { method: "PUT", body: JSON.stringify({
+        nombre: item.nombre, apellido: item.apellido, rut: item.rut, correo: item.correo,
+        telefono: item.telefono, activo: !item.activo, estudiante_ids: item.estudiantes.map((student) => student.id),
+        parentesco: item.estudiantes[0]?.parentesco || null,
+        recibe_avisos: item.estudiantes.some((student) => student.recibe_avisos),
+      }) });
+      await loadGuardianData();
+    } catch (error) {
+      showMessage("#guardian-page-message", error.message, true);
+    }
+  });
+  qs("#notice-guardian")?.addEventListener("change", loadGuardianNotices);
+}
+
+async function initApoderados() {
+  bindApoderados();
+  await loadGuardianData();
+  const first = guardianState.apoderados.find((item) => item.activo);
+  if (first) {
+    qs("#notice-guardian").value = String(first.id);
+    await loadGuardianNotices();
+  }
+}
+
+function formatReportDate(value) {
+  if (!value) return "—";
+  const raw = String(value);
+  const parsed = new Date(/^\d{4}-\d{2}-\d{2}$/.test(raw) ? `${raw}T12:00:00` : raw);
+  return Number.isNaN(parsed.getTime()) ? raw : new Intl.DateTimeFormat("es-CL", { dateStyle: "medium" }).format(parsed);
+}
+
+const reportColumns = {
+  asistencia: [["estudiante", "Estudiante"], ["rut", "RUT"], ["curso", "Curso"], ["registros", "Días registrados"], ["presentes", "Presentes"], ["ausentes", "Ausentes"], ["justificados", "Justificados"], ["atrasos", "Atrasos"], ["porcentaje_asistencia", "% asistencia"]],
+  promedios: [["estudiante", "Estudiante"], ["rut", "RUT"], ["curso", "Curso"], ["evaluaciones", "Evaluaciones"], ["promedio", "Promedio ponderado"]],
+  matriculas: [["estudiante", "Estudiante"], ["rut", "RUT"], ["curso", "Curso"], ["anio_academico", "Año académico"], ["estado", "Estado"]],
+  "prestamos-vencidos": [["estudiante", "Estudiante"], ["curso", "Curso"], ["libro", "Libro"], ["fecha_prestamo", "Fecha de préstamo"], ["fecha_devolucion", "Fecha de devolución"], ["dias_atraso", "Días de atraso"]],
+};
+const reportTitles = { asistencia: "Reporte de asistencia", promedios: "Reporte de promedios", matriculas: "Reporte de matrículas", "prestamos-vencidos": "Préstamos vencidos" };
+
+function reportQuery() {
+  const params = new URLSearchParams();
+  const type = reportState.type;
+  if (qs("#report-course").value) params.set("curso_id", qs("#report-course").value);
+  if (["asistencia", "promedios"].includes(type)) {
+    if (qs("#report-from").value) params.set("desde", qs("#report-from").value);
+    if (qs("#report-to").value) params.set("hasta", qs("#report-to").value);
+  }
+  if (["promedios", "matriculas"].includes(type) && qs("#report-year").value) params.set("anio_academico", qs("#report-year").value);
+  return params.toString();
+}
+
+async function loadReport() {
+  const type = reportState.type;
+  const path = type === "asistencia" ? "/reportes/asistencia" : type === "promedios" ? "/reportes/promedios" : type === "matriculas" ? "/reportes/matriculas" : "/reportes/prestamos-vencidos";
+  qs("#report-results-message").classList.add("hidden");
+  try {
+    const query = reportQuery();
+    let rows = await api(`${path}${query ? `?${query}` : ""}`);
+    if (type === "asistencia") rows = rows.resultados || [];
+    reportState.rows = rows;
+    reportState.columns = reportColumns[type];
+    qs("#report-head").innerHTML = `<tr>${reportState.columns.map(([, label]) => `<th>${escapeHtml(label)}</th>`).join("")}</tr>`;
+    qs("#report-body").innerHTML = rows.map((row) => `<tr>${reportState.columns.map(([key]) => {
+      const value = key.includes("fecha") ? formatReportDate(row[key]) : row[key] ?? "—";
+      return `<td>${escapeHtml(value)}${key === "porcentaje_asistencia" && row[key] != null ? "%" : ""}</td>`;
+    }).join("")}</tr>`).join("");
+    setText("#report-title", reportTitles[type]);
+    const captions = {
+      asistencia: `Asistencia entre ${formatReportDate(qs("#report-from").value)} y ${formatReportDate(qs("#report-to").value)}.`,
+      promedios: `Promedios ponderados del año académico ${qs("#report-year").value || "seleccionado"}.`,
+      matriculas: `Matrículas del año académico ${qs("#report-year").value || "seleccionado"}.`,
+      "prestamos-vencidos": "Libros con fecha de devolución vencida que aún no se han registrado como devueltos.",
+    };
+    setText("#report-caption", captions[type]);
+    qs("#report-empty").classList.toggle("hidden", rows.length > 0);
+    qs("#report-export").disabled = rows.length === 0;
+  } catch (error) {
+    showMessage("#report-results-message", error.message, true);
+    qs("#report-empty").classList.add("hidden");
+    qs("#report-export").disabled = true;
+  }
+}
+
+function downloadReportCsv() {
+  if (!reportState.rows.length) return;
+  const safeCell = (value) => {
+    let cell = value == null ? "" : String(value);
+    if (/^[\s]*[=+\-@\t\r]/.test(cell)) cell = `'${cell}`;
+    return `"${cell.replaceAll('"', '""')}"`;
+  };
+  const csv = [reportState.columns.map(([, label]) => safeCell(label)).join(";"), ...reportState.rows.map((row) => reportState.columns.map(([key]) => safeCell(row[key])).join(";"))].join("\r\n");
+  const url = URL.createObjectURL(new Blob(["\ufeff", csv], { type: "text/csv;charset=utf-8" }));
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = `kairos-${reportState.type}-${new Date().toISOString().slice(0, 10)}.csv`;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
+async function initReportes() {
+  const localNow = new Date();
+  const today = new Date(localNow.getTime() - localNow.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
+  qs("#report-from").value = `${today.slice(0, 4)}-01-01`;
+  qs("#report-to").value = today;
+  qs("#report-year").value = today.slice(0, 4);
+  const courses = await api(`/cursos?activo=true&anio_academico=${today.slice(0, 4)}`);
+  qs("#report-course").innerHTML = `<option value="">Todos los cursos</option>${courses.map((course) => `<option value="${course.id}">${escapeHtml(course.nombre)}</option>`).join("")}`;
+  qs("#report-export").addEventListener("click", downloadReportCsv);
+  qs("#report-course").addEventListener("change", loadReport);
+  qs("#report-year").addEventListener("change", async () => {
+    const updatedCourses = await api(`/cursos?activo=true&anio_academico=${qs("#report-year").value}`);
+    qs("#report-course").innerHTML = `<option value="">Todos los cursos</option>${updatedCourses.map((course) => `<option value="${course.id}">${escapeHtml(course.nombre)}</option>`).join("")}`;
+    await loadReport();
+  });
+  qs("#report-from").addEventListener("change", loadReport);
+  qs("#report-to").addEventListener("change", loadReport);
+  qsa("[data-report]").forEach((button) => button.addEventListener("click", async () => {
+    reportState.type = button.dataset.report;
+    qsa("[data-report]").forEach((option) => option.classList.toggle("active", option === button));
+    const showDates = ["asistencia", "promedios"].includes(reportState.type);
+    const showYear = ["promedios", "matriculas"].includes(reportState.type);
+    qs("#report-from").closest("label").classList.toggle("hidden", !showDates);
+    qs("#report-to").closest("label").classList.toggle("hidden", !showDates);
+    qs("#report-year").closest("label").classList.toggle("hidden", !showYear);
+    await loadReport();
+  }));
+  qs("#report-from").closest("label").classList.add("hidden");
+  qs("#report-to").closest("label").classList.add("hidden");
+  qs("#report-year").closest("label").classList.add("hidden");
+  await loadReport();
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const page = document.body.dataset.page;
-  if (page !== "login" && !sessionStorage.getItem("kairos-user")) {
-    window.location.href = "login.html";
-    return;
+  if (page !== "login" && page !== "reset-password") {
+    try {
+      const identity = await api("/auth/me");
+      if (identity.rol === "alumno" && page !== "portal-alumno") {
+        window.location.href = "portal-alumno.html";
+        return;
+      }
+      if (identity.rol === "admin" && page === "portal-alumno") {
+        window.location.href = "index.html";
+        return;
+      }
+    } catch {
+      sessionStorage.removeItem("kairos-user");
+      window.location.href = "login.html";
+      return;
+    }
   }
 
   bindShell();
@@ -2493,6 +2890,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await checkApiStatus();
   try {
     if (page === "dashboard") await initDashboard();
+    if (page === "portal-alumno") await initPortalAlumno();
     if (page === "cursos") {
       bindCursos();
       await loadCursos();
@@ -2515,6 +2913,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (page === "calendario") await initCalendario();
     if (page === "notas") await initNotas();
     if (page === "asistencia") await initAsistencia();
+    if (page === "apoderados") await initApoderados();
+    if (page === "reportes") await initReportes();
   } catch (error) {
     console.error(error);
     const pageMessages = {
@@ -2526,7 +2926,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       calendario: ["#calendario-message", "calendario"],
       notas: ["#notas-message", "notas"],
       asistencia: ["#asistencia-message", "asistencia"],
+      apoderados: ["#guardian-page-message", "apoderados y avisos"],
+      reportes: ["#report-page-message", "reportes"],
       "perfil-estudiante": ["#perfil-message", "perfil"],
+      "portal-alumno": ["#portal-alumno-message", "tu información"],
     };
     const pageMessage = pageMessages[page];
     if (pageMessage) {
