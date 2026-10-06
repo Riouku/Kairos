@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 260" role="img" aria-labelledby="title desc">
+  <title id="title">Escudo Colegio Imperial</title>
+  <desc id="desc">Escudo azul con una corona dorada y un libro abierto, identidad del Colegio Imperial.</desc>
+  <defs>
+    <linearGradient id="shield" x1="38" y1="18" x2="205" y2="238" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3C5DA8"/>
+      <stop offset="1" stop-color="#142654"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="71" y1="57" x2="169" y2="145" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE49A"/>
+      <stop offset="1" stop-color="#E9AD32"/>
+    </linearGradient>
+    <filter id="shadow" x="12" y="8" width="216" height="244" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dy="3"/>
+      <feComponentTransfer><feFuncA type="linear" slope=".18"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M120 17 204 43v76c0 61-32 100-84 126-52-26-84-65-84-126V43l84-26Z" fill="url(#shield)"/>
+    <path d="M120 29 193 52v67c0 53-26 87-73 112-47-25-73-59-73-112V52l73-23Z" fill="none" stroke="#B9C9E8" stroke-width="3"/>
+
+    <path d="m76 91 10-32 22 19 12-30 12 30 22-19 10 32H76Z" fill="url(#gold)" stroke="#FFE9AA" stroke-linejoin="round" stroke-width="3"/>
+    <path d="M83 99h74v10c0 5-4 9-9 9H92c-5 0-9-4-9-9V99Z" fill="#E9AD32"/>
+    <circle cx="86" cy="59" r="5" fill="#FFF1BD"/>
+    <circle cx="120" cy="48" r="5" fill="#FFF1BD"/>
+    <circle cx="154" cy="59" r="5" fill="#FFF1BD"/>
+
+    <path d="M57 124c22-10 43-7 63 7v65c-20-14-41-17-63-7v-65Z" fill="#FFFDF5"/>
+    <path d="M183 124c-22-10-43-7-63 7v65c20-14 41-17 63-7v-65Z" fill="#F1F5FC"/>
+    <path d="M120 131v64" stroke="#E6B445" stroke-linecap="round" stroke-width="3"/>
+    <path d="M68 140c15-5 29-3 42 4m-42 12c15-5 29-3 42 4m46-20c-15-5-29-3-42 4m42 12c-15-5-29-3-42 4" fill="none" stroke="#B8C7E1" stroke-linecap="round" stroke-width="3"/>
+    <path d="M57 190c22-10 43-7 63 7 20-14 41-17 63-7" fill="none" stroke="#E6B445" stroke-linecap="round" stroke-width="4"/>
+  </g>
+</svg>

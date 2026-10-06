@@ -2827,7 +2827,7 @@ function downloadReportCsv() {
   const url = URL.createObjectURL(new Blob(["\ufeff", csv], { type: "text/csv;charset=utf-8" }));
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = `kairos-${reportState.type}-${new Date().toISOString().slice(0, 10)}.csv`;
+  anchor.download = `imperial-${reportState.type}-${new Date().toISOString().slice(0, 10)}.csv`;
   anchor.click();
   URL.revokeObjectURL(url);
 }

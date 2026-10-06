@@ -92,7 +92,7 @@ def _send_reset_email(email: str, token: str) -> None:
     base_url = settings.kairos_public_url.rstrip("/")
     reset_url = f"{base_url}/restablecer-contrasena.html?token={token}"
     message = EmailMessage()
-    message["Subject"] = "Recuperación de contraseña - Colegio Kairos"
+    message["Subject"] = "Recuperación de contraseña - Colegio Imperial"
     message["From"] = settings.smtp_from_email
     message["To"] = email
     message.set_content(
