@@ -1,18 +1,18 @@
 :root {
-  --sidebar: #17164d;
-  --sidebar-2: #10143d;
-  --blue: #5b35e6;
-  --blue-dark: #4724c7;
+  --sidebar: #19366d;
+  --sidebar-2: #10264f;
+  --blue: #315da8;
+  --blue-dark: #23457f;
   --green: #31b77a;
   --orange: #ff7a00;
-  --purple: #7b2ff2;
+  --purple: #bd9139;
   --red: #dc2626;
-  --bg: #8a7df0;
+  --bg: #d4b66f;
   --panel: #ffffff;
   --text: #11163d;
-  --muted: #5c638a;
-  --line: #e7e4f5;
-  --shadow: 0 24px 70px rgba(34, 21, 111, 0.18);
+  --muted: #5b6883;
+  --line: #e8e2d2;
+  --shadow: 0 24px 70px rgba(25, 47, 88, 0.18);
 }
 
 * {
@@ -22,16 +22,16 @@
 html {
   min-height: 100%;
   background:
-    radial-gradient(circle at 80% 8%, rgba(157, 72, 255, 0.5), transparent 32%),
-    linear-gradient(135deg, #283c91 0%, #6140c8 48%, #cbb8ff 100%);
+    radial-gradient(circle at 80% 8%, rgba(226, 190, 111, 0.32), transparent 32%),
+    linear-gradient(135deg, #19366d 0%, #315da8 52%, #d2b66e 100%);
 }
 
 body {
   min-height: 100vh;
   margin: 0;
   background:
-    radial-gradient(circle at 80% 8%, rgba(157, 72, 255, 0.46), transparent 32%),
-    linear-gradient(135deg, #283c91 0%, #6140c8 48%, #cbb8ff 100%);
+    radial-gradient(circle at 80% 8%, rgba(226, 190, 111, 0.28), transparent 32%),
+    linear-gradient(135deg, #19366d 0%, #315da8 52%, #d2b66e 100%);
   color: var(--text);
   font-family: Inter, Poppins, Nunito, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -45,8 +45,8 @@ textarea {
 
 .app-shell {
   background:
-    radial-gradient(circle at 82% 8%, rgba(157, 72, 255, 0.42), transparent 32%),
-    linear-gradient(135deg, #283c91 0%, #6140c8 48%, #cbb8ff 100%);
+    radial-gradient(circle at 82% 8%, rgba(226, 190, 111, 0.26), transparent 32%),
+    linear-gradient(135deg, #19366d 0%, #315da8 52%, #d2b66e 100%);
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
   min-height: 100vh;
@@ -314,15 +314,15 @@ textarea {
 
 .nav-menu a:hover,
 .nav-menu a.active {
-  background: linear-gradient(135deg, #7438f6, #6329d9);
-  box-shadow: 0 14px 30px rgba(92, 43, 219, 0.34);
+  background: linear-gradient(135deg, #315da8, #23457f);
+  box-shadow: 0 14px 30px rgba(25, 54, 109, 0.3);
   color: #ffffff;
 }
 
 .main-content {
   background:
-    radial-gradient(circle at 82% 8%, rgba(157, 72, 255, 0.36), transparent 32%),
-    linear-gradient(135deg, #283c91 0%, #6140c8 48%, #cbb8ff 100%);
+    radial-gradient(circle at 82% 8%, rgba(226, 190, 111, 0.22), transparent 32%),
+    linear-gradient(135deg, #19366d 0%, #315da8 52%, #d2b66e 100%);
   min-width: 0;
   padding: 24px;
 }
@@ -742,12 +742,12 @@ body[data-page="dashboard"] .dashboard-side-stack .panel {
 }
 
 .button-blue {
-  background: linear-gradient(135deg, #7438f6, #5b35e6);
+  background: linear-gradient(135deg, #315da8, #23457f);
   color: #ffffff;
 }
 
 .button-blue:hover {
-  background: linear-gradient(135deg, #6330de, #4724c7);
+  background: linear-gradient(135deg, #284d8d, #19366d);
 }
 
 .button-green {
@@ -1058,8 +1058,8 @@ label {
 
 .login-page {
   background:
-    radial-gradient(circle at 78% 12%, rgba(157, 72, 255, 0.46), transparent 34%),
-    linear-gradient(135deg, #17164d 0%, #4d32b9 52%, #a996ff 100%);
+    radial-gradient(circle at 78% 12%, rgba(226, 190, 111, 0.3), transparent 34%),
+    linear-gradient(135deg, #10264f 0%, #315da8 55%, #d2b66e 100%);
 }
 
 .detail-card {
@@ -4433,13 +4433,13 @@ body[data-page="asistencia"] .panel {
   --ink: #10163d;
   --ink-soft: #53607f;
   --border-soft: #dfe6f3;
-  --focus-ring: 0 0 0 4px rgba(91, 53, 230, 0.14);
+  --focus-ring: 0 0 0 4px rgba(189, 145, 57, 0.2);
 }
 
 body:not([data-page="calendario"]):not([data-page="notas"]) .main-content {
   background:
     radial-gradient(circle at 86% 2%, rgba(255, 255, 255, 0.24), transparent 30%),
-    linear-gradient(135deg, #243681 0%, #5635b7 48%, #9d87ea 100%);
+    linear-gradient(135deg, #19366d 0%, #315da8 54%, #c8ab62 100%);
   padding: 26px;
 }
 
