@@ -3,5 +3,5 @@
   <path d="M32 5 57 12v21c0 17-10 25-25 31C17 58 7 50 7 33V12l25-7Z" fill="#315184" stroke="#E0BD68" stroke-width="2.4"/>
   <path d="M32 11 51 16v17c0 13-7 20-19 26-12-6-19-13-19-26V16l19-5Z" fill="none" stroke="#F5E2AA" stroke-width="1"/>
   <circle cx="32" cy="32" r="12" fill="#17305A" stroke="#D8B45D" stroke-width="1.5"/>
-  <path d="M24 25h16v3h-6v10h6v3H24v-3h6V28h-6v-3Z" fill="#F2D586"/>
+  <text x="32" y="38" text-anchor="middle" fill="#F2D586" font-family="Georgia, 'Times New Roman', serif" font-size="17" font-weight="700" letter-spacing="-2">CI</text>
 </svg>

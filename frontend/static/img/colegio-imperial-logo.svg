@@ -34,10 +34,10 @@
     </g>
     <path d="M75 210c14 12 29 21 45 29 16-8 31-17 45-29" fill="none" stroke="#F4D98F" stroke-linecap="round" stroke-width="2.2"/>
 
-    <!-- Central medallion and Imperial initial. -->
+    <!-- Central medallion and Imperial initials. -->
     <circle cx="120" cy="132" r="48" fill="#17305A" stroke="url(#gold)" stroke-width="4"/>
     <circle cx="120" cy="132" r="40" fill="none" stroke="#F4D98F" stroke-opacity=".65" stroke-width="1.3"/>
-    <path d="M97 101h46v9h-16v45h16v9H97v-9h16v-45H97v-9Z" fill="url(#gold)" stroke="#F9E9BC" stroke-width="1.6" stroke-linejoin="round"/>
+    <text x="120" y="147" text-anchor="middle" fill="url(#gold)" stroke="#F9E9BC" stroke-width=".45" paint-order="stroke" font-family="Georgia, 'Times New Roman', serif" font-size="39" font-weight="700" letter-spacing="-4">CI</text>
     <path d="M108 177h24" stroke="#F4D98F" stroke-linecap="round" stroke-width="2"/>
   </g>
 </svg>
